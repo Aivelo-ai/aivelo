@@ -69,4 +69,23 @@ Financement : ${financement || 'Non précisé'}
       score,
       statut,
       resume,
-      qualification
+      qualification_at: new Date().toISOString(),
+      dernier_contact:  new Date().toISOString(),
+    })
+    .select()
+    .single();
+
+  if (error) throw new Error(`Erreur Supabase : ${error.message}`);
+
+  return {
+    lead_id:        lead.id,
+    score,
+    statut,
+    resume,
+    points_cles:    qualification.points_cles ?? [],
+    recommandation: qualification.recommandation ?? '',
+    tokens_used:    response.usage.input_tokens + response.usage.output_tokens,
+  };
+}
+
+module.exports = { qualifierLead };

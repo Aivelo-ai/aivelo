@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Aivelo — Agent Immobilier IA</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F5F4F0;color:#1a1a1a;min-height:100vh}
+.topnav{background:#fff;border-bottom:1px solid #e8e6e0;padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.brand{font-size:16px;font-weight:600;color:#1a1a1a;letter-spacing:-0.3px}
+.brand span{color:#4F7EF7}
+.nav-links{display:flex;gap:4px}
+.nav-link{font-size:13px;padding:6px 12px;border-radius:6px;color:#666;cursor:pointer;border:none;background:none;transition:all 0.15s}
+.nav-link:hover,.nav-link.active{background:#F5F4F0;color:#1a1a1a;font-weight:500}
+.badge-live{font-size:11px;padding:3px 8px;border-radius:20px;background:#EAFFEA;color:#1a7a1a;font-weight:500;display:flex;align-items:center;gap:4px}
+.badge-live::before{content:'';width:6px;height:6px;border-radius:50%;background:#2da82d;display:inline-block}
+.layout{display:flex;height:calc(100vh - 56px)}
+.sidebar{width:220px;background:#fff;border-right:1px solid #e8e6e0;padding:20px 0;display:flex;flex-direction:column;flex-shrink:0}
+.sidebar-section{font-size:10px;font-weight:600;color:#aaa;letter-spacing:0.08em;text-transform:uppercase;padding:12px 20px 6px}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:9px 20px;font-size:13px;color:#666;cursor:pointer;border-left:2px solid transparent;transition:all 0.1s}
+.sidebar-item i{font-size:16px}
+.sidebar-item.active{color:#1a1a1a;border-left:2px solid #4F7EF7;background:#F8F9FF;font-weight:500}
+.sidebar-item:hover:not(.active){background:#F5F4F0;color:#1a1a1a}
+.sidebar-footer{margin-top:auto;padding:16px 20px;border-top:1px solid #e8e6e0}
+.agency-name{font-size:12px;font-weight:500;color:#1a1a1a}
+.agency-status{font-size:11px;color:#2da82d;margin-top:2px}
+.main{flex:1;overflow-y:auto}
+.page-header{padding:24px 28px 0;display:flex;justify-content:space-between;align-items:flex-start}
+.page-title{font-size:20px;font-weight:600;color:#1a1a1a;letter-spacing:-0.3px}
+.page-sub{font-size:13px;color:#888;margin-top:3px}
+.content{padding:20px 28px 28px}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.metric{background:#fff;border:1px solid #e8e6e0;border-radius:10px;padding:14px 16px}
+.metric-val{font-size:26px;font-weight:600;color:#1a1a1a;letter-spacing:-0.5px}
+.metric-label{font-size:12px;color:#888;margin-top:2px}
+.metric-delta{font-size:11px;margin-top:6px;color:#2da82d}
+.panel{background:#fff;border:1px solid #e8e6e0;border-radius:10px;padding:16px 18px;margin-bottom:14px}
+.panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.panel-title{font-size:14px;font-weight:600;color:#1a1a1a}
+.btn{font-size:12px;padding:7px 14px;border-radius:7px;border:1px solid #e0deda;background:#fff;color:#555;cursor:pointer;transition:all 0.15s;font-weight:500}
+.btn:hover{background:#F5F4F0;border-color:#ccc}
+.btn-primary{background:#4F7EF7;color:#fff;border-color:#4F7EF7}
+.btn-primary:hover{background:#3a6ae0}
+.badge{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:500}
+.badge-green{background:#EAFFEA;color:#1a7a1a}
+.badge-amber{background:#FFF4E0;color:#a06010}
+.badge-red{background:#FFECEC;color:#a02020}
+.badge-blue{background:#EEF3FF;color:#2a4eb5}
+.badge-gray{background:#F5F4F0;color:#666}
+.log-box{background:#F9F8F5;border:1px solid #e8e6e0;border-radius:8px;padding:10px 14px;font-family:'SF Mono',Monaco,monospace;font-size:11px;color:#666;line-height:1.9;max-height:90px;overflow-y:auto}
+.log-ok{color:#2da82d}
+.log-info{color:#4F7EF7}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.leads-table{width:100%;border-collapse:collapse;font-size:12px}
+.leads-table th{text-align:left;padding:9px 12px;font-size:11px;font-weight:600;color:#aaa;border-bottom:1px solid #e8e6e0;text-transform:uppercase;letter-spacing:0.04em}
+.leads-table td{padding:10px 12px;border-bottom:1px solid #F0EEE8;color:#555}
+.leads-table tr:last-child td{border-bottom:none}
+.leads-table tr:hover td{background:#FAFAF8}
+.name-cell{color:#1a1a1a;font-weight:500}
+.score-wrap{display:flex;align-items:center;gap:6px}
+.score-bar{width:48px;height:4px;background:#eee;border-radius:2px;overflow:hidden}
+.score-fill{height:100%;border-radius:2px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.form-field{display:flex;flex-direction:column;gap:4px}
+.form-field label{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.04em}
+.form-field input,.form-field select,.form-field textarea{font-size:13px;padding:8px 10px;border-radius:7px;border:1px solid #e0deda;background:#fff;color:#1a1a1a;outline:none;transition:border 0.15s}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:#4F7EF7}
+.form-field textarea{resize:none;height:64px;font-family:inherit}
+.annonce-output{background:#F9F8F5;border:1px solid #e8e6e0;border-radius:8px;padding:14px;font-size:13px;color:#444;line-height:1.7;min-height:90px;white-space:pre-wrap;margin-top:10px}
+.relance-item{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid #F0EEE8}
+.relance-item:last-child{border-bottom:none}
+.avatar{width:34px;height:34px;border-radius:50%;background:#EEF3FF;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#4F7EF7;flex-shrink:0}
+.relance-content{flex:1}
+.relance-name{font-size:13px;font-weight:500;color:#1a1a1a}
+.relance-preview{font-size:12px;color:#888;margin-top:2px}
+.relance-meta{text-align:right;font-size:11px;color:#aaa;flex-shrink:0}
+.tabs{display:flex;gap:2px;background:#F5F4F0;border-radius:8px;padding:3px}
+.tab{font-size:12px;padding:5px 12px;border-radius:6px;cursor:pointer;color:#666;border:none;background:none;font-weight:500;transition:all 0.15s}
+.tab.active{background:#fff;color:#1a1a1a;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.thinking{display:none;align-items:center;gap:6px;font-size:12px;color:#888;margin-top:8px}
+.dot{width:5px;height:5px;border-radius:50%;background:#4F7EF7;animation:pulse 1.2s ease-in-out infinite}
+.dot:nth-child(2){animation-delay:0.2s}
+.dot:nth-child(3){animation-delay:0.4s}
+@keyframes pulse{0%,80%,100%{opacity:0.2}40%{opacity:1}}
+.perf-row{margin-bottom:10px}
+.perf-label{display:flex;justify-content:space-between;font-size:12px;color:#888;margin-bottom:5px}
+.perf-val{font-weight:600;color:#1a1a1a}
+.perf-track{height:5px;background:#F0EEE8;border-radius:3px;overflow:hidden}
+.perf-fill{height:100%;border-radius:3px}
+.pane{display:none}
+.pane.active{display:block}
+.config-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #F0EEE8}
+.toggle-row:last-child{border-bottom:none}
+.toggle-label{font-size:13px;color:#1a1a1a;font-weight:500}
+.toggle-sub{font-size:11px;color:#888;margin-top:1px}
+.toggle{width:38px;height:22px;border-radius:11px;background:#4F7EF7;position:relative;cursor:pointer;flex-shrink:0}
+.toggle::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:3px;right:3px;transition:right 0.2s}
+.toggle.off{background:#e0deda}
+.toggle.off::after{right:19px}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="brand">Aive<span>lo</span></div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="switchNav(this,'overview')">Vue d'ensemble</button>
+    <button class="nav-link" onclick="switchNav(this,'leads')">Leads</button>
+    <button class="nav-link" onclick="switchNav(this,'annonces')">Annonces</button>
+    <button class="nav-link" onclick="switchNav(this,'relances')">Relances</button>
+  </div>
+  <div class="badge-live">Agent actif</div>
+</nav>
+
+<div class="layout">
+  <div class="sidebar">
+    <div class="sidebar-section">Navigation</div>
+    <div class="sidebar-item active" onclick="switchNav2(this,'overview')"><i class="ti ti-layout-dashboard"></i>Vue d'ensemble</div>
+    <div class="sidebar-item" onclick="switchNav2(this,'leads')"><i class="ti ti-users"></i>Leads</div>
+    <div class="sidebar-item" onclick="switchNav2(this,'annonces')"><i class="ti ti-file-text"></i>Annonces</div>
+    <div class="sidebar-item" onclick="switchNav2(this,'relances')"><i class="ti ti-send"></i>Relances</div>
+    <div class="sidebar-section">Compte</div>
+    <div class="sidebar-item" onclick="switchNav2(this,'settings')"><i class="ti ti-settings"></i>Paramètres</div>
+    <div class="sidebar-footer">
+      <div class="agency-name">Agence Martineau</div>
+      <div class="agency-status">● Agent actif</div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="page-header">
+      <div>
+        <div class="page-title" id="page-title">Vue d'ensemble</div>
+        <div class="page-sub" id="page-sub">Activité des 7 derniers jours</div>
+      </div>
+    </div>
+    <div class="content">
+
+      <div class="pane active" id="pane-overview">
+        <div class="metrics">
+          <div class="metric"><div class="metric-val">47</div><div class="metric-label">Leads reçus</div><div class="metric-delta">↑ +12 cette semaine</div></div>
+          <div class="metric"><div class="metric-val">31</div><div class="metric-label">Qualifiés</div><div class="metric-delta">↑ 66% taux</div></div>
+          <div class="metric"><div class="metric-val">18</div><div class="metric-label">Annonces générées</div><div class="metric-delta">↑ ce mois</div></div>
+          <div class="metric"><div class="metric-val">24</div><div class="metric-label">Relances envoyées</div><div class="metric-delta">↑ 3 réponses</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Activité récente de l'agent</div><span class="badge badge-blue">En direct</span></div>
+          <div class="log-box">
+            <div><span style="color:#aaa">09:41</span> &nbsp;<span class="log-ok">✓</span>&nbsp; Lead qualifié — Sophie Martin (budget 350k, acheteur sérieux)</div>
+            <div><span style="color:#aaa">09:38</span> &nbsp;<span class="log-info">→</span>&nbsp; Annonce générée — Apt 3p Lyon 6e, 89m²</div>
+            <div><span style="color:#aaa">09:22</span> &nbsp;<span class="log-info">→</span>&nbsp; Relance J+7 envoyée — Marc Dupont</div>
+            <div><span style="color:#aaa">08:55</span> &nbsp;<span class="log-ok">✓</span>&nbsp; Lead disqualifié — budget non défini</div>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title">Leads chauds</div></div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:500">Sophie Martin</div><div style="font-size:11px;color:#888">Achat · 350k · Lyon</div></div><span class="badge badge-green">Chaud</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:500">Jean-Pierre Roux</div><div style="font-size:11px;color:#888">Vente · Maison 5p</div></div><span class="badge badge-green">Chaud</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13px;font-weight:500">Amina Benali</div><div style="font-size:11px;color:#888">Achat · 220k · T3</div></div><span class="badge badge-amber">Tiède</span></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title">Performance</div></div>
+            <div class="perf-row"><div class="perf-label"><span>Temps de réponse</span><span class="perf-val" style="color:#2da82d">1m 42s</span></div><div class="perf-track"><div class="perf-fill" style="width:92%;background:#2da82d"></div></div></div>
+            <div class="perf-row"><div class="perf-label"><span>Taux qualification</span><span class="perf-val" style="color:#4F7EF7">66%</span></div><div class="perf-track"><div class="perf-fill" style="width:66%;background:#4F7EF7"></div></div></div>
+            <div class="perf-row"><div class="perf-label"><span>Réponses relances</span><span class="perf-val" style="color:#E9A020">28%</span></div><div class="perf-track"><div class="perf-fill" style="width:28%;background:#E9A020"></div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pane" id="pane-leads">
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Leads qualifiés par l'agent</div><span class="badge badge-blue">Mis à jour en temps réel</span></div>
+          <table class="leads-table">
+            <thead><tr><th>Contact</th><th>Projet</th><th>Budget</th><th>Score</th><th>Statut</th></tr></thead>
+            <tbody>
+              <tr><td class="name-cell">Sophie Martin</td><td>Achat T4 Lyon</td><td>350 000€</td><td><div class="score-wrap"><div class="score-bar"><div class="score-fill" style="width:92%;background:#2da82d"></div></div>92</div></td><td><span class="badge badge-green">Chaud</span></td></tr>
+              <tr><td class="name-cell">Jean-Pierre Roux</td><td>Vente maison</td><td>—</td><td><div class="score-wrap"><div class="score-bar"><div class="score-fill" style="width:85%;background:#2da82d"></div></div>85</div></td><td><span class="badge badge-green">Chaud</span></td></tr>
+              <tr><td class="name-cell">Amina Benali</td><td>Achat T3</td><td>220 000€</td><td><div class="score-wrap"><div class="score-bar"><div class="score-fill" style="width:61%;background:#E9A020"></div></div>61</div></td><td><span class="badge badge-amber">Tiède</span></td></tr>
+              <tr><td class="name-cell">Thomas Girard</td><td>Location appt</td><td>900€/mois</td><td><div class="score-wrap"><div class="score-bar"><div class="score-fill" style="width:40%;background:#E9A020"></div></div>40</div></td><td><span class="badge badge-amber">Tiède</span></td></tr>
+              <tr><td class="name-cell">Claire Faure</td><td>Achat inconnu</td><td>Non défini</td><td><div class="score-wrap"><div class="score-bar"><div class="score-fill" style="width:18%;background:#e05050"></div></div>18</div></td><td><span class="badge badge-red">Froid</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="pane" id="pane-annonces">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Générateur d'annonces IA</div>
+            <div class="tabs"><button class="tab active" onclick="switchTab(this,'t-form')">Nouveau bien</button><button class="tab" onclick="switchTab(this,'t-history')">Historique</button></div>
+          </div>
+          <div id="t-form">
+            <div class="form-row">
+              <div class="form-field"><label>Type de bien</label><select id="type-bien"><option>Appartement</option><option>Maison</option><option>Studio</option><option>Local commercial</option></select></div>
+              <div class="form-field"><label>Surface (m²)</label><input type="number" id="surface" value="72"/></div>
+            </div>
+            <div class="form-row">
+              <div class="form-field"><label>Ville / Quartier</label><input type="text" id="ville" value="Lyon 6e"/></div>
+              <div class="form-field"><label>Prix</label><input type="text" id="prix" value="320 000€"/></div>
+            </div>
+            <div class="form-field"><label>Points forts</label><textarea id="points">Vue dégagée, parquet ancien, lumineux, 2 chambres, parking inclus</textarea></div>
+            <div style="margin-top:10px;display:flex;align-items:center;gap:10px">
+              <button class="btn btn-primary" onclick="genAnnonce()">✦ Générer l'annonce</button>
+              <div class="thinking" id="thinking-annonce"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span>L'agent rédige…</span></div>
+            </div>
+            <div class="annonce-output" id="annonce-out">L'annonce générée apparaîtra ici.</div>
+          </div>
+          <div id="t-history" style="display:none">
+            <div style="display:flex;flex-direction:column;gap:0">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #F0EEE8"><div><div style="font-size:13px;font-weight:500">Apt 3p Lyon 6e — 89m²</div><div style="font-size:11px;color:#888">Générée il y a 2h</div></div><span class="badge badge-blue">Publiée</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #F0EEE8"><div><div style="font-size:13px;font-weight:500">Maison 5p Villeurbanne — 140m²</div><div style="font-size:11px;color:#888">Générée hier</div></div><span class="badge badge-green">En ligne</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0"><div><div style="font-size:13px;font-weight:500">Studio Lyon 3e — 28m²</div><div style="font-size:11px;color:#888">Générée il y a 3j</div></div><span class="badge badge-amber">Brouillon</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pane" id="pane-relances">
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Relances automatiques</div><span class="badge badge-green">4 actives</span></div>
+          <div class="relance-item"><div class="avatar">MD</div><div class="relance-content"><div class="relance-name">Marc Dupont</div><div class="relance-preview">Relance J+7 — "Avez-vous eu le temps de réfléchir à votre projet ?"</div></div><div class="relance-meta"><div>Envoyée</div><span class="badge badge-green" style="margin-top:4px;display:inline-block">Ouverte</span></div></div>
+          <div class="relance-item"><div class="avatar">LB</div><div class="relance-content"><div class="relance-name">Laura Bernard</div><div class="relance-preview">Relance J+3 — "Votre recherche d'appartement à Lyon…"</div></div><div class="relance-meta"><div>Demain 9h</div><span class="badge badge-amber" style="margin-top:4px;display:inline-block">Programmée</span></div></div>
+          <div class="relance-item"><div class="avatar">PL</div><div class="relance-content"><div class="relance-name">Pierre Laurent</div><div class="relance-preview">Relance J+14 — "Dernière tentative avant de clôturer…"</div></div><div class="relance-meta"><div>Dans 3j</div><span class="badge badge-amber" style="margin-top:4px;display:inline-block">Programmée</span></div></div>
+          <div class="relance-item"><div class="avatar">AB</div><div class="relance-content"><div class="relance-name">Amina Benali</div><div class="relance-preview">Relance J+1 — "Suite à votre demande de ce matin…"</div></div><div class="relance-meta"><div>Hier</div><span class="badge badge-blue" style="margin-top:4px;display:inline-block">Répondue</span></div></div>
+        </div>
+      </div>
+
+      <div class="pane" id="pane-settings">
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Configuration de l'agent</div></div>
+          <div class="config-row">
+            <div class="form-field"><label>Nom de l'agence</label><input type="text" value="Agence Martineau"/></div>
+            <div class="form-field"><label>Email de contact</label><input type="text" value="contact@martineau-immo.fr"/></div>
+          </div>
+          <div class="config-row">
+            <div class="form-field"><label>Ton de l'agent</label><select><option>Professionnel et chaleureux</option><option>Formel</option><option>Décontracté</option></select></div>
+            <div class="form-field"><label>Délai relance J+1 (heures)</label><input type="number" value="24"/></div>
+          </div>
+          <div style="margin-top:4px">
+            <div class="toggle-row"><div><div class="toggle-label">Qualification automatique</div><div class="toggle-sub">L'agent répond et score les leads entrants</div></div><div class="toggle"></div></div>
+            <div class="toggle-row"><div><div class="toggle-label">Génération d'annonces</div><div class="toggle-sub">Rédaction automatique à la saisie</div></div><div class="toggle"></div></div>
+            <div class="toggle-row"><div><div class="toggle-label">Relances automatiques</div><div class="toggle-sub">Séquences J+1, J+7, J+14</div></div><div class="toggle"></div></div>
+          </div>
+          <div style="margin-top:14px"><button class="btn btn-primary">Sauvegarder les paramètres</button></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const annonces = [
+  "✨ Appartement lumineux de 72m² — Lyon 6e\n\nNichée au cœur du 6e arrondissement, cette belle surface vous offre une vue dégagée et un parquet ancien plein de charme. Deux chambres spacieuses, un séjour baigné de lumière et un parking privatif inclus.\n\nPrix : 320 000€ — Réf. LY6-0847\nContact : 04 78 XX XX XX",
+  "🏡 Appartement de caractère 72m² — Lyon 6e\n\nÀ deux pas du parc de la Tête d'Or, découvrez cet appartement alliant cachet et modernité. Parquet massif, hauteur sous plafond généreuse, deux chambres et un parking font de ce bien une opportunité rare.\n\nPrix : 320 000€ HAI — Visite sur RDV",
+  "Appartement 72m² — Lyon 6e | 320 000€\n\nBien rare dans ce secteur : 72m² lumineux avec vue dégagée, parquet en excellent état, 2 chambres, parking en sous-sol. Idéal résidence principale ou investissement locatif.\n\nDPE : C — Charges : 180€/mois"
+];
+let idx = 0;
+
+function genAnnonce(){
+  document.getElementById('thinking-annonce').style.display='flex';
+  document.getElementById('annonce-out').textContent='';
+  setTimeout(()=>{
+    document.getElementById('thinking-annonce').style.display='none';
+    document.getElementById('annonce-out').textContent=annonces[idx%annonces.length];
+    idx++;
+  },1800);
+}
+
+function switchNav(el,pane){
+  document.querySelectorAll('.nav-link').forEach(n=>n.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.sidebar-item').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item')[['overview','leads','annonces','relances','settings'].indexOf(pane)].classList.add('active');
+  setPane(pane);
+}
+
+function switchNav2(el,pane){
+  document.querySelectorAll('.sidebar-item').forEach(n=>n.classList.remove('active'));
+  el.classList.add('active');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const idx2 = ['overview','leads','annonces','relances','settings'].indexOf(pane);
+  navLinks.forEach(n=>n.classList.remove('active'));
+  if(idx2<navLinks.length) navLinks[idx2].classList.add('active');
+  setPane(pane);
+}
+
+function setPane(pane){
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pane-'+pane).classList.add('active');
+  const titles={overview:'Vue d\'ensemble',leads:'Qualification des leads',annonces:'Générateur d\'annonces',relances:'Relances automatiques',settings:'Paramètres'};
+  const subs={overview:'Activité des 7 derniers jours',leads:'Leads scorés en temps réel par l\'agent',annonces:'Annonces générées automatiquement par IA',relances:'Séquences de relance en cours',settings:'Configuration de votre agent Aivelo'};
+  document.getElementById('page-title').textContent=titles[pane];
+  document.getElementById('page-sub').textContent=subs[pane];
+}
+
+function switchTab(el,tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('t-form').style.display=tab==='t-form'?'block':'none';
+  document.getElementById('t-history').style.display=tab==='t-history'?'block':'none';
+}
+</script>
+</body>
+</html>

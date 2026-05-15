@@ -237,8 +237,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         </div>
       </div>
       <div class="topbar-right">
-        <button class="btn btn-sm" onclick="nav(document.querySelector('.sidebar-item:nth-child(6)'),'qualifier')">+ Qualifier un lead</button>
-        <button class="btn btn-primary btn-sm">+ Nouveau bien</button>
+        <button class="btn btn-sm" onclick="goToPane('qualifier')">+ Qualifier un lead</button>
+        <button class="btn btn-primary btn-sm" onclick="goToPane('biens')">+ Nouveau bien</button>
       </div>
     </div>
 
@@ -311,7 +311,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="panel">
         <div class="panel-header">
           <div class="panel-title">Leads récents</div>
-          <button class="btn btn-sm" onclick="nav(document.querySelectorAll('.sidebar-item')[3],'contacts')">Voir tous →</button>
+          <button class="btn btn-sm" onclick="goToPane('contacts')">Voir tous →</button>
         </div>
         <table class="data-table">
           <thead><tr><th>Contact</th><th>Type</th><th>Projet</th><th>Score</th><th>Statut</th><th>Date</th></tr></thead>
@@ -389,7 +389,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="panel">
         <div class="panel-header">
           <div class="panel-title">Contacts & Leads</div>
-          <button class="btn btn-primary btn-sm" onclick="nav(document.querySelectorAll('.sidebar-item')[5],'qualifier')">+ Qualifier un lead</button>
+          <button class="btn btn-primary btn-sm" onclick="goToPane('qualifier')">+ Qualifier un lead</button>
         </div>
         <div class="search-box">
           <i class="ti ti-search" style="font-size:14px;color:#aaa"></i>
@@ -718,17 +718,69 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
       <div class="panel">
         <div class="panel-header"><div class="panel-title">Tunnel de conversion</div></div>
-        <div style="display:flex;align-items:flex-end;gap:8px;height:80px;padding:0 10px">
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;background:#4F7EF7;border-radius:3px 3px 0 0;height:80px"></div><div class="text-xs">Leads 100%</div></div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;background:#4F7EF7;opacity:.75;border-radius:3px 3px 0 0;height:62px"></div><div class="text-xs">Qualifiés 78%</div></div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;background:#E9A020;border-radius:3px 3px 0 0;height:34px"></div><div class="text-xs">Visites 42%</div></div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;background:#E9A020;opacity:.7;border-radius:3px 3px 0 0;height:22px"></div><div class="text-xs">Offres 28%</div></div>
-          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;background:#2da82d;border-radius:3px 3px 0 0;height:10px"></div><div class="text-xs">Ventes 12%</div></div>
+        <div style="display:flex;align-items:flex-end;gap:6px;height:120px;padding:0 8px;margin-bottom:8px">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%"><div style="width:100%;background:#4F7EF7;border-radius:4px 4px 0 0;height:100%"></div><div class="text-xs" style="white-space:nowrap">Leads 100%</div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%"><div style="width:100%;background:#4F7EF7;opacity:.75;border-radius:4px 4px 0 0;height:78%"></div><div class="text-xs" style="white-space:nowrap">Qualifiés 78%</div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%"><div style="width:100%;background:#E9A020;border-radius:4px 4px 0 0;height:42%"></div><div class="text-xs" style="white-space:nowrap">Visites 42%</div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%"><div style="width:100%;background:#E9A020;opacity:.7;border-radius:4px 4px 0 0;height:28%"></div><div class="text-xs" style="white-space:nowrap">Offres 28%</div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%"><div style="width:100%;background:#2da82d;border-radius:4px 4px 0 0;height:12%"></div><div class="text-xs" style="white-space:nowrap">Ventes 12%</div></div>
         </div>
       </div>
     </div>
 
-    <!-- ════════ PARAMÈTRES ════════ -->
+    <!-- ════════ FICHE CLIENT ════════ -->
+    <div class="pane" id="pane-fiche">
+      <div style="margin-bottom:14px">
+        <button class="btn btn-sm" onclick="goToPane('contacts')">← Retour aux contacts</button>
+      </div>
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-header">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div class="avatar" id="fiche-avatar" style="width:40px;height:40px;font-size:14px">?</div>
+              <div><div class="panel-title" id="fiche-nom">—</div><div class="text-xs" id="fiche-id">—</div></div>
+            </div>
+            <span class="badge" id="fiche-statut-badge">—</span>
+          </div>
+          <div class="form-grid" style="margin-bottom:0">
+            <div><div class="text-xs">Type</div><div class="fw500 text-sm" id="fiche-type">—</div></div>
+            <div><div class="text-xs">Source</div><div class="fw500 text-sm" id="fiche-source">—</div></div>
+            <div><div class="text-xs">Budget</div><div class="fw500 text-sm" id="fiche-budget">—</div></div>
+            <div><div class="text-xs">Délai</div><div class="fw500 text-sm" id="fiche-delai">—</div></div>
+            <div><div class="text-xs">Financement</div><div class="fw500 text-sm" id="fiche-financement">—</div></div>
+            <div><div class="text-xs">Score IA</div><div class="fw500 text-sm" id="fiche-score">—</div></div>
+          </div>
+          <hr class="divider"/>
+          <div class="section-label">Projet</div>
+          <div class="text-sm" id="fiche-projet">—</div>
+          <hr class="divider"/>
+          <div class="section-label">Résumé IA</div>
+          <div class="text-sm" id="fiche-resume" style="line-height:1.6">—</div>
+        </div>
+        <div>
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title">Documents</div><button class="btn btn-sm">+ Ajouter</button></div>
+            <div class="doc-row"><div class="doc-name"><i class="ti ti-x" style="color:#e05050"></i> Pièce d'identité</div><button class="btn btn-sm">Relancer</button></div>
+            <div class="doc-row"><div class="doc-name"><i class="ti ti-x" style="color:#e05050"></i> Fiches de salaire</div><button class="btn btn-sm">Relancer</button></div>
+            <div class="doc-row"><div class="doc-name"><i class="ti ti-x" style="color:#e05050"></i> Avis d'imposition</div><button class="btn btn-sm">Relancer</button></div>
+          </div>
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title">Actions rapides</div></div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <button class="btn" style="text-align:left" onclick="alert('Lien Calendly envoyé')"><i class="ti ti-calendar"></i> Envoyer lien Calendly</button>
+              <button class="btn" style="text-align:left" onclick="goToPane('annonces')"><i class="ti ti-file-text"></i> Générer une annonce</button>
+              <button class="btn" style="text-align:left" onclick="alert('Relance manuelle envoyée')"><i class="ti ti-send"></i> Relancer manuellement</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">Historique</div></div>
+        <div class="timeline" id="fiche-timeline">
+          <div class="timeline-item"><span class="timeline-time">Aujourd'hui</span><span class="timeline-text">Fiche créée via qualification IA</span></div>
+        </div>
+      </div>
+    </div>
     <div class="pane" id="pane-settings">
       <div class="two-col">
         <div class="panel">
@@ -808,12 +860,20 @@ function nav(el, pane) {
   const titles = {
     overview:'Vue d\'ensemble', biens:'Biens & Mandats', contacts:'Contacts & Leads',
     pipeline:'Pipeline', qualifier:'Qualifier un lead', annonces:'Générateur d\'annonces',
-    relances:'Relances automatiques', vocal:'Agent vocal IA', rapports:'Rapports', settings:'Paramètres'
+    relances:'Relances automatiques', vocal:'Agent vocal IA', rapports:'Rapports', settings:'Paramètres',
+    fiche:'Fiche client'
   };
   document.getElementById('page-title').textContent = titles[pane] || pane;
   if(pane === 'overview') loadMetrics();
   if(pane === 'contacts') loadContacts();
   if(pane === 'relances') loadRelances();
+}
+
+function goToPane(pane) {
+  const idx = ['overview','biens','contacts','pipeline','qualifier','annonces','relances','vocal','rapports','settings'];
+  const items = document.querySelectorAll('.sidebar-item');
+  const i = idx.indexOf(pane);
+  nav(i >= 0 ? items[i] : null, pane);
 }
 
 // ── Recherche globale ─────────────────────────────────────────────────────────
@@ -929,7 +989,8 @@ async function loadContacts() {
       const badge = l.statut === 'chaud' ? 'badge-green' : l.statut === 'tiede' ? 'badge-amber' : 'badge-red';
       const label = l.statut === 'chaud' ? 'Chaud' : l.statut === 'tiede' ? 'Tiède' : 'Froid';
       const color = l.statut === 'chaud' ? '#2da82d' : l.statut === 'tiede' ? '#E9A020' : '#e05050';
-      return `<tr>
+      const data = encodeURIComponent(JSON.stringify(l));
+      return `<tr onclick="openFiche('${data}')" style="cursor:pointer">
         <td class="name-cell">${l.nom}</td>
         <td><span class="badge badge-blue">Acheteur</span></td>
         <td>${l.projet ? l.projet.substring(0,28)+'…' : '—'}</td>
@@ -941,6 +1002,31 @@ async function loadContacts() {
   } catch(e) {
     console.error('Erreur contacts:', e);
   }
+}
+
+function openFiche(dataStr) {
+  const l = JSON.parse(decodeURIComponent(dataStr));
+  const initials = l.nom.split(' ').map(p=>p[0]?.toUpperCase()||'').join('').slice(0,2);
+  const badge = l.statut === 'chaud' ? 'badge-green' : l.statut === 'tiede' ? 'badge-amber' : 'badge-red';
+  const label = l.statut === 'chaud' ? 'Chaud' : l.statut === 'tiede' ? 'Tiède' : 'Froid';
+  document.getElementById('fiche-avatar').textContent = initials;
+  document.getElementById('fiche-nom').textContent = l.nom;
+  document.getElementById('fiche-id').textContent = 'CLI-' + l.id?.slice(0,6).toUpperCase();
+  document.getElementById('fiche-statut-badge').textContent = label;
+  document.getElementById('fiche-statut-badge').className = 'badge ' + badge;
+  document.getElementById('fiche-type').textContent = 'Acheteur';
+  document.getElementById('fiche-source').textContent = l.source || 'Non précisé';
+  document.getElementById('fiche-budget').textContent = l.budget ? l.budget.toLocaleString('fr-FR')+'€' : '—';
+  document.getElementById('fiche-delai').textContent = l.delai || '—';
+  document.getElementById('fiche-financement').textContent = l.financement || '—';
+  document.getElementById('fiche-score').textContent = (l.score||'—') + '/100';
+  document.getElementById('fiche-projet').textContent = l.projet || '—';
+  document.getElementById('fiche-resume').textContent = l.resume || 'Résumé non disponible';
+  const date = l.created_at ? new Date(l.created_at).toLocaleDateString('fr-FR') : 'Aujourd\'hui';
+  document.getElementById('fiche-timeline').innerHTML = `
+    <div class="timeline-item"><span class="timeline-time">${date}</span><span class="timeline-text">Lead qualifié IA — Score ${l.score} — ${label}</span></div>
+    <div class="timeline-item"><span class="timeline-time">${date}</span><span class="timeline-text">Contact entrant — Projet : ${l.projet||'—'}</span></div>`;
+  goToPane('fiche');
 }
 
 // ── Charger les relances ──────────────────────────────────────────────────────
@@ -977,6 +1063,32 @@ function setQualType(t) {
   ['acheteur','vendeur','locataire','bailleur'].forEach(id => document.getElementById('qt-'+id).classList.remove('active'));
   document.getElementById('qt-'+t).classList.add('active');
   currentQualType = t;
+
+  // Adapter les libellés selon le type
+  const configs = {
+    acheteur:  { budget:'Budget achat (€)', projet:'Projet d\'achat', delai:'Délai d\'achat', financement:'Financement', projetPH:'Achat T3 Lyon-centre, résidence principale' },
+    vendeur:   { budget:'Prix de vente estimé (€)', projet:'Bien à vendre', delai:'Délai de vente souhaité', financement:'Situation fiscale', projetPH:'Appartement 72m², Lyon 6e, parquet, vue dégagée' },
+    locataire: { budget:'Budget loyer mensuel (€)', projet:'Recherche de location', delai:'Date d\'emménagement', financement:'Garant / revenus', projetPH:'T2 meublé Lyon-centre, proche métro' },
+    bailleur:  { budget:'Loyer souhaité (€/mois)', projet:'Bien à louer', delai:'Disponibilité du bien', financement:'Régime fiscal (LMNP, nu...)', projetPH:'Appartement T3, Lyon 6e, disponible juin' },
+  };
+  const c = configs[t];
+  document.querySelector('label[for-type="budget"]')?.parentElement.querySelector('label').textContent = c.budget;
+  document.querySelector('label[for-type="projet"]')?.parentElement.querySelector('label').textContent = c.projet;
+
+  // Mettre à jour les placeholders et labels dynamiquement
+  const fields = {
+    'q-budget': { label: c.budget, ph: t === 'locataire' ? '900' : t === 'bailleur' ? '1200' : '320000' },
+    'q-projet': { label: c.projet, ph: c.projetPH },
+    'q-delai':  { label: c.delai,  ph: t === 'locataire' ? '1er juin 2026' : '2-3 mois' },
+    'q-financement': { label: c.financement, ph: t === 'vendeur' ? 'Résidence principale depuis +5 ans' : t === 'locataire' ? 'CDI + garant' : 'Accord bancaire obtenu' },
+  };
+  Object.entries(fields).forEach(([id, cfg]) => {
+    const input = document.getElementById(id);
+    if(input) { input.placeholder = cfg.ph; input.previousElementSibling.textContent = cfg.label.toUpperCase(); }
+  });
+
+  if(document.getElementById('preview-type'))
+    document.getElementById('preview-type').textContent = t.charAt(0).toUpperCase()+t.slice(1) + ' · En cours de qualification';
 }
 
 function updatePreview() {

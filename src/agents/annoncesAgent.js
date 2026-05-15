@@ -42,7 +42,7 @@ Points forts : ${points_forts || 'Non précisé'}
       type_bien,
       surface:       surface ?? null,
       ville,
-      prix:          prix ?? null,
+      prix: prix ? parseFloat(prix.toString().replace(/[^0-9.]/g, '')) : null,
       points_forts:  points_forts ? [points_forts] : [],
       texte_annonce,
       generated_at:  new Date().toISOString(),

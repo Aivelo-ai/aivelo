@@ -400,13 +400,37 @@ async function genAnnonce() {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Erreur serveur');
     document.getElementById('annonce-out').textContent = data.data.texte_annonce;
+    document.getElementById('annonce-result').style.display = 'block';
+    document.getElementById('regen-btn').style.display = 'inline-block';
+    document.getElementById('char-count').textContent = data.data.texte_annonce.length + ' chars';
   } catch (err) {
     document.getElementById('annonce-out').textContent = 'Erreur : ' + err.message + '\n(Agent 2 pas encore déployé ?)';
   }
 
   document.getElementById('thinking-annonce').style.display = 'none';
 }
+function selectPlatform(p) {
+  ['sl','lbc','bi'].forEach(id => {
+    const el = document.getElementById('plt-' + id);
+    if (el) { el.style.border = '1px solid #e0ddd6'; el.style.background = 'transparent'; el.querySelector('div').style.color = '#1a1a1a'; }
+  });
+  const sel = document.getElementById('plt-' + p);
+  if (sel) { sel.style.border = '2px solid #4F7EF7'; sel.style.background = '#EEF3FF'; sel.querySelector('div').style.color = '#4F7EF7'; }
+  window.selectedPlatform = p;
+}
 
+function regenAnnonce() { document.getElementById('regen-btn').style.display = 'none'; genAnnonce(); }
+
+function copyAnnonce() {
+  const text = document.getElementById('annonce-out').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✓ Copié !';
+    setTimeout(() => btn.textContent = '⎘ Copier', 2000);
+  });
+}
+
+function publishTo(url) { copyAnnonce(); window.open(url, '_blank'); }
 function switchNav(el,pane){
   document.querySelectorAll('.nav-link').forEach(n=>n.classList.remove('active'));
   el.classList.add('active');

@@ -4,6 +4,7 @@ const cors = require('cors');
 
 const qualificationRoute = require('./routes/qualification');
 const annoncesRoute = require('./routes/annonces');
+const relancesRoute = require('./routes/relances');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -23,11 +24,12 @@ app.use((req, _res, next) => {
 
 app.use('/api/qualify', qualificationRoute);
 app.use('/api/annonces', annoncesRoute);
+app.use('/api/relances', relancesRoute);
 app.get('/health', (_req, res) => {
   res.json({
     status: 'ok',
     version: '1.0.0',
-    agents: ['qualification', 'annonces'],
+    agents: ['qualification', 'annonces', 'relances'],
     timestamp: new Date().toISOString(),
   });
 });

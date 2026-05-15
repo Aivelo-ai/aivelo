@@ -296,7 +296,7 @@ async function qualifierLead() {
   try {
     const res = await fetch(API + '/api/qualify', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-api-key': 'aivelo-2026-ArthurS-immo' },
       body: JSON.stringify({ nom, projet, budget, delai, financement })
     });
     const data = await res.json();
@@ -351,7 +351,7 @@ async function genAnnonce() {
   try {
     const res = await fetch(API + '/api/annonces', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-api-key': 'aivelo-2026-ArthurS-immo' },
       body: JSON.stringify({ type_bien, surface, ville, prix, points_forts })
     });
     const data = await res.json();

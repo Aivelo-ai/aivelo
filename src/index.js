@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 
 const qualificationRoute = require('./routes/qualification');
-
+const annoncesRoute = require('./routes/annonces');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -22,12 +22,12 @@ app.use((req, _res, next) => {
 });
 
 app.use('/api/qualify', qualificationRoute);
-
+app.use('/api/annonces', annoncesRoute);
 app.get('/health', (_req, res) => {
   res.json({
     status: 'ok',
     version: '1.0.0',
-    agents: ['qualification'],
+    agents: ['qualification', 'annonces'],
     timestamp: new Date().toISOString(),
   });
 });

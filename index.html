@@ -209,11 +209,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         </div>
       </div>
 
-      <div class="pane" id="pane-annonces">
-        <div class="panel">
+     <div class="pane" id="pane-annonces">
+        <div class="panel" style="margin-bottom:14px">
           <div class="panel-header">
             <div class="panel-title">Générateur d'annonces IA</div>
-            <div class="tabs"><button class="tab active" onclick="switchTab(this,'t-form')">Nouveau bien</button><button class="tab" onclick="switchTab(this,'t-history')">Historique</button></div>
+            <div style="display:flex;gap:8px">
+              <button class="tab active" onclick="switchTab(this,'t-form')">Nouveau bien</button>
+              <button class="tab" onclick="switchTab(this,'t-history')">Historique</button>
+            </div>
           </div>
           <div id="t-form">
             <div class="form-row">
@@ -225,18 +228,58 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
               <div class="form-field"><label>Prix</label><input type="text" id="prix" value="320 000€"/></div>
             </div>
             <div class="form-field"><label>Points forts</label><textarea id="points">Vue dégagée, parquet ancien, lumineux, 2 chambres, parking inclus</textarea></div>
-            <div style="margin-top:10px;display:flex;align-items:center;gap:10px">
+            <div style="margin:12px 0 8px">
+              <label style="font-size:12px;color:#888;display:block;margin-bottom:8px">PLATEFORME CIBLE</label>
+              <div style="display:flex;gap:8px">
+                <div id="plt-sl" onclick="selectPlatform('sl')" style="flex:1;border:2px solid #4F7EF7;border-radius:8px;padding:10px;text-align:center;cursor:pointer;background:#EEF3FF">
+                  <div style="font-size:13px;font-weight:500;color:#4F7EF7">SeLoger</div>
+                  <div style="font-size:11px;color:#888">Formel · 3000 chars</div>
+                </div>
+                <div id="plt-lbc" onclick="selectPlatform('lbc')" style="flex:1;border:1px solid #e0ddd6;border-radius:8px;padding:10px;text-align:center;cursor:pointer">
+                  <div style="font-size:13px;font-weight:500">LeBonCoin</div>
+                  <div style="font-size:11px;color:#888">Accrocheur · 5000 chars</div>
+                </div>
+                <div id="plt-bi" onclick="selectPlatform('bi')" style="flex:1;border:1px solid #e0ddd6;border-radius:8px;padding:10px;text-align:center;cursor:pointer">
+                  <div style="font-size:13px;font-weight:500">Bien'ici</div>
+                  <div style="font-size:11px;color:#888">Premium · 4000 chars</div>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
               <button class="btn btn-primary" onclick="genAnnonce()">✦ Générer l'annonce</button>
+              <button class="btn" id="regen-btn" onclick="regenAnnonce()" style="display:none">↺ Régénérer</button>
               <div class="thinking" id="thinking-annonce"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span>L'agent rédige…</span></div>
             </div>
-            <div class="annonce-output" id="annonce-out">L'annonce générée apparaîtra ici.</div>
           </div>
           <div id="t-history" style="display:none">
-            <div style="display:flex;flex-direction:column;gap:0">
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #F0EEE8"><div><div style="font-size:13px;font-weight:500">Apt 3p Lyon 6e — 89m²</div><div style="font-size:11px;color:#888">Générée il y a 2h</div></div><span class="badge badge-blue">Publiée</span></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #F0EEE8"><div><div style="font-size:13px;font-weight:500">Maison 5p Villeurbanne — 140m²</div><div style="font-size:11px;color:#888">Générée hier</div></div><span class="badge badge-green">En ligne</span></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0"><div><div style="font-size:13px;font-weight:500">Studio Lyon 3e — 28m²</div><div style="font-size:11px;color:#888">Générée il y a 3j</div></div><span class="badge badge-amber">Brouillon</span></div>
+            <div style="display:flex;flex-direction:column;gap:8px" id="history-list">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#F9F8F5;border-radius:8px">
+                <div><div style="font-size:13px;font-weight:500">Appartement 72m² — Lyon 6e</div><div style="font-size:11px;color:#888">Aujourd'hui · SeLoger · 320 000€</div></div>
+                <button class="btn" style="font-size:11px;padding:4px 8px">Copier</button>
+              </div>
             </div>
+          </div>
+        </div>
+        <div class="panel" id="annonce-result" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="panel-title">Annonce générée</div>
+              <span id="plt-badge" class="badge badge-blue">SeLoger</span>
+              <span id="char-count" style="font-size:11px;color:#888">0 chars</span>
+            </div>
+            <div style="display:flex;gap:6px">
+              <button class="btn" id="copy-btn" onclick="copyAnnonce()">⎘ Copier</button>
+            </div>
+          </div>
+          <div class="annonce-output" id="annonce-out" style="margin-bottom:16px"></div>
+          <div>
+            <div style="font-size:11px;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em">Publier sur</div>
+            <div style="display:flex;gap:8px">
+              <button class="btn" onclick="publishTo('https://www.seloger.com/deposer-annonce')" style="flex:1;font-size:12px">↗ SeLoger</button>
+              <button class="btn" onclick="publishTo('https://www.leboncoin.fr/deposer-annonce')" style="flex:1;font-size:12px">↗ LeBonCoin</button>
+              <button class="btn" onclick="publishTo('https://www.bienici.com')" style="flex:1;font-size:12px">↗ Bien'ici</button>
+            </div>
+            <div style="font-size:11px;color:#888;margin-top:6px;text-align:center">L'annonce est copiée automatiquement — collez-la sur la plateforme</div>
           </div>
         </div>
       </div>

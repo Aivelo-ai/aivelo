@@ -1,0 +1,9 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "node src/index.js"
+
+[[cron]]
+schedule = "0 9 * * *"
+command = "node -e \"require('./src/agents/relancesAgent').traiterRelances().then(r => console.log('Relances:', r))\""

@@ -753,6 +753,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
               <div><div class="panel-title" id="fiche-nom">—</div><div class="text-xs" id="fiche-id">—</div></div>
             </div>
             <span class="badge" id="fiche-statut-badge">—</span>
+            <select id="fiche-statut-select" onchange="updateStatut(this.value)" style="display:none;font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid #e0deda;background:#fff;cursor:pointer;font-weight:500;color:#555">
+              <option value="chaud">🔥 Chaud</option>
+              <option value="tiede">🌡️ Tiède</option>
+              <option value="froid">❄️ Froid</option>
+            </select>
           </div>
           <div class="form-grid" style="margin-bottom:0">
             <div><div class="text-xs">Type</div><div class="fw500 text-sm" id="fiche-type">—</div></div>
@@ -791,6 +796,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div class="timeline" id="fiche-timeline">
           <div class="timeline-item"><span class="timeline-time">Aujourd'hui</span><span class="timeline-text">Fiche créée via qualification IA</span></div>
         </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">Notes libres</div></div>
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <textarea id="note-input" placeholder="Ajouter une note sur ce contact…" style="flex:1;padding:8px 10px;border-radius:7px;border:1px solid #e0deda;font-size:13px;resize:none;height:64px;font-family:inherit;outline:none" onfocus="this.style.borderColor='#4F7EF7'" onblur="this.style.borderColor='#e0deda'"></textarea>
+          <button class="btn btn-primary btn-sm" onclick="saveNote()" style="align-self:flex-end;white-space:nowrap">+ Ajouter</button>
+        </div>
+        <div id="notes-list"><div class="text-xs" style="color:#aaa;text-align:center;padding:12px">Aucune note pour ce contact</div></div>
       </div>
     </div>
     <div class="pane" id="pane-settings">
@@ -1049,14 +1063,18 @@ async function loadContacts() {
 
 function openFiche(dataStr) {
   const l = JSON.parse(decodeURIComponent(dataStr));
+  _currentFicheId = l.id;
   const initials = l.nom.split(' ').map(p=>p[0]?.toUpperCase()||'').join('').slice(0,2);
   const badge = l.statut === 'chaud' ? 'badge-green' : l.statut === 'tiede' ? 'badge-amber' : 'badge-red';
   const label = l.statut === 'chaud' ? 'Chaud' : l.statut === 'tiede' ? 'Tiède' : 'Froid';
   document.getElementById('fiche-avatar').textContent = initials;
   document.getElementById('fiche-nom').textContent = l.nom;
   document.getElementById('fiche-id').textContent = 'CLI-' + l.id?.slice(0,6).toUpperCase();
-  document.getElementById('fiche-statut-badge').textContent = label;
-  document.getElementById('fiche-statut-badge').className = 'badge ' + badge;
+  // Badge statut → remplacé par select modifiable
+  document.getElementById('fiche-statut-badge').style.display = 'none';
+  const sel = document.getElementById('fiche-statut-select');
+  sel.style.display = 'inline-block';
+  sel.value = l.statut || 'froid';
   document.getElementById('fiche-type').textContent = 'Acheteur';
   document.getElementById('fiche-source').textContent = l.source || 'Non précisé';
   document.getElementById('fiche-budget').textContent = l.budget ? l.budget.toLocaleString('fr-FR')+'€' : '—';
@@ -1069,6 +1087,7 @@ function openFiche(dataStr) {
   document.getElementById('fiche-timeline').innerHTML = `
     <div class="timeline-item"><span class="timeline-time">${date}</span><span class="timeline-text">Lead qualifié IA — Score ${l.score} — ${label}</span></div>
     <div class="timeline-item"><span class="timeline-time">${date}</span><span class="timeline-text">Contact entrant — Projet : ${l.projet||'—'}</span></div>`;
+  loadNotes(l.id);
   goToPane('fiche');
 }
 
@@ -1351,7 +1370,12 @@ function switchTab(el, tab) {
   el.classList.add('active');
   document.getElementById('t-form').style.display = tab==='t-form' ? 'block' : 'none';
   document.getElementById('t-history').style.display = tab==='t-history' ? 'block' : 'none';
-  if(tab === 't-history') loadAnnonceHistory();
+  if(tab === 't-history') {
+    // Cacher le panneau annonce générée et la zone confirm
+    document.getElementById('annonce-result').style.display = 'none';
+    document.getElementById('confirm-pub-zone').style.display = 'none';
+    loadAnnonceHistory();
+  }
 }
 
 // ── Biens ─────────────────────────────────────────────────────────────────────
@@ -1409,7 +1433,67 @@ function saveBien() {
   document.getElementById('bien-form').style.display = 'none';
 }
 
-// ── Filtres ───────────────────────────────────────────────────────────────────
+// ── Statut modifiable ────────────────────────────────────────────────────────
+let _currentFicheId = null;
+
+async function updateStatut(newStatut) {
+  if(!_currentFicheId) return;
+  const { error } = await sb.from('leads').update({ statut: newStatut }).eq('id', _currentFicheId);
+  if(error) {
+    alert('Erreur mise à jour statut : ' + error.message);
+  } else {
+    // Feedback visuel rapide
+    const sel = document.getElementById('fiche-statut-select');
+    const colors = { chaud: '#2da82d', tiede: '#E9A020', froid: '#e05050' };
+    sel.style.borderColor = colors[newStatut] || '#e0deda';
+    setTimeout(() => sel.style.borderColor = '#e0deda', 1500);
+  }
+}
+
+// ── Notes libres ─────────────────────────────────────────────────────────────
+async function saveNote() {
+  const texte = document.getElementById('note-input').value.trim();
+  if(!texte || !_currentFicheId) return;
+
+  const { error } = await sb.from('contact_notes').insert({
+    lead_id: _currentFicheId,
+    texte: texte,
+    created_at: new Date().toISOString()
+  });
+
+  if(error) {
+    alert('Erreur sauvegarde note : ' + error.message);
+  } else {
+    document.getElementById('note-input').value = '';
+    loadNotes(_currentFicheId);
+  }
+}
+
+async function loadNotes(leadId) {
+  const container = document.getElementById('notes-list');
+  container.innerHTML = '<div class="text-xs" style="color:#aaa;text-align:center;padding:8px">Chargement…</div>';
+
+  const { data, error } = await sb.from('contact_notes')
+    .select('*')
+    .eq('lead_id', leadId)
+    .order('created_at', { ascending: false });
+
+  if(error || !data?.length) {
+    container.innerHTML = '<div class="text-xs" style="color:#aaa;text-align:center;padding:12px">Aucune note pour ce contact</div>';
+    return;
+  }
+
+  container.innerHTML = data.map(n => `
+    <div style="padding:9px 11px;background:#F9F8F5;border-radius:7px;margin-bottom:6px;border-left:3px solid #e0deda">
+      <div class="text-xs" style="color:#aaa;margin-bottom:4px">
+        <i class="ti ti-clock" style="font-size:10px"></i>
+        ${new Date(n.created_at).toLocaleDateString('fr-FR', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}
+      </div>
+      <div style="font-size:13px;color:#444;line-height:1.5">${n.texte}</div>
+    </div>`).join('');
+}
+
+
 function filterByType(type, el) {
   document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
   el.classList.add('active');

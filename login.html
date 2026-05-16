@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Aivelo — Connexion</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F5F4F0;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.card{background:#fff;border:1px solid #e8e6e0;border-radius:14px;padding:36px;width:100%;max-width:400px;box-shadow:0 4px 24px rgba(0,0,0,0.06)}
+.logo{text-align:center;margin-bottom:28px}
+.logo-text{font-size:24px;font-weight:700;color:#1a1a2e;letter-spacing:-0.5px}
+.logo-text span{color:#4F7EF7}
+.logo-sub{font-size:12px;color:#888;margin-top:4px;letter-spacing:1px;text-transform:uppercase}
+.tabs{display:flex;background:#F5F4F0;border-radius:8px;padding:3px;margin-bottom:24px}
+.tab{flex:1;padding:8px;text-align:center;font-size:13px;font-weight:500;cursor:pointer;border-radius:6px;color:#666;border:none;background:none}
+.tab.active{background:#fff;color:#1a1a2e;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:5px}
+.field input{width:100%;padding:10px 12px;border:1px solid #e0deda;border-radius:8px;font-size:13px;color:#1a1a1a;outline:none;transition:border 0.15s;font-family:inherit}
+.field input:focus{border-color:#4F7EF7}
+.btn{width:100%;padding:11px;background:#4F7EF7;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;margin-top:6px;transition:background 0.15s;font-family:inherit}
+.btn:hover{background:#3a6ae0}
+.btn:disabled{opacity:0.6;cursor:not-allowed}
+.msg{margin-top:12px;padding:10px;border-radius:8px;font-size:12px;text-align:center;display:none}
+.msg.error{background:#FFECEC;color:#a02020;display:block}
+.msg.success{background:#EAFFEA;color:#1a7a1a;display:block}
+.divider{text-align:center;font-size:12px;color:#aaa;margin:16px 0;position:relative}
+.divider::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:#e8e6e0}
+.divider span{background:#fff;padding:0 10px;position:relative}
+.footer{text-align:center;font-size:11px;color:#aaa;margin-top:20px}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <div class="logo-text">Aive<span>lo</span></div>
+    <div class="logo-sub">CRM Immobilier IA</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('login',this)">Connexion</button>
+    <button class="tab" onclick="showTab('signup',this)">Créer un compte</button>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="tab-login">
+    <div class="field"><label>Email</label><input id="login-email" type="email" placeholder="contact@agence.fr"/></div>
+    <div class="field"><label>Mot de passe</label><input id="login-pwd" type="password" placeholder="••••••••"/></div>
+    <button class="btn" id="login-btn" onclick="login()">Se connecter</button>
+    <div class="msg" id="login-msg"></div>
+  </div>
+
+  <!-- SIGNUP -->
+  <div id="tab-signup" style="display:none">
+    <div class="field"><label>Nom de l'agence</label><input id="signup-agence" placeholder="Agence Martineau"/></div>
+    <div class="field"><label>Email</label><input id="signup-email" type="email" placeholder="contact@agence.fr"/></div>
+    <div class="field"><label>Mot de passe</label><input id="signup-pwd" type="password" placeholder="8 caractères minimum"/></div>
+    <button class="btn" id="signup-btn" onclick="signup()">Créer mon compte</button>
+    <div class="msg" id="signup-msg"></div>
+  </div>
+
+  <div class="footer">En vous connectant, vous acceptez nos CGU · RGPD</div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://njaqvuqkchaaouyuyqao.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_pLk9dDRS1tA3tJCUqbv_XQ_fKjO8_xjU8_';
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+function showTab(tab, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-login').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('tab-signup').style.display = tab === 'signup' ? 'block' : 'none';
+}
+
+async function login() {
+  const email = document.getElementById('login-email').value.trim();
+  const pwd = document.getElementById('login-pwd').value;
+  const btn = document.getElementById('login-btn');
+  const msg = document.getElementById('login-msg');
+
+  if(!email || !pwd) { showMsg(msg, 'Remplissez tous les champs', 'error'); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Connexion…';
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pwd });
+
+  if(error) {
+    showMsg(msg, 'Email ou mot de passe incorrect', 'error');
+    btn.disabled = false;
+    btn.textContent = 'Se connecter';
+    return;
+  }
+
+  showMsg(msg, 'Connexion réussie — redirection…', 'success');
+  setTimeout(() => window.location.href = 'index.html', 1000);
+}
+
+async function signup() {
+  const agence = document.getElementById('signup-agence').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const pwd = document.getElementById('signup-pwd').value;
+  const btn = document.getElementById('signup-btn');
+  const msg = document.getElementById('signup-msg');
+
+  if(!agence || !email || !pwd) { showMsg(msg, 'Remplissez tous les champs', 'error'); return; }
+  if(pwd.length < 8) { showMsg(msg, 'Mot de passe minimum 8 caractères', 'error'); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Création…';
+
+  const { data, error } = await sb.auth.signUp({ email, password: pwd });
+
+  if(error) {
+    showMsg(msg, error.message, 'error');
+    btn.disabled = false;
+    btn.textContent = 'Créer mon compte';
+    return;
+  }
+
+  // Créer l'entrée agence
+  if(data.user) {
+    await sb.from('agencies').insert({
+      user_id: data.user.id,
+      nom: agence,
+      email: email,
+      plan: 'pro'
+    });
+  }
+
+  showMsg(msg, 'Compte créé ! Vérifiez votre email pour confirmer.', 'success');
+  btn.disabled = false;
+  btn.textContent = 'Créer mon compte';
+}
+
+function showMsg(el, text, type) {
+  el.textContent = text;
+  el.className = 'msg ' + type;
+}
+
+// Vérifier si déjà connecté
+sb.auth.getSession().then(({ data }) => {
+  if(data.session) window.location.href = 'index.html';
+});
+</script>
+</body>
+</html>

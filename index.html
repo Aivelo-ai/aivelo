@@ -946,16 +946,7 @@ async function loadMetrics() {
     const debut = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
 
     // Leads ce mois
-    const rLeads = await fetch(`${API}/api/qualify/health`, { headers: { 'x-api-key': API_KEY } });
-
-    // Appels directs Supabase via backend à créer — pour l'instant on charge les leads
-    const res = await fetch(`https://njaqvuqkchaaouyuyqao.supabase.co/rest/v1/leads?select=score,statut,created_at&created_at=gte.${debut}`, {
-      headers: {
-        'apikey': 'sb_publishable_pLk9dDRS1tA3tJCUqbv_XQ_fKjO8_xjU8_',
-        'Authorization': 'Bearer sb_publishable_pLk9dDRS1tA3tJCUqbv_XQ_fKjO8_xjU8_'
-      }
-    });
-    const leads = await res.json();
+    const { data: leads } = await sb.from('leads').select('*').gte('created_at', debut);
 
     if(Array.isArray(leads)) {
       document.getElementById('m-leads').textContent = leads.length;
@@ -965,12 +956,9 @@ async function loadMetrics() {
       const chauds = leads.filter(l => l.statut === 'chaud').length;
       document.getElementById('m-chaud').textContent = `${chauds} chaud${chauds > 1 ? 's' : ''}`;
       document.getElementById('m-leads-delta').textContent = `+${leads.length} ce mois`;
-
-      // Stats rapports
       if(document.getElementById('r-score-moyen')) document.getElementById('r-score-moyen').textContent = avg;
       updateStatsBars(leads);
 
-      // Tableau overview
       const tbody = document.getElementById('overview-leads');
       if(tbody && leads.length > 0) {
         tbody.innerHTML = leads.slice(0,5).map(l => {
@@ -981,7 +969,7 @@ async function loadMetrics() {
           return `<tr>
             <td class="name-cell">${l.nom || '—'}</td>
             <td><span class="badge badge-gray">Acheteur</span></td>
-            <td>${l.projet ? l.projet.substring(0,30) + (l.projet.length > 30 ? '…' : '') : '—'}</td>
+            <td>${l.projet ? l.projet.substring(0,30)+(l.projet.length>30?'…':'') : '—'}</td>
             <td><div class="score-wrap"><div class="score-bar"><div class="score-fill" style="width:${l.score||0}%;background:${color}"></div></div>${l.score||'—'}</div></td>
             <td><span class="badge ${badge}">${label}</span></td>
             <td class="text-xs">${date}</td>
@@ -991,17 +979,11 @@ async function loadMetrics() {
     }
 
     // Annonces
-    const resA = await fetch(`https://njaqvuqkchaaouyuyqao.supabase.co/rest/v1/annonces?select=id&created_at=gte.${debut}`, {
-      headers: { 'apikey': 'sb_publishable_pLk9dDRS1tA3tJCUqbv_XQ_fKjO8_xjU8_', 'Authorization': 'Bearer sb_publishable_pLk9dDRS1tA3tJCUqbv_XQ_fKjO8_xjU8_' }
-    });
-    const annonces = await resA.json();
+    const { data: annonces } = await sb.from('annonces').select('id').gte('created_at', debut);
     if(Array.isArray(annonces)) document.getElementById('m-annonces').textContent = annonces.length;
 
     // Relances
-    const resR = await fetch(`https://njaqvuqkchaaouyuyqao.supabase.co/rest/v1/relances?select=id,type_relance&sent_at=gte.${debut}`, {
-      headers: { 'apikey': 'sb_publishable_pLk9dDRS1tA3tJCUqbv_XQ_fKjO8_xjU8_', 'Authorization': 'Bearer sb_publishable_pLk9dDRS1tA3tJCUqbv_XQ_fKjO8_xjU8_' }
-    });
-    const relances = await resR.json();
+    const { data: relances } = await sb.from('relances').select('id,type_relance').gte('sent_at', debut);
     if(Array.isArray(relances)) {
       document.getElementById('m-relances').textContent = relances.length;
       if(document.getElementById('r-j1')) document.getElementById('r-j1').textContent = relances.filter(r=>r.type_relance==='j1').length;
@@ -1033,12 +1015,9 @@ function updateStatsBars(leads) {
 // ── Charger les contacts ──────────────────────────────────────────────────────
 async function loadContacts() {
   try {
-    const res = await fetch(`https://njaqvuqkchaaouyuyqao.supabase.co/rest/v1/leads?select=*&order=created_at.desc`, {
-      headers: { 'apikey': 'sb_publishable_pLk9dDRS1tA3tJCUqbv_XQ_fKjO8_xjU8_', 'Authorization': 'Bearer sb_publishable_pLk9dDRS1tA3tJCUqbv_XQ_fKjO8_xjU8_' }
-    });
-    const leads = await res.json();
+    const { data: leads, error } = await sb.from('leads').select('*').order('created_at', { ascending: false });
     const tbody = document.getElementById('contacts-tbody');
-    if(!Array.isArray(leads) || !leads.length) {
+    if(error || !Array.isArray(leads) || !leads.length) {
       tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">Aucun contact — qualifiez votre premier lead</div></td></tr>';
       return;
     }
@@ -1048,10 +1027,10 @@ async function loadContacts() {
       const color = l.statut === 'chaud' ? '#2da82d' : l.statut === 'tiede' ? '#E9A020' : '#e05050';
       const data = encodeURIComponent(JSON.stringify(l));
       return `<tr onclick="openFiche('${data}')" style="cursor:pointer">
-        <td class="name-cell">${l.nom}</td>
+        <td class="name-cell">${l.nom || '—'}</td>
         <td><span class="badge badge-blue">Acheteur</span></td>
         <td>${l.projet ? l.projet.substring(0,28)+'…' : '—'}</td>
-        <td>${l.budget ? l.budget.toLocaleString('fr-FR')+'€' : '—'}</td>
+        <td>${l.budget ? Number(l.budget).toLocaleString('fr-FR')+'€' : '—'}</td>
         <td><div class="score-wrap"><div class="score-bar"><div class="score-fill" style="width:${l.score||0}%;background:${color}"></div></div>${l.score||'—'}</div></td>
         <td><span class="badge ${badge}">${label}</span></td>
       </tr>`;
@@ -1094,21 +1073,18 @@ function openFiche(dataStr) {
 // ── Charger les relances ──────────────────────────────────────────────────────
 async function loadRelances() {
   try {
-    const res = await fetch(`https://njaqvuqkchaaouyuyqao.supabase.co/rest/v1/relances?select=*,leads(nom)&order=sent_at.desc`, {
-      headers: { 'apikey': 'sb_publishable_pLk9dDRS1tA3tJCUqbv_XQ_fKjO8_xjU8_', 'Authorization': 'Bearer sb_publishable_pLk9dDRS1tA3tJCUqbv_XQ_fKjO8_xjU8_' }
-    });
-    const relances = await res.json();
+    const { data: relances, error } = await sb.from('relances').select('*,leads(nom)').order('sent_at', { ascending: false });
     const tbody = document.getElementById('relances-tbody');
-    if(!Array.isArray(relances) || !relances.length) {
+    if(error || !Array.isArray(relances) || !relances.length) {
       tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state">Aucune relance envoyée — les relances J+1/J+7/J+14 apparaîtront ici</div></td></tr>';
       return;
     }
     tbody.innerHTML = relances.map(r => {
-      const date = new Date(r.sent_at).toLocaleDateString('fr-FR');
+      const date = r.sent_at ? new Date(r.sent_at).toLocaleDateString('fr-FR') : '—';
       const badge = r.type_relance === 'j1' ? 'badge-blue' : r.type_relance === 'j7' ? 'badge-amber' : 'badge-red';
       return `<tr>
         <td class="name-cell">${r.leads?.nom || '—'}</td>
-        <td><span class="badge ${badge}">${r.type_relance?.toUpperCase()}</span></td>
+        <td><span class="badge ${badge}">${r.type_relance?.toUpperCase() || '—'}</span></td>
         <td>${r.email_contenu ? r.email_contenu.substring(0,60)+'…' : '—'}</td>
         <td class="text-xs">${date}</td>
         <td><button class="btn btn-sm" onclick="alert('Contenu complet de la relance')">Voir</button></td>
@@ -1117,6 +1093,7 @@ async function loadRelances() {
   } catch(e) {
     console.error('Erreur relances:', e);
   }
+}
 }
 
 // ── Agent 1 — Qualification ───────────────────────────────────────────────────

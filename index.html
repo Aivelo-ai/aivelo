@@ -1104,9 +1104,10 @@ function setQualType(t) {
     bailleur:  { budget:'Loyer souhaité (€/mois)', projet:'Bien à louer', delai:'Disponibilité du bien', financement:'Régime fiscal (LMNP, nu...)', projetPH:'Appartement T3, Lyon 6e, disponible juin' },
   };
   const c = configs[t];
-  document.querySelector('label[for-type="budget"]')?.parentElement.querySelector('label').textContent = c.budget;
-  document.querySelector('label[for-type="projet"]')?.parentElement.querySelector('label').textContent = c.projet;
-
+const bl = document.querySelector('label[for-type="budget"]')?.parentElement.querySelector('label');
+if(bl) bl.textContent = c.budget;
+const pl = document.querySelector('label[for-type="projet"]')?.parentElement.querySelector('label');
+if(pl) pl.textContent = c.projet;
   // Mettre à jour les placeholders et labels dynamiquement
   const fields = {
     'q-budget': { label: c.budget, ph: t === 'locataire' ? '900' : t === 'bailleur' ? '1200' : '320000' },

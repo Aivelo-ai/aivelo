@@ -1013,6 +1013,8 @@ function updateStatsBars(leads) {
 }
 
 // ── Charger les contacts ──────────────────────────────────────────────────────
+let _leadsCache = [];
+
 async function loadContacts() {
   try {
     const { data: leads, error } = await sb.from('leads').select('*').order('created_at', { ascending: false });
@@ -1021,12 +1023,12 @@ async function loadContacts() {
       tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">Aucun contact — qualifiez votre premier lead</div></td></tr>';
       return;
     }
-    tbody.innerHTML = leads.map(l => {
+    _leadsCache = leads;
+    tbody.innerHTML = leads.map((l, i) => {
       const badge = l.statut === 'chaud' ? 'badge-green' : l.statut === 'tiede' ? 'badge-amber' : 'badge-red';
       const label = l.statut === 'chaud' ? 'Chaud' : l.statut === 'tiede' ? 'Tiède' : 'Froid';
       const color = l.statut === 'chaud' ? '#2da82d' : l.statut === 'tiede' ? '#E9A020' : '#e05050';
-      const data = encodeURIComponent(JSON.stringify(l));
-      return `<tr onclick="openFiche('${data}')" style="cursor:pointer">
+      return `<tr onclick="openFiche(${i})" style="cursor:pointer">
         <td class="name-cell">${l.nom || '—'}</td>
         <td><span class="badge badge-blue">Acheteur</span></td>
         <td>${l.projet ? l.projet.substring(0,28)+'…' : '—'}</td>
@@ -1040,8 +1042,9 @@ async function loadContacts() {
   }
 }
 
-function openFiche(dataStr) {
-  const l = JSON.parse(decodeURIComponent(dataStr));
+function openFiche(index) {
+  const l = _leadsCache[index];
+  if(!l) return;
   _currentFicheId = l.id;
   const initials = l.nom.split(' ').map(p=>p[0]?.toUpperCase()||'').join('').slice(0,2);
   const badge = l.statut === 'chaud' ? 'badge-green' : l.statut === 'tiede' ? 'badge-amber' : 'badge-red';
@@ -1094,6 +1097,7 @@ async function loadRelances() {
     console.error('Erreur relances:', e);
   }
 }
+
 // ── Agent 1 — Qualification ───────────────────────────────────────────────────
 let currentQualType = 'acheteur';
 function setQualType(t) {

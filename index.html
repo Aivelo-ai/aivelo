@@ -871,7 +871,15 @@ async function checkAuth() {
   }
 }
 
-checkAuth();
+window.addEventListener('DOMContentLoaded', () => {
+  if(typeof supabase === 'undefined') {
+    window.location.href = 'login.html';
+    return;
+  }
+  checkAuth();
+  loadMetrics();
+  selectPlatform('sl');
+});
 const API = 'https://aivelo-production.up.railway.app';
 const API_KEY = 'aivelo-2026-ArthurS-immo';
 
@@ -1335,13 +1343,6 @@ function filterRelances(type, el) {
   document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
   el.classList.add('active');
 }
-
-// ── Init ──────────────────────────────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', () => {
-  loadMetrics();
-  // Pré-sélectionner SeLoger
-  selectPlatform('sl');
-});
 </script>
 </body>
 </html>

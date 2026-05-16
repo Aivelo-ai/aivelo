@@ -601,11 +601,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <hr class="divider"/>
         <div class="section-label">Publier sur</div>
         <div style="display:flex;gap:8px">
-          <button class="btn" onclick="publishTo('https://www.seloger.com/deposer-annonce')" style="flex:1;font-size:11px">↗ SeLoger</button>
-          <button class="btn" onclick="publishTo('https://www.leboncoin.fr/deposer-annonce')" style="flex:1;font-size:11px">↗ LeBonCoin</button>
-          <button class="btn" onclick="publishTo('https://www.bienici.com')" style="flex:1;font-size:11px">↗ Bien'ici</button>
+          <button class="btn" onclick="publishTo('https://www.seloger.com/deposer-annonce','SeLoger')" style="flex:1;font-size:11px">↗ SeLoger</button>
+          <button class="btn" onclick="publishTo('https://www.leboncoin.fr/deposer-annonce','LeBonCoin')" style="flex:1;font-size:11px">↗ LeBonCoin</button>
+          <button class="btn" onclick="publishTo('https://www.bienici.com','Bien\'ici')" style="flex:1;font-size:11px">↗ Bien'ici</button>
         </div>
         <div class="text-xs" style="margin-top:6px;text-align:center">L'annonce est copiée automatiquement — collez-la sur la plateforme</div>
+
+        <div id="confirm-pub-zone" style="display:none;margin-top:12px;padding:12px;background:#F0F5FF;border-radius:8px;border:1px solid #c0d4ff">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <div>
+              <div style="font-size:12px;font-weight:600;color:#1a1a1a">Publication confirmée sur <span id="confirm-plt-name" style="color:#4F7EF7"></span> ?</div>
+              <div class="text-xs" style="margin-top:2px">Cliquez pour historiser dans Aivelo</div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="confirmerPublication()" id="confirm-pub-btn">✓ Confirmer la publication</button>
+          </div>
+          <div id="confirm-pub-success" style="display:none;font-size:12px;color:#2da82d;margin-top:8px;font-weight:500">✓ Publication enregistrée dans l'historique</div>
+        </div>
       </div>
     </div>
 
@@ -1263,9 +1274,75 @@ function copyAnnonce() {
   });
 }
 
-function publishTo(url) {
+let _currentPlatform = 'SeLoger';
+
+function publishTo(url, platform) {
+  _currentPlatform = platform;
   copyAnnonce();
   window.open(url, '_blank');
+  // Affiche la zone de confirmation
+  document.getElementById('confirm-plt-name').textContent = platform;
+  document.getElementById('confirm-pub-zone').style.display = 'block';
+  document.getElementById('confirm-pub-success').style.display = 'none';
+  const btn = document.getElementById('confirm-pub-btn');
+  btn.disabled = false;
+  btn.textContent = '✓ Confirmer la publication';
+}
+
+async function confirmerPublication() {
+  const texte = document.getElementById('annonce-out').innerText;
+  const btn = document.getElementById('confirm-pub-btn');
+  btn.disabled = true;
+  btn.textContent = 'Enregistrement…';
+
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    const agency_id = session?.user?.id || null;
+
+    const { error } = await sb.from('annonces').insert({
+      texte_annonce: texte,
+      plateforme: _currentPlatform,
+      publie_le: new Date().toISOString(),
+      agency_id: agency_id
+    });
+
+    if (error) throw error;
+
+    document.getElementById('confirm-pub-success').style.display = 'block';
+    btn.textContent = '✓ Confirmé';
+    loadAnnonceHistory();
+  } catch(err) {
+    btn.disabled = false;
+    btn.textContent = '✓ Confirmer la publication';
+    alert('Erreur enregistrement : ' + err.message);
+  }
+}
+
+async function loadAnnonceHistory() {
+  const { data, error } = await sb.from('annonces')
+    .select('*')
+    .order('publie_le', { ascending: false })
+    .limit(20);
+
+  const container = document.getElementById('t-history');
+  if (error || !data?.length) {
+    container.innerHTML = '<div class="empty-state">Aucune annonce publiée pour l\'instant</div>';
+    return;
+  }
+
+  const platColors = { 'SeLoger': 'badge-blue', 'LeBonCoin': 'badge-amber', "Bien'ici": 'badge-green' };
+
+  container.innerHTML = `
+    <table class="data-table">
+      <thead><tr><th>Plateforme</th><th>Aperçu annonce</th><th>Date de publication</th></tr></thead>
+      <tbody>${data.map(a => `
+        <tr>
+          <td><span class="badge ${platColors[a.plateforme] || 'badge-gray'}">${a.plateforme || '—'}</span></td>
+          <td style="max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#555">${(a.texte_annonce || '').substring(0, 90)}…</td>
+          <td class="text-sm">${a.publie_le ? new Date(a.publie_le).toLocaleDateString('fr-FR', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—'}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
 }
 
 // ── Tabs annonces ─────────────────────────────────────────────────────────────
@@ -1274,6 +1351,7 @@ function switchTab(el, tab) {
   el.classList.add('active');
   document.getElementById('t-form').style.display = tab==='t-form' ? 'block' : 'none';
   document.getElementById('t-history').style.display = tab==='t-history' ? 'block' : 'none';
+  if(tab === 't-history') loadAnnonceHistory();
 }
 
 // ── Biens ─────────────────────────────────────────────────────────────────────

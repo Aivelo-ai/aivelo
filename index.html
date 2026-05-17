@@ -36,9 +36,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .pipeline-step.active .pipeline-dot{box-shadow:0 0 0 3px #4F7EF720}
 .pipeline-label{font-size:10px;color:#555;text-align:center;font-weight:500;line-height:1.3}
 .pipeline-arrow{color:#e0deda;font-size:16px;padding:0 2px;margin-bottom:12px}
-.notaire-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
-.notaire-card{background:#F9F8F5;border-radius:8px;padding:12px;border:1px solid #e0deda}
-.notaire-card-title{font-size:11px;font-weight:600;color:#4F7EF7;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.notaire-badge{display:flex;align-items:center;gap:8px;background:#F9F8F5;border:1px solid #e0deda;border-radius:8px;padding:10px 14px;cursor:pointer;transition:all .15s;flex:1;min-width:200px}
+.notaire-badge:hover{border-color:#4F7EF7;background:#f0f4ff}
+.notaire-dot{font-size:10px;color:#ccc}
+.notaire-dot.green{color:#22c55e}
+.notaire-badge-label{font-size:12px;font-weight:600;color:#444}
+.notaire-badge-name{font-size:12px;color:#888;flex:1}
+.notaire-badge-name.filled{color:#222;font-weight:500}
+.notaire-loupe{font-size:14px;color:#4F7EF7;margin-left:auto}
+/* Modal notaire */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:2000;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:12px;padding:24px;width:420px;max-width:92vw;box-shadow:0 8px 32px rgba(0,0,0,0.15)}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.modal-title{font-size:15px;font-weight:700;color:#222}
+.modal-close{background:none;border:none;font-size:18px;color:#888;cursor:pointer;line-height:1}
+.modal-close:hover{color:#222}
 .main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
 /* ── Topbar ── */
 .topbar{background:#fff;border-bottom:1px solid #e8e6e0;padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:50}
@@ -431,27 +444,40 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <!-- Notaires -->
       <div class="panel">
         <div class="panel-header"><div class="panel-title">Notaires</div></div>
-        <div class="notaire-grid">
-          <div class="notaire-card">
-            <div class="notaire-card-title">🏠 Notaire vendeur</div>
-            <div class="form-grid" style="grid-template-columns:1fr">
-              <div class="form-field"><label>Nom</label><input id="fb-notaire-v-nom" placeholder="Me Dupont"></div>
-              <div class="form-field"><label>Cabinet</label><input id="fb-notaire-v-cabinet" placeholder="Dupont & Associés"></div>
-              <div class="form-field"><label>Email</label><input id="fb-notaire-v-email" placeholder="contact@notaire.fr"></div>
-              <div class="form-field"><label>Téléphone</label><input id="fb-notaire-v-tel" placeholder="04 78 ..."></div>
-            </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">
+          <div class="notaire-badge" onclick="ouvrirModalNotaire('vendeur')">
+            <span class="notaire-dot" id="dot-notaire-v">●</span>
+            <span class="notaire-badge-label">🏠 Vendeur</span>
+            <span class="notaire-badge-name" id="badge-v-nom">Non renseigné</span>
+            <span class="notaire-loupe">🔍</span>
           </div>
-          <div class="notaire-card">
-            <div class="notaire-card-title">🤝 Notaire acheteur</div>
-            <div class="form-grid" style="grid-template-columns:1fr">
-              <div class="form-field"><label>Nom</label><input id="fb-notaire-a-nom" placeholder="Me Martin"></div>
-              <div class="form-field"><label>Cabinet</label><input id="fb-notaire-a-cabinet" placeholder="Martin Notaires"></div>
-              <div class="form-field"><label>Email</label><input id="fb-notaire-a-email" placeholder="contact@martin-notaire.fr"></div>
-              <div class="form-field"><label>Téléphone</label><input id="fb-notaire-a-tel" placeholder="04 72 ..."></div>
-            </div>
+          <div class="notaire-badge" onclick="ouvrirModalNotaire('acheteur')">
+            <span class="notaire-dot" id="dot-notaire-a">●</span>
+            <span class="notaire-badge-label">🤝 Acheteur</span>
+            <span class="notaire-badge-name" id="badge-a-nom">Non renseigné</span>
+            <span class="notaire-loupe">🔍</span>
           </div>
         </div>
-        <button class="btn btn-primary btn-sm" style="margin-top:12px" onclick="saveNotaires()">💾 Sauvegarder notaires</button>
+      </div>
+
+      <!-- Modal Notaire -->
+      <div class="modal-overlay" id="modal-notaire">
+        <div class="modal-box">
+          <div class="modal-header">
+            <div class="modal-title" id="modal-notaire-title">Notaire vendeur</div>
+            <button class="modal-close" onclick="fermerModalNotaire()">✕</button>
+          </div>
+          <div class="form-grid" style="grid-template-columns:1fr">
+            <div class="form-field"><label>Nom</label><input id="mn-nom" placeholder="Me Dupont"></div>
+            <div class="form-field"><label>Cabinet</label><input id="mn-cabinet" placeholder="Dupont & Associés"></div>
+            <div class="form-field"><label>Email</label><input id="mn-email" placeholder="contact@notaire.fr"></div>
+            <div class="form-field"><label>Téléphone</label><input id="mn-tel" placeholder="04 78 ..."></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">
+            <button class="btn btn-sm" onclick="fermerModalNotaire()">Annuler</button>
+            <button class="btn btn-primary btn-sm" onclick="saveNotaireModal()">💾 Sauvegarder</button>
+          </div>
+        </div>
       </div>
 
       <!-- Documents -->
@@ -1602,30 +1628,67 @@ function filterRelances(type, el) {
   el.classList.add('active');
 }
 
-// ── Déconnexion ───────────────────────────────────────────────────────────────
+
+// ── Notaires ──────────────────────────────────────────────────────────────────
+let _notairesCache = { vendeur: {}, acheteur: {} };
+let _modalNotaireType = null;
+
 async function loadNotaires(bienId) {
+  _notairesCache = { vendeur: {}, acheteur: {} };
   const { data } = await sb.from('notaires').select('*').eq('bien_id', bienId);
-  if(!data?.length) return;
-  data.forEach(n => {
-    const prefix = n.type === 'vendeur' ? 'v' : 'a';
-    ['nom','cabinet','email','telephone'].forEach(f => {
-      const el = document.getElementById(`fb-notaire-${prefix}-${f === 'telephone' ? 'tel' : f}`);
-      if(el) el.value = n[f] || '';
-    });
-  });
-  
-}async function saveNotaires() {
-  if(!_currentBienId) return;
-  const notaires = [
-    { type:'vendeur', nom: document.getElementById('fb-notaire-v-nom').value, cabinet: document.getElementById('fb-notaire-v-cabinet').value, email: document.getElementById('fb-notaire-v-email').value, telephone: document.getElementById('fb-notaire-v-tel').value },
-    { type:'acheteur', nom: document.getElementById('fb-notaire-a-nom').value, cabinet: document.getElementById('fb-notaire-a-cabinet').value, email: document.getElementById('fb-notaire-a-email').value, telephone: document.getElementById('fb-notaire-a-tel').value },
-  ];
-  for(const n of notaires) {
-    if(!n.nom) continue;
-    await sb.from('notaires').upsert({ bien_id: _currentBienId, ...n }, { onConflict: 'bien_id,type' });
+  if (!data?.length) {
+    updateNotaireBadge('vendeur', {});
+    updateNotaireBadge('acheteur', {});
+    return;
   }
-  alert('✅ Notaires sauvegardés');
+  data.forEach(n => {
+    _notairesCache[n.type] = n;
+    updateNotaireBadge(n.type, n);
+  });
 }
+
+function updateNotaireBadge(type, n) {
+  const prefix = type === 'vendeur' ? 'v' : 'a';
+  const dot = document.getElementById(`dot-notaire-${prefix}`);
+  const nom = document.getElementById(`badge-${prefix}-nom`);
+  const filled = n?.nom;
+  if (dot) { dot.className = 'notaire-dot' + (filled ? ' green' : ''); }
+  if (nom) { nom.textContent = filled ? n.nom : 'Non renseigné'; nom.className = 'notaire-badge-name' + (filled ? ' filled' : ''); }
+}
+
+function ouvrirModalNotaire(type) {
+  _modalNotaireType = type;
+  const n = _notairesCache[type] || {};
+  document.getElementById('modal-notaire-title').textContent = type === 'vendeur' ? '🏠 Notaire vendeur' : '🤝 Notaire acheteur';
+  document.getElementById('mn-nom').value = n.nom || '';
+  document.getElementById('mn-cabinet').value = n.cabinet || '';
+  document.getElementById('mn-email').value = n.email || '';
+  document.getElementById('mn-tel').value = n.telephone || '';
+  document.getElementById('modal-notaire').classList.add('open');
+}
+
+function fermerModalNotaire() {
+  document.getElementById('modal-notaire').classList.remove('open');
+  _modalNotaireType = null;
+}
+
+async function saveNotaireModal() {
+  if (!_currentBienId || !_modalNotaireType) return;
+  const n = {
+    bien_id: _currentBienId,
+    type: _modalNotaireType,
+    nom: document.getElementById('mn-nom').value,
+    cabinet: document.getElementById('mn-cabinet').value,
+    email: document.getElementById('mn-email').value,
+    telephone: document.getElementById('mn-tel').value,
+  };
+  await sb.from('notaires').upsert(n, { onConflict: 'bien_id,type' });
+  _notairesCache[_modalNotaireType] = n;
+  updateNotaireBadge(_modalNotaireType, n);
+  fermerModalNotaire();
+  showToast('✅ Notaire sauvegardé');
+}
+
 
 async function uploadDocument(input) {
   if(!input.files?.[0] || !_currentBienId) return;

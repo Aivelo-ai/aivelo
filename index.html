@@ -1076,72 +1076,347 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
     <!-- ════════ FICHE CLIENT ════════ -->
     <div class="pane" id="pane-fiche">
-      <div style="margin-bottom:14px">
-        <button class="btn btn-sm" onclick="goToPane('contacts')">← Retour aux contacts</button>
-      </div>
-      <div class="two-col">
-        <div class="panel">
-          <div class="panel-header">
-            <div style="display:flex;align-items:center;gap:10px">
-              <div class="avatar" id="fiche-avatar" style="width:40px;height:40px;font-size:14px">?</div>
-              <div><div class="panel-title" id="fiche-nom">—</div><div class="text-xs" id="fiche-id">—</div></div>
-            </div>
-            <span class="badge" id="fiche-statut-badge">—</span>
-            <select id="fiche-statut-select" onchange="updateStatut(this.value)" style="display:none;font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid #e0deda;background:#fff;cursor:pointer;font-weight:500;color:#555">
-              <option value="chaud">🔥 Chaud</option>
-              <option value="tiede">🌡️ Tiède</option>
-              <option value="froid">❄️ Froid</option>
-            </select>
-          </div>
-          <div class="form-grid" style="margin-bottom:0">
-            <div><div class="text-xs">Type</div><div class="fw500 text-sm" id="fiche-type">—</div></div>
-            <div><div class="text-xs">Source</div><div class="fw500 text-sm" id="fiche-source">—</div></div>
-            <div><div class="text-xs">Budget</div><div class="fw500 text-sm" id="fiche-budget">—</div></div>
-            <div><div class="text-xs">Délai</div><div class="fw500 text-sm" id="fiche-delai">—</div></div>
-            <div><div class="text-xs">Financement</div><div class="fw500 text-sm" id="fiche-financement">—</div></div>
-            <div><div class="text-xs">Score IA</div><div class="fw500 text-sm" id="fiche-score">—</div></div>
-          </div>
-          <hr class="divider"/>
-          <div class="section-label">Projet</div>
-          <div class="text-sm" id="fiche-projet">—</div>
-          <hr class="divider"/>
-          <div class="section-label">Résumé IA</div>
-          <div class="text-sm" id="fiche-resume" style="line-height:1.6">—</div>
-        </div>
-        <div>
-          <div class="panel">
-            <div class="panel-header"><div class="panel-title">Documents</div><button class="btn btn-sm">+ Ajouter</button></div>
-            <div class="doc-row"><div class="doc-name"><i class="ti ti-x" style="color:#e05050"></i> Pièce d'identité</div><button class="btn btn-sm">Relancer</button></div>
-            <div class="doc-row"><div class="doc-name"><i class="ti ti-x" style="color:#e05050"></i> Fiches de salaire</div><button class="btn btn-sm">Relancer</button></div>
-            <div class="doc-row"><div class="doc-name"><i class="ti ti-x" style="color:#e05050"></i> Avis d'imposition</div><button class="btn btn-sm">Relancer</button></div>
-          </div>
-          <div class="panel">
-            <div class="panel-header"><div class="panel-title">Actions rapides</div></div>
-            <div style="display:flex;flex-direction:column;gap:6px">
-              <button class="btn" style="text-align:left" onclick="alert('Lien Calendly envoyé')"><i class="ti ti-calendar"></i> Envoyer lien Calendly</button>
-              <button class="btn" style="text-align:left" onclick="goToPane('annonces')"><i class="ti ti-file-text"></i> Générer une annonce</button>
-              <button class="btn" style="text-align:left" onclick="alert('Relance manuelle envoyée')"><i class="ti ti-send"></i> Relancer manuellement</button>
-            </div>
+
+      <!-- Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-sm" onclick="goToPane('contacts')">← Retour</button>
+          <div class="avatar" id="fiche-avatar" style="width:36px;height:36px;font-size:14px;flex-shrink:0">?</div>
+          <div>
+            <div style="font-size:16px;font-weight:600;color:#1a1a1a" id="fiche-nom">—</div>
+            <div style="font-size:11px;color:#888"><span id="fiche-id">—</span> · <span id="fiche-type">Acheteur</span> · Dernier échange : <span id="fiche-dernier-echange" style="color:#1a7a1a;font-weight:500">—</span></div>
           </div>
         </div>
-      </div>
-      <div class="panel">
-        <div class="panel-header"><div class="panel-title">Historique</div></div>
-        <div class="timeline" id="fiche-timeline">
-          <div class="timeline-item"><span class="timeline-time">Aujourd'hui</span><span class="timeline-text">Fiche créée via qualification IA</span></div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <select id="fiche-statut-select" onchange="updateStatut(this.value)" style="font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid #e0deda;background:#fff;cursor:pointer;font-weight:500;color:#555">
+            <option value="chaud">🔥 Chaud</option>
+            <option value="tiede">🌡️ Tiède</option>
+            <option value="froid">❄️ Froid</option>
+          </select>
+          <span class="badge badge-blue" id="fiche-score-badge">—/100</span>
         </div>
       </div>
 
-      <div class="panel">
-        <div class="panel-header"><div class="panel-title">Notes libres</div></div>
-        <div style="display:flex;gap:8px;margin-bottom:12px">
-          <textarea id="note-input" placeholder="Ajouter une note sur ce contact…" style="flex:1;padding:8px 10px;border-radius:7px;border:1px solid #e0deda;font-size:13px;resize:none;height:64px;font-family:inherit;outline:none" onfocus="this.style.borderColor='#4F7EF7'" onblur="this.style.borderColor='#e0deda'"></textarea>
+      <!-- Actions rapides -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+        <a id="fiche-tel-btn" href="#" class="btn btn-sm">📞 Appeler</a>
+        <a id="fiche-email-btn" href="#" class="btn btn-sm">✉️ Email</a>
+        <button class="btn btn-sm" style="border-color:#c5d4f8;color:#2a4eb5;background:#EEF3FF" onclick="envoyerCalendly()">📅 Planifier un appel</button>
+        <button class="btn btn-sm" style="border-color:#c5d4f8;color:#2a4eb5;background:#EEF3FF" onclick="envoyerLienCalendly()">🔗 Envoyer Calendly</button>
+        <button class="btn btn-sm" style="color:#aaa" title="Sprint 4">🌐 Portail client <span style="font-size:9px;background:#F5F4F0;padding:1px 5px;border-radius:4px">bientôt</span></button>
+      </div>
+
+      <!-- Import IA -->
+      <div class="import-ia-wrap" style="margin-bottom:14px">
+        <div class="import-ia-header" onclick="toggleImportIAContact()">
+          <div style="display:flex;align-items:center;gap:8px">
+            <i class="ti ti-sparkles" style="font-size:14px;color:#4F7EF7"></i>
+            <span style="font-size:12px;font-weight:600;color:#2a4eb5">Import intelligent IA</span>
+            <span style="font-size:11px;color:#4F7EF7;opacity:.8">— Email, document, copier-coller</span>
+          </div>
+          <span style="font-size:11px;color:#4F7EF7;font-weight:500" id="import-ia-contact-toggle-txt">Ouvrir</span>
+        </div>
+        <div class="import-ia-body" id="import-ia-contact-body">
+          <div class="import-modes">
+            <div class="import-mode active" id="cimode-upload" onclick="setImportModeContact('upload')">
+              <i class="ti ti-upload"></i>
+              <div class="import-mode-label">Téléverser</div>
+              <div class="import-mode-sub">PDF, photo, image</div>
+            </div>
+            <div class="import-mode" id="cimode-paste" onclick="setImportModeContact('paste')">
+              <i class="ti ti-clipboard-text"></i>
+              <div class="import-mode-label">Coller du texte</div>
+              <div class="import-mode-sub">Email, SMS, notes</div>
+            </div>
+            <div class="import-mode" id="cimode-scan" onclick="setImportModeContact('scan')">
+              <i class="ti ti-scan"></i>
+              <div class="import-mode-label">Scanner</div>
+              <div class="import-mode-sub">Photo document</div>
+            </div>
+          </div>
+          <div id="cimport-zone-upload">
+            <div class="import-dropzone" onclick="document.getElementById('cimport-file-input').click()">
+              <i class="ti ti-file-upload" style="font-size:26px;color:#4F7EF7;display:block;margin-bottom:8px"></i>
+              <div style="font-size:13px;font-weight:500;color:#1a1a1a;margin-bottom:4px">Glissez le document ici</div>
+              <div style="font-size:11px;color:#888">Email, fiche client, doc identité — PDF · JPG · PNG</div>
+              <input type="file" id="cimport-file-input" style="display:none" accept=".pdf,.jpg,.jpeg,.png" onchange="lancerImportIAContactFile(this)">
+            </div>
+          </div>
+          <div id="cimport-zone-paste" style="display:none">
+            <textarea id="cimport-paste-text" placeholder="Collez ici — email reçu, SMS, fiche papier retranscrite, notes d'appel…" style="width:100%;min-height:80px;border:1px solid #e8e6e0;border-radius:8px;padding:10px;font-size:13px;resize:vertical;box-sizing:border-box"></textarea>
+            <button class="btn btn-primary btn-sm" style="margin-top:8px" onclick="lancerImportIAContactTexte()">
+              <i class="ti ti-sparkles"></i> Analyser et remplir automatiquement
+            </button>
+          </div>
+          <div id="cimport-zone-scan" style="display:none">
+            <div class="import-dropzone" onclick="document.getElementById('cimport-scan-input').click()">
+              <i class="ti ti-camera" style="font-size:26px;color:#4F7EF7;display:block;margin-bottom:8px"></i>
+              <div style="font-size:13px;font-weight:500;color:#1a1a1a;margin-bottom:4px">Photographiez le document</div>
+              <div style="font-size:11px;color:#888">Pièce d'identité, document papier</div>
+              <input type="file" id="cimport-scan-input" style="display:none" accept="image/*" capture="environment" onchange="lancerImportIAContactFile(this)">
+            </div>
+          </div>
+          <div id="cimport-result" style="display:none;margin-top:12px">
+            <div style="display:flex;align-items:center;gap:6px;background:#EAFFEA;border:1px solid #b3eab3;border-radius:7px;padding:8px 12px;margin-bottom:10px">
+              <i class="ti ti-check" style="font-size:14px;color:#1a7a1a"></i>
+              <span style="font-size:12px;color:#1a7a1a;font-weight:500" id="cimport-result-count">Informations extraites</span>
+            </div>
+            <div style="font-size:10px;color:#aaa;font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Vérifiez avant de valider</div>
+            <div id="cimport-fields-list"></div>
+            <div style="display:flex;gap:8px;margin-top:10px">
+              <button class="btn btn-sm" onclick="resetImportIAContact()">Annuler</button>
+              <button class="btn btn-primary btn-sm" onclick="validerImportIAContact()">✓ Valider et remplir la fiche</button>
+            </div>
+          </div>
+          <div id="cimport-loading" style="display:none;text-align:center;padding:16px">
+            <div style="font-size:13px;color:#4F7EF7">⏳ Analyse en cours…</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Informations -->
+      <div class="fb-section" style="margin-bottom:10px">
+        <div class="fb-section-header" style="cursor:default">
+          <div class="fb-section-title">Informations</div>
+          <button class="btn btn-sm" onclick="editContactModal()"><i class="ti ti-pencil"></i> Modifier</button>
+        </div>
+        <div class="fb-section-body" style="padding-top:0">
+          <div class="fb-grid">
+            <div class="fb-card"><div class="fb-card-label">Email</div><div class="fb-card-val" id="fiche-email" style="font-size:12px;word-break:break-all">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Téléphone</div><div class="fb-card-val" id="fiche-telephone">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Source</div><div class="fb-card-val" id="fiche-source">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Budget</div><div class="fb-card-val blue" id="fiche-budget">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Délai</div><div class="fb-card-val" id="fiche-delai">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Financement</div><div class="fb-card-val" id="fiche-financement">—</div></div>
+          </div>
+          <div style="margin-top:10px;padding:10px;background:#F9F8F5;border-radius:8px">
+            <div class="fb-card-label" style="margin-bottom:4px">Résumé IA</div>
+            <div style="font-size:12px;color:#555;line-height:1.6" id="fiche-resume">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Biens liés (bulles) -->
+      <div class="fb-section" style="margin-bottom:10px">
+        <div class="fb-section-header" style="cursor:default">
+          <div class="fb-section-title">Biens liés</div>
+        </div>
+        <div class="fb-section-body" style="padding-top:0">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 12px;background:#F9F8F5;border-radius:8px;border:1px solid #f0ede8">
+            <span style="font-size:11px;color:#888;font-weight:500;margin-right:2px">Biens</span>
+            <div onclick="ouvrirPanelBiens('visites')" style="display:flex;align-items:center;gap:5px;background:#EAFFEA;border:1px solid #b3eab3;border-radius:20px;padding:4px 10px;cursor:pointer" id="bulle-visites">
+              <span style="width:6px;height:6px;border-radius:50%;background:#22c55e"></span>
+              <span style="font-size:11px;font-weight:600;color:#1a7a1a" id="count-visites">0 visité</span>
+            </div>
+            <div onclick="ouvrirPanelBiens('discussion')" style="display:flex;align-items:center;gap:5px;background:#FFF4E0;border:1px solid #fcd89a;border-radius:20px;padding:4px 10px;cursor:pointer" id="bulle-discussion">
+              <span style="width:6px;height:6px;border-radius:50%;background:#f59e0b"></span>
+              <span style="font-size:11px;font-weight:600;color:#a06010" id="count-discussion">0 en cours</span>
+            </div>
+            <div onclick="ouvrirPanelBiens('suggestions')" style="display:flex;align-items:center;gap:5px;background:#EEF3FF;border:1px solid #c5d4f8;border-radius:20px;padding:4px 10px;cursor:pointer" id="bulle-suggestions">
+              <span style="width:6px;height:6px;border-radius:50%;background:#4F7EF7"></span>
+              <span style="font-size:11px;font-weight:600;color:#2a4eb5" id="count-suggestions">0 suggestion IA</span>
+            </div>
+          </div>
+          <!-- Panel biens -->
+          <div id="panel-biens-contact" style="display:none;margin-top:10px;border:1px solid #e8e6e0;border-radius:8px;overflow:hidden">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#F9F8F5;border-bottom:1px solid #e8e6e0">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span id="panel-biens-dot" style="width:8px;height:8px;border-radius:50%;background:#22c55e"></span>
+                <span style="font-size:12px;font-weight:600;color:#1a1a1a" id="panel-biens-title">Biens visités</span>
+              </div>
+              <button onclick="document.getElementById('panel-biens-contact').style.display='none';document.getElementById('drawer-bien-contact').style.display='none'" style="font-size:13px;padding:2px 7px;border-radius:5px;border:1px solid #e0deda;background:#fff;color:#888;cursor:pointer">✕</button>
+            </div>
+            <div id="panel-biens-list" style="padding:10px;display:flex;flex-direction:column;gap:6px"></div>
+          </div>
+          <!-- Drawer bien -->
+          <div id="drawer-bien-contact" style="display:none;margin-top:8px;border:1px solid #c5d4f8;border-radius:8px;overflow:hidden;background:#fff">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#EEF3FF;border-bottom:1px solid #c5d4f8">
+              <div>
+                <div style="font-size:13px;font-weight:600;color:#1a1a1a" id="drawer-bien-ref">—</div>
+                <div style="font-size:11px;color:#888" id="drawer-bien-adresse">—</div>
+              </div>
+              <div style="display:flex;gap:5px;align-items:center">
+                <span id="drawer-bien-statut" style="font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500;background:#EAFFEA;color:#1a7a1a">—</span>
+                <button onclick="document.getElementById('drawer-bien-contact').style.display='none'" style="font-size:12px;padding:2px 7px;border-radius:5px;border:1px solid #c5d4f8;background:#fff;color:#888;cursor:pointer">✕</button>
+              </div>
+            </div>
+            <div style="padding:12px 14px">
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:7px;margin-bottom:12px" id="drawer-bien-infos"></div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <button class="btn btn-sm" style="border-color:#c5d4f8;color:#2a4eb5;background:#EEF3FF">📅 Planifier visite</button>
+                <button class="btn btn-sm">📋 Envoyer fiche</button>
+                <button class="btn btn-sm" style="color:#4F7EF7" onclick="ouvrirFicheBienDepuisContact()">🔗 Ouvrir dans le CRM →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contacts associés -->
+      <div class="fb-section">
+        <div class="fb-section-header" onclick="fbToggle('cassocies')">
+          <div class="fb-section-title">Contacts associés <span style="font-size:10px;color:#888;font-weight:400;text-transform:none;letter-spacing:0">— co-acheteur, conjoint, garant</span></div>
+          <i class="ti ti-chevron-down fb-chevron" id="chev-cassocies"></i>
+        </div>
+        <div class="fb-section-body" id="body-cassocies" style="display:none">
+          <div id="associes-list" style="margin-bottom:8px"></div>
+          <button class="btn btn-sm" style="width:100%;border-style:dashed;color:#aaa" onclick="showToast('Associer un contact — Sprint 4')">+ Associer un contact</button>
+        </div>
+      </div>
+
+      <!-- Critères de recherche -->
+      <div class="fb-section">
+        <div class="fb-section-header" onclick="fbToggle('ccriteres')">
+          <div class="fb-section-title">Critères de recherche</div>
+          <div style="display:flex;align-items:center;gap:6px" onclick="event.stopPropagation()">
+            <button class="btn btn-sm" onclick="editCriteresModal()"><i class="ti ti-pencil"></i></button>
+            <i class="ti ti-chevron-down fb-chevron" id="chev-ccriteres"></i>
+          </div>
+        </div>
+        <div class="fb-section-body" id="body-ccriteres" style="display:none">
+          <div class="fb-grid">
+            <div class="fb-card"><div class="fb-card-label">Type bien</div><div class="fb-card-val" id="fc-type-bien">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Budget max</div><div class="fb-card-val blue" id="fc-budget-max">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Surface min</div><div class="fb-card-val" id="fc-surface-min">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Pièces min</div><div class="fb-card-val" id="fc-pieces-min">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Secteur</div><div class="fb-card-val" id="fc-secteur">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Délai achat</div><div class="fb-card-val" id="fc-delai-achat">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Accord bancaire</div><div class="fb-card-val" id="fc-accord">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Critères imp.</div><div class="fb-card-val" id="fc-criteres" style="font-size:11px">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notaire acheteur -->
+      <div class="fb-section">
+        <div class="fb-section-header" onclick="fbToggle('cnotaire')">
+          <div class="fb-section-title">Notaire acheteur</div>
+          <i class="ti ti-chevron-down fb-chevron" id="chev-cnotaire"></i>
+        </div>
+        <div class="fb-section-body" id="body-cnotaire" style="display:none">
+          <div id="cnotaire-view" style="display:flex;align-items:center;gap:12px">
+            <div style="width:34px;height:34px;border-radius:50%;background:#EEF3FF;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#2a4eb5;flex-shrink:0" id="cnotaire-initials">—</div>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:500;color:#1a1a1a" id="cnotaire-nom">Non renseigné</div>
+              <div style="font-size:11px;color:#888;margin-top:1px" id="cnotaire-cabinet"></div>
+              <div style="font-size:11px;color:#4F7EF7;margin-top:1px" id="cnotaire-contact"></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:5px;flex-shrink:0">
+              <button onclick="toggleEditCNotaire()" class="btn btn-sm">✏️ Modifier</button>
+              <a id="cnotaire-email-btn" href="#" class="btn btn-sm" style="text-align:center;text-decoration:none;color:#4F7EF7">✉️ Email</a>
+            </div>
+          </div>
+          <div id="cnotaire-edit" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid #f0ede8">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+              <div class="form-field"><label>Nom</label><input id="cnotaire-input-nom" placeholder="Me Martin"></div>
+              <div class="form-field"><label>Cabinet</label><input id="cnotaire-input-cabinet" placeholder="Martin Notaires"></div>
+              <div class="form-field"><label>Email</label><input id="cnotaire-input-email" placeholder="contact@notaire.fr"></div>
+              <div class="form-field"><label>Téléphone</label><input id="cnotaire-input-tel" placeholder="04 72 ..."></div>
+            </div>
+            <div style="display:flex;gap:8px;justify-content:flex-end">
+              <button class="btn btn-sm" onclick="toggleEditCNotaire()">Annuler</button>
+              <button class="btn btn-primary btn-sm" onclick="saveCNotaire()">💾 Sauvegarder</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Documents dossier -->
+      <div class="fb-section">
+        <div class="fb-section-header" onclick="fbToggle('cdocs')">
+          <div class="fb-section-title">Documents dossier <span id="cdocs-badge"></span></div>
+          <i class="ti ti-chevron-down fb-chevron" id="chev-cdocs"></i>
+        </div>
+        <div class="fb-section-body" id="body-cdocs" style="display:none">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px">
+            <div class="fb-card" style="cursor:pointer" onclick="toggleDoc('identite')">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div class="fb-card-label">Doc. d'identité</div><span style="font-size:16px">🪪</span>
+              </div>
+              <div class="fb-card-val" id="doc-identite" style="font-size:11px;margin-top:4px">⏳ En attente</div>
+            </div>
+            <div class="fb-card" style="cursor:pointer" onclick="toggleDoc('salaire')">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div class="fb-card-label">Bulletins de salaire</div><span style="font-size:16px">📄</span>
+              </div>
+              <div class="fb-card-val" id="doc-salaire" style="font-size:11px;margin-top:4px">⏳ En attente</div>
+            </div>
+            <div class="fb-card" style="cursor:pointer" onclick="toggleDoc('impots')">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div class="fb-card-label">Avis d'imposition</div><span style="font-size:16px">📋</span>
+              </div>
+              <div class="fb-card-val" id="doc-impots" style="font-size:11px;margin-top:4px">⏳ En attente</div>
+            </div>
+            <div class="fb-card" style="cursor:pointer" onclick="toggleDoc('banque')">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div class="fb-card-label">Accord bancaire</div><span style="font-size:16px">🏦</span>
+              </div>
+              <div class="fb-card-val" id="doc-banque" style="font-size:11px;margin-top:4px">⏳ En attente</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes & Échanges -->
+      <div class="panel" style="margin-top:10px">
+        <div class="panel-header">
+          <div class="panel-title">Notes & Échanges</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+          <span class="badge badge-gray" style="cursor:pointer" onclick="filtrerNotes('tous')" id="filter-tous">Tout</span>
+          <span class="badge" style="cursor:pointer;background:#F5F4F0;color:#666" onclick="filtrerNotes('appel')" id="filter-appel">📞 Appels</span>
+          <span class="badge" style="cursor:pointer;background:#F5F4F0;color:#666" onclick="filtrerNotes('email')" id="filter-email">✉️ Emails</span>
+          <span class="badge" style="cursor:pointer;background:#F5F4F0;color:#666" onclick="filtrerNotes('note')" id="filter-note">📝 Notes</span>
+          <span class="badge" style="cursor:pointer;background:#F5F4F0;color:#666" onclick="filtrerNotes('notaire')" id="filter-notaire">🏛️ Notaire</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+          <select id="note-type-select" style="font-size:12px;padding:6px 10px;border:1px solid #e0deda;border-radius:7px;background:#fff;color:#555">
+            <option value="note">📝 Note</option>
+            <option value="appel">📞 Appel</option>
+            <option value="email">✉️ Email</option>
+            <option value="notaire">🏛️ Notaire</option>
+          </select>
+          <textarea id="note-input" placeholder="Ajouter une note, un appel, un échange notaire…" style="flex:1;min-width:200px;padding:8px 10px;border-radius:7px;border:1px solid #e0deda;font-size:13px;resize:none;height:56px;font-family:inherit;outline:none"></textarea>
           <button class="btn btn-primary btn-sm" onclick="saveNote()" style="align-self:flex-end;white-space:nowrap">+ Ajouter</button>
         </div>
-        <div id="notes-list"><div class="text-xs" style="color:#aaa;text-align:center;padding:12px">Aucune note pour ce contact</div></div>
+        <div id="notes-list"><div class="text-xs" style="color:#aaa;text-align:center;padding:12px">Aucun échange pour ce contact</div></div>
       </div>
+
+      <!-- Modal critères -->
+      <div class="modal-overlay" id="modal-criteres">
+        <div class="modal-box" style="width:500px">
+          <div class="modal-header">
+            <div class="modal-title">Critères de recherche</div>
+            <button class="modal-close" onclick="document.getElementById('modal-criteres').classList.remove('open')">✕</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="form-field"><label>Type de bien</label><input id="cr-type-bien" placeholder="Appartement, Maison…"></div>
+            <div class="form-field"><label>Budget max (€)</label><input id="cr-budget-max" type="number" placeholder="350000"></div>
+            <div class="form-field"><label>Surface min (m²)</label><input id="cr-surface-min" type="number" placeholder="60"></div>
+            <div class="form-field"><label>Pièces min</label><input id="cr-pieces-min" placeholder="3P"></div>
+            <div class="form-field"><label>Secteur / Ville</label><input id="cr-secteur" placeholder="Chartrons, Bordeaux"></div>
+            <div class="form-field"><label>Délai d'achat</label><input id="cr-delai-achat" placeholder="< 3 mois"></div>
+            <div class="form-field"><label>Accord bancaire</label>
+              <select id="cr-accord" style="width:100%;padding:8px 10px;border:1px solid #e0deda;border-radius:7px;font-size:13px">
+                <option value="">Non précisé</option>
+                <option value="Oui">Oui</option>
+                <option value="Non">Non</option>
+                <option value="En cours">En cours</option>
+              </select>
+            </div>
+            <div class="form-field"><label>Critères importants</label><input id="cr-criteres" placeholder="Parking, balcon, jardin…"></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">
+            <button class="btn btn-sm" onclick="document.getElementById('modal-criteres').classList.remove('open')">Annuler</button>
+            <button class="btn btn-primary btn-sm" onclick="saveCriteres()">💾 Sauvegarder</button>
+          </div>
+        </div>
+      </div>
+
     </div>
-    <div class="pane" id="pane-settings">
+
+
+        <div class="pane" id="pane-settings">
       <div class="two-col">
         <div class="panel">
           <div class="panel-header"><div class="panel-title">Informations agence</div></div>
@@ -1382,31 +1657,415 @@ function openFiche(index) {
   const l = _leadsCache[index];
   if(!l) return;
   _currentFicheId = l.id;
+  const d = l.details || {};
+
+  // Header
   const initials = l.nom.split(' ').map(p=>p[0]?.toUpperCase()||'').join('').slice(0,2);
-  const badge = l.statut === 'chaud' ? 'badge-green' : l.statut === 'tiede' ? 'badge-amber' : 'badge-red';
-  const label = l.statut === 'chaud' ? 'Chaud' : l.statut === 'tiede' ? 'Tiède' : 'Froid';
   document.getElementById('fiche-avatar').textContent = initials;
   document.getElementById('fiche-nom').textContent = l.nom;
   document.getElementById('fiche-id').textContent = 'CLI-' + l.id?.slice(0,6).toUpperCase();
-  // Badge statut → remplacé par select modifiable
-  document.getElementById('fiche-statut-badge').style.display = 'none';
-  const sel = document.getElementById('fiche-statut-select');
-  sel.style.display = 'inline-block';
-  sel.value = l.statut || 'froid';
-  document.getElementById('fiche-type').textContent = 'Acheteur';
-  document.getElementById('fiche-source').textContent = l.source || 'Non précisé';
-  document.getElementById('fiche-budget').textContent = l.budget ? l.budget.toLocaleString('fr-FR')+'€' : '—';
+  document.getElementById('fiche-type').textContent = l.type || 'Acheteur';
+  document.getElementById('fiche-score-badge').textContent = (l.score||'—') + '/100';
+  document.getElementById('fiche-statut-select').value = l.statut || 'froid';
+
+  // Dernier échange
+  const dernierEchange = d.dernier_echange || (l.created_at ? new Date(l.created_at).toLocaleDateString('fr-FR') : '—');
+  document.getElementById('fiche-dernier-echange').textContent = dernierEchange;
+
+  // Actions rapides
+  const telBtn = document.getElementById('fiche-tel-btn');
+  const emailBtn = document.getElementById('fiche-email-btn');
+  telBtn.href = l.telephone ? 'tel:'+l.telephone : '#';
+  emailBtn.href = l.email ? 'mailto:'+l.email : '#';
+
+  // Informations
+  document.getElementById('fiche-email').textContent = l.email || '—';
+  document.getElementById('fiche-telephone').textContent = l.telephone || '—';
+  document.getElementById('fiche-source').textContent = l.source || '—';
+  document.getElementById('fiche-budget').textContent = l.budget ? Number(l.budget).toLocaleString('fr-FR')+'€' : '—';
   document.getElementById('fiche-delai').textContent = l.delai || '—';
   document.getElementById('fiche-financement').textContent = l.financement || '—';
-  document.getElementById('fiche-score').textContent = (l.score||'—') + '/100';
-  document.getElementById('fiche-projet').textContent = l.projet || '—';
-  document.getElementById('fiche-resume').textContent = l.resume || 'Résumé non disponible';
-  const date = l.created_at ? new Date(l.created_at).toLocaleDateString('fr-FR') : 'Aujourd\'hui';
-  document.getElementById('fiche-timeline').innerHTML = `
-    <div class="timeline-item"><span class="timeline-time">${date}</span><span class="timeline-text">Lead qualifié IA — Score ${l.score} — ${label}</span></div>
-    <div class="timeline-item"><span class="timeline-time">${date}</span><span class="timeline-text">Contact entrant — Projet : ${l.projet||'—'}</span></div>`;
+  document.getElementById('fiche-resume').textContent = l.resume || '—';
+
+  // Critères de recherche
+  document.getElementById('fc-type-bien').textContent = d.type_bien_recherche || '—';
+  document.getElementById('fc-budget-max').textContent = d.budget_max ? Number(d.budget_max).toLocaleString('fr-FR')+'€' : '—';
+  document.getElementById('fc-surface-min').textContent = d.surface_min ? d.surface_min+' m²' : '—';
+  document.getElementById('fc-pieces-min').textContent = d.pieces_min || '—';
+  document.getElementById('fc-secteur').textContent = d.secteur || '—';
+  document.getElementById('fc-delai-achat').textContent = d.delai_achat || l.delai || '—';
+  document.getElementById('fc-accord').textContent = d.accord_bancaire || (l.financement ? l.financement : '—');
+  document.getElementById('fc-criteres').textContent = d.criteres_importants || '—';
+
+  // Notaire acheteur
+  const cn = d.notaire_acheteur || {};
+  const cnNom = cn.nom || '';
+  document.getElementById('cnotaire-initials').textContent = cnNom ? cnNom.split(' ').filter(Boolean).map(x=>x[0]).join('').slice(0,2).toUpperCase() : '—';
+  document.getElementById('cnotaire-nom').textContent = cnNom || 'Non renseigné';
+  document.getElementById('cnotaire-cabinet').textContent = cn.cabinet || '';
+  document.getElementById('cnotaire-contact').textContent = [cn.email, cn.telephone].filter(Boolean).join(' · ');
+  document.getElementById('cnotaire-email-btn').href = cn.email ? 'mailto:'+cn.email : '#';
+  document.getElementById('cnotaire-input-nom').value = cn.nom || '';
+  document.getElementById('cnotaire-input-cabinet').value = cn.cabinet || '';
+  document.getElementById('cnotaire-input-email').value = cn.email || '';
+  document.getElementById('cnotaire-input-tel').value = cn.telephone || '';
+
+  // Documents
+  const docs = d.docs || {};
+  const docStatus = (key) => docs[key] ? '<span style="color:#1a7a1a">✅ Reçu</span>' : '<span style="color:#a06010">⏳ En attente</span>';
+  document.getElementById('doc-identite').innerHTML = docStatus('identite');
+  document.getElementById('doc-salaire').innerHTML = docStatus('salaire');
+  document.getElementById('doc-impots').innerHTML = docStatus('impots');
+  document.getElementById('doc-banque').innerHTML = docStatus('banque');
+  const docsCount = Object.values(docs).filter(Boolean).length;
+  document.getElementById('cdocs-badge').innerHTML = docsCount > 0 ? `<span class="badge badge-green" style="font-size:9px;padding:2px 6px">${docsCount}/4</span>` : '';
+
+  // Biens liés (depuis details)
+  const biensList = d.biens_lies || { visites: [], discussion: [], suggestions: [] };
+  document.getElementById('count-visites').textContent = biensList.visites.length + ' visité' + (biensList.visites.length > 1 ? 's' : '');
+  document.getElementById('count-discussion').textContent = biensList.discussion.length + ' en cours';
+  document.getElementById('count-suggestions').textContent = biensList.suggestions.length + ' suggestion' + (biensList.suggestions.length > 1 ? 's' : '') + ' IA';
+  window._currentBiensLies = biensList;
+
+  // Reset panels
+  document.getElementById('panel-biens-contact').style.display = 'none';
+  document.getElementById('drawer-bien-contact').style.display = 'none';
+  resetImportIAContact();
+
   loadNotes(l.id);
   goToPane('fiche');
+}
+
+// ── Biens liés ────────────────────────────────────────────────────────────────
+const PANEL_CONFIG = {
+  visites:     { title:'Biens visités',           dot:'#22c55e' },
+  discussion:  { title:'En discussion / Offres',  dot:'#f59e0b' },
+  suggestions: { title:'Suggestions IA',          dot:'#4F7EF7' }
+};
+
+function ouvrirPanelBiens(type) {
+  const cfg = PANEL_CONFIG[type];
+  const biens = (window._currentBiensLies || {})[type] || [];
+  document.getElementById('panel-biens-title').textContent = cfg.title;
+  document.getElementById('panel-biens-dot').style.background = cfg.dot;
+  document.getElementById('drawer-bien-contact').style.display = 'none';
+
+  if (!biens.length) {
+    document.getElementById('panel-biens-list').innerHTML = '<div class="empty-state">Aucun bien dans cette catégorie</div>';
+  } else {
+    const colors = { green:'#22c55e', amber:'#f59e0b', blue:'#4F7EF7', gray:'#ccc' };
+    document.getElementById('panel-biens-list').innerHTML = biens.map(b => `
+      <div onclick="ouvrirDrawerBien(${JSON.stringify(b).replace(/"/g,'&quot;')})"
+        style="display:flex;align-items:center;gap:10px;padding:9px 11px;background:#F9F8F5;border-radius:8px;border:1px solid #f0ede8;cursor:pointer"
+        onmouseover="this.style.borderColor='#4F7EF7'" onmouseout="this.style.borderColor='#f0ede8'">
+        <span style="width:7px;height:7px;border-radius:50%;background:${colors[b.color||'gray']};flex-shrink:0"></span>
+        <div style="flex:1">
+          <div style="font-size:12px;font-weight:500;color:#1a1a1a">${b.ref} · ${b.adresse||''}</div>
+          <div style="font-size:10px;color:#888;margin-top:2px">${b.type||''} ${b.prix?'· '+b.prix:''} ${b.date?'· '+b.date:''}</div>
+          ${b.note?`<div style="font-size:10px;color:#555;font-style:italic;margin-top:2px">"${b.note}"</div>`:''}
+        </div>
+        ${b.match?`<span style="font-size:10px;font-weight:600;background:#EEF3FF;color:#2a4eb5;padding:2px 8px;border-radius:20px">${b.match}</span>`:''}
+        <span style="font-size:13px;color:#4F7EF7">→</span>
+      </div>`).join('');
+  }
+  document.getElementById('panel-biens-contact').style.display = 'block';
+}
+
+function ouvrirDrawerBien(b) {
+  document.getElementById('drawer-bien-ref').textContent = b.ref || '—';
+  document.getElementById('drawer-bien-adresse').textContent = b.adresse || '—';
+  const s = document.getElementById('drawer-bien-statut');
+  s.textContent = b.statut || '—';
+  const infos = [['Type', b.type], ['Prix', b.prix], ['Date visite', b.date], ['Match IA', b.match], ['Note', b.note]].filter(([,v])=>v);
+  document.getElementById('drawer-bien-infos').innerHTML = infos.map(([l,v])=>`
+    <div class="fb-card"><div class="fb-card-label">${l}</div><div class="fb-card-val" style="font-size:11px">${v}</div></div>`).join('');
+  window._drawerBienRef = b.ref;
+  document.getElementById('drawer-bien-contact').style.display = 'block';
+}
+
+function ouvrirFicheBienDepuisContact() {
+  const ref = window._drawerBienRef;
+  if (!ref) return;
+  const idx = _biensCache.findIndex(b => b.reference === ref);
+  if (idx >= 0) openFicheBien(idx);
+  else showToast('Bien non trouvé dans le CRM');
+}
+
+// ── Notaire acheteur (fiche contact) ─────────────────────────────────────────
+function toggleEditCNotaire() {
+  const view = document.getElementById('cnotaire-view');
+  const edit = document.getElementById('cnotaire-edit');
+  const isEdit = edit.style.display === 'block';
+  view.style.display = isEdit ? 'flex' : 'none';
+  edit.style.display = isEdit ? 'none' : 'block';
+}
+
+async function saveCNotaire() {
+  if (!_currentFicheId) return;
+  const l = _leadsCache.find(x => x.id === _currentFicheId);
+  if (!l) return;
+  const cn = {
+    nom: document.getElementById('cnotaire-input-nom').value,
+    cabinet: document.getElementById('cnotaire-input-cabinet').value,
+    email: document.getElementById('cnotaire-input-email').value,
+    telephone: document.getElementById('cnotaire-input-tel').value,
+  };
+  const details = { ...(l.details||{}), notaire_acheteur: cn };
+  await sb.from('leads').update({ details }).eq('id', _currentFicheId);
+  l.details = details;
+  document.getElementById('cnotaire-nom').textContent = cn.nom || 'Non renseigné';
+  document.getElementById('cnotaire-cabinet').textContent = cn.cabinet || '';
+  document.getElementById('cnotaire-contact').textContent = [cn.email, cn.telephone].filter(Boolean).join(' · ');
+  const initials = cn.nom ? cn.nom.split(' ').filter(Boolean).map(x=>x[0]).join('').slice(0,2).toUpperCase() : '—';
+  document.getElementById('cnotaire-initials').textContent = initials;
+  toggleEditCNotaire();
+  showToast('✅ Notaire sauvegardé');
+}
+
+// ── Documents dossier ─────────────────────────────────────────────────────────
+async function toggleDoc(key) {
+  if (!_currentFicheId) return;
+  const l = _leadsCache.find(x => x.id === _currentFicheId);
+  if (!l) return;
+  const docs = { ...(l.details?.docs || {}) };
+  docs[key] = !docs[key];
+  const details = { ...(l.details||{}), docs };
+  await sb.from('leads').update({ details }).eq('id', _currentFicheId);
+  l.details = details;
+  const el = document.getElementById('doc-'+key);
+  el.innerHTML = docs[key] ? '<span style="color:#1a7a1a">✅ Reçu</span>' : '<span style="color:#a06010">⏳ En attente</span>';
+  const count = Object.values(docs).filter(Boolean).length;
+  document.getElementById('cdocs-badge').innerHTML = count > 0 ? `<span class="badge badge-green" style="font-size:9px;padding:2px 6px">${count}/4</span>` : '';
+  showToast(docs[key] ? '✅ Document marqué reçu' : 'Document remis en attente');
+}
+
+// ── Critères de recherche ─────────────────────────────────────────────────────
+function editCriteresModal() {
+  if (!_currentFicheId) return;
+  const l = _leadsCache.find(x => x.id === _currentFicheId);
+  const d = l?.details || {};
+  document.getElementById('cr-type-bien').value = d.type_bien_recherche || '';
+  document.getElementById('cr-budget-max').value = d.budget_max || '';
+  document.getElementById('cr-surface-min').value = d.surface_min || '';
+  document.getElementById('cr-pieces-min').value = d.pieces_min || '';
+  document.getElementById('cr-secteur').value = d.secteur || '';
+  document.getElementById('cr-delai-achat').value = d.delai_achat || '';
+  document.getElementById('cr-accord').value = d.accord_bancaire || '';
+  document.getElementById('cr-criteres').value = d.criteres_importants || '';
+  document.getElementById('modal-criteres').classList.add('open');
+}
+
+async function saveCriteres() {
+  if (!_currentFicheId) return;
+  const l = _leadsCache.find(x => x.id === _currentFicheId);
+  if (!l) return;
+  const criteres = {
+    type_bien_recherche: document.getElementById('cr-type-bien').value,
+    budget_max: document.getElementById('cr-budget-max').value,
+    surface_min: document.getElementById('cr-surface-min').value,
+    pieces_min: document.getElementById('cr-pieces-min').value,
+    secteur: document.getElementById('cr-secteur').value,
+    delai_achat: document.getElementById('cr-delai-achat').value,
+    accord_bancaire: document.getElementById('cr-accord').value,
+    criteres_importants: document.getElementById('cr-criteres').value,
+  };
+  const details = { ...(l.details||{}), ...criteres };
+  await sb.from('leads').update({ details }).eq('id', _currentFicheId);
+  l.details = details;
+  document.getElementById('fc-type-bien').textContent = criteres.type_bien_recherche || '—';
+  document.getElementById('fc-budget-max').textContent = criteres.budget_max ? Number(criteres.budget_max).toLocaleString('fr-FR')+'€' : '—';
+  document.getElementById('fc-surface-min').textContent = criteres.surface_min ? criteres.surface_min+' m²' : '—';
+  document.getElementById('fc-pieces-min').textContent = criteres.pieces_min || '—';
+  document.getElementById('fc-secteur').textContent = criteres.secteur || '—';
+  document.getElementById('fc-delai-achat').textContent = criteres.delai_achat || '—';
+  document.getElementById('fc-accord').textContent = criteres.accord_bancaire || '—';
+  document.getElementById('fc-criteres').textContent = criteres.criteres_importants || '—';
+  document.getElementById('modal-criteres').classList.remove('open');
+  showToast('✅ Critères sauvegardés');
+}
+
+// ── Actions rapides contact ───────────────────────────────────────────────────
+async function envoyerCalendly() {
+  const { data: agency } = await sb.from('agencies').select('calendly_url').single();
+  const url = agency?.calendly_url;
+  if (url) window.open(url, '_blank');
+  else showToast('⚠️ Lien Calendly non configuré — vérifiez vos Paramètres');
+}
+
+async function envoyerLienCalendly() {
+  const { data: agency } = await sb.from('agencies').select('calendly_url').single();
+  const url = agency?.calendly_url;
+  const l = _leadsCache.find(x => x.id === _currentFicheId);
+  if (!url) { showToast('⚠️ Lien Calendly non configuré'); return; }
+  if (l?.email) {
+    showToast('📅 Lien Calendly copié — envoyez-le par email à ' + l.email);
+    await navigator.clipboard.writeText(url).catch(()=>{});
+  } else {
+    showToast('⚠️ Email du contact manquant');
+  }
+}
+
+function editContactModal() {
+  showToast('💡 Modifiez les infos via l'Agent 1 Qualification ou l'Import IA');
+}
+
+// ── Import IA Contact ─────────────────────────────────────────────────────────
+let _cImportedData = {};
+
+function toggleImportIAContact() {
+  const body = document.getElementById('import-ia-contact-body');
+  const txt = document.getElementById('import-ia-contact-toggle-txt');
+  const open = body.style.display === 'block';
+  body.style.display = open ? 'none' : 'block';
+  txt.textContent = open ? 'Ouvrir' : 'Fermer';
+}
+
+function setImportModeContact(mode) {
+  ['upload','paste','scan'].forEach(m => {
+    document.getElementById('cimode-'+m).classList.toggle('active', m === mode);
+    document.getElementById('cimport-zone-'+m).style.display = m === mode ? 'block' : 'none';
+  });
+  document.getElementById('cimport-result').style.display = 'none';
+}
+
+const CIMPORT_LABELS = {
+  nom:'Nom', email:'Email', telephone:'Téléphone', source:'Source',
+  type_bien_recherche:'Type bien recherché', budget_max:'Budget max',
+  surface_min:'Surface min', pieces_min:'Pièces min', secteur:'Secteur',
+  delai_achat:'Délai achat', accord_bancaire:'Accord bancaire', criteres_importants:'Critères importants',
+  notaire_nom:'Notaire - Nom', notaire_cabinet:'Notaire - Cabinet',
+  notaire_email:'Notaire - Email', notaire_tel:'Notaire - Tél'
+};
+
+const CIMPORT_PROMPT = `Tu es un expert immobilier. Analyse ce contenu et extrais les informations sur l'acheteur / candidat.
+Réponds UNIQUEMENT en JSON valide sans markdown, avec les champs disponibles parmi :
+{
+  "nom": "", "email": "", "telephone": "", "source": "",
+  "type_bien_recherche": "", "budget_max": "", "surface_min": "", "pieces_min": "",
+  "secteur": "", "delai_achat": "", "accord_bancaire": "", "criteres_importants": "",
+  "notaire_nom": "", "notaire_cabinet": "", "notaire_email": "", "notaire_tel": ""
+}
+N'inclus que les champs trouvés. Laisse vide si non trouvé.`;
+
+async function lancerImportIAContactFile(input) {
+  const file = input.files?.[0];
+  if (!file) return;
+  document.getElementById('cimport-zone-upload').style.display = 'none';
+  document.getElementById('cimport-zone-scan').style.display = 'none';
+  document.getElementById('cimport-loading').style.display = 'block';
+  try {
+    const base64full = await fileToBase64(file);
+    const payload = file.type.startsWith('image/')
+      ? { image_base64: base64full.split(',')[1], image_type: file.type, prompt_override: CIMPORT_PROMPT }
+      : { texte: '[Document PDF — extrais les informations acheteur]', prompt_override: CIMPORT_PROMPT };
+    await appelImportIAContact(payload);
+  } catch(e) { showToast('❌ '+e.message); resetImportIAContact(); }
+}
+
+async function lancerImportIAContactTexte() {
+  const texte = document.getElementById('cimport-paste-text').value.trim();
+  if (!texte) return;
+  document.getElementById('cimport-zone-paste').style.display = 'none';
+  document.getElementById('cimport-loading').style.display = 'block';
+  try {
+    await appelImportIAContact({ texte, prompt_override: CIMPORT_PROMPT });
+  } catch(e) { showToast('❌ '+e.message); resetImportIAContact(); }
+}
+
+async function appelImportIAContact(payload) {
+  const res = await fetch('https://aivelo-production.up.railway.app/api/import-bien', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-api-key': 'aivelo-2026-ArthurS-immo' },
+    body: JSON.stringify(payload)
+  });
+  const data = await res.json();
+  if (!data.success) throw new Error(data.error || 'Erreur import');
+  _cImportedData = data.data;
+  afficherImportResultContact(data.data);
+}
+
+function afficherImportResultContact(data) {
+  document.getElementById('cimport-loading').style.display = 'none';
+  const entries = Object.entries(data).filter(([,v]) => v);
+  document.getElementById('cimport-result-count').textContent = entries.length + ' information(s) extraite(s) — décochez ce que vous ne voulez pas importer';
+  document.getElementById('cimport-fields-list').innerHTML = entries.map(([k,v]) =>
+    `<div class="extracted-field" style="cursor:pointer" onclick="toggleImportField(this)" data-key="${k}">
+      <div style="display:flex;align-items:center;gap:8px">
+        <input type="checkbox" checked onclick="event.stopPropagation();toggleImportField(this.closest('.extracted-field'))" style="cursor:pointer;width:14px;height:14px;accent-color:#4F7EF7">
+        <span class="extracted-label">${CIMPORT_LABELS[k]||k}</span>
+      </div>
+      <span class="extracted-val">${v}</span>
+    </div>`).join('');
+  document.getElementById('cimport-result').style.display = 'block';
+}
+
+async function validerImportIAContact() {
+  if (!_currentFicheId || !Object.keys(_cImportedData).length) return;
+  const l = _leadsCache.find(x => x.id === _currentFicheId);
+  if (!l) return;
+  const checkedKeys = [...document.querySelectorAll('#cimport-fields-list .extracted-field')]
+    .filter(el => el.querySelector('input[type=checkbox]')?.checked)
+    .map(el => el.dataset.key);
+  const sel = {};
+  checkedKeys.forEach(k => { if (_cImportedData[k]) sel[k] = _cImportedData[k]; });
+  if (!Object.keys(sel).length) { showToast('⚠️ Aucun champ sélectionné'); return; }
+  const updates = {};
+  if (sel.nom) updates.nom = sel.nom;
+  if (sel.email) updates.email = sel.email;
+  if (sel.telephone) updates.telephone = sel.telephone;
+  if (sel.source) updates.source = sel.source;
+  const notaire = {};
+  if (sel.notaire_nom) notaire.nom = sel.notaire_nom;
+  if (sel.notaire_cabinet) notaire.cabinet = sel.notaire_cabinet;
+  if (sel.notaire_email) notaire.email = sel.notaire_email;
+  if (sel.notaire_tel) notaire.telephone = sel.notaire_tel;
+  const details = {
+    ...(l.details||{}),
+    ...(sel.type_bien_recherche && {type_bien_recherche: sel.type_bien_recherche}),
+    ...(sel.budget_max && {budget_max: sel.budget_max}),
+    ...(sel.surface_min && {surface_min: sel.surface_min}),
+    ...(sel.pieces_min && {pieces_min: sel.pieces_min}),
+    ...(sel.secteur && {secteur: sel.secteur}),
+    ...(sel.delai_achat && {delai_achat: sel.delai_achat}),
+    ...(sel.accord_bancaire && {accord_bancaire: sel.accord_bancaire}),
+    ...(sel.criteres_importants && {criteres_importants: sel.criteres_importants}),
+    ...(Object.keys(notaire).length && {notaire_acheteur: notaire}),
+  };
+  updates.details = details;
+  await sb.from('leads').update(updates).eq('id', _currentFicheId);
+  Object.assign(l, updates);
+  const idx = _leadsCache.indexOf(l);
+  document.getElementById('import-ia-contact-body').style.display = 'none';
+  document.getElementById('import-ia-contact-toggle-txt').textContent = 'Ouvrir';
+  openFiche(idx);
+  showToast('✅ ' + Object.keys(sel).length + ' champ(s) importé(s)');
+}
+
+function resetImportIAContact() {
+  _cImportedData = {};
+  document.getElementById('cimport-result').style.display = 'none';
+  document.getElementById('cimport-loading').style.display = 'none';
+  document.getElementById('cimport-zone-upload').style.display = 'block';
+  document.getElementById('cimport-zone-paste').style.display = 'none';
+  document.getElementById('cimport-zone-scan').style.display = 'none';
+  document.getElementById('import-ia-contact-body').style.display = 'none';
+  document.getElementById('import-ia-contact-toggle-txt').textContent = 'Ouvrir';
+  const ta = document.getElementById('cimport-paste-text');
+  if (ta) ta.value = '';
+  setImportModeContact('upload');
+}
+
+// ── Filtrer notes ─────────────────────────────────────────────────────────────
+let _currentNoteFilter = 'tous';
+function filtrerNotes(type) {
+  _currentNoteFilter = type;
+  ['tous','appel','email','note','notaire'].forEach(t => {
+    const el = document.getElementById('filter-'+t);
+    if (el) el.className = t === type ? 'badge badge-blue' : 'badge';
+    if (el && t !== type) el.style.cssText = 'cursor:pointer;background:#F5F4F0;color:#666';
+    if (el && t === type) el.style.cssText = '';
+  });
+  if (_currentFicheId) loadNotes(_currentFicheId);
 }
 
 // ── Charger les relances ──────────────────────────────────────────────────────
@@ -1768,44 +2427,58 @@ async function updateStatut(newStatut) {
 // ── Notes libres ─────────────────────────────────────────────────────────────
 async function saveNote() {
   const texte = document.getElementById('note-input').value.trim();
+  const type = document.getElementById('note-type-select')?.value || 'note';
   if(!texte || !_currentFicheId) return;
-
   const { error } = await sb.from('contact_notes').insert({
     lead_id: _currentFicheId,
-    texte: texte,
+    texte,
+    type_note: type,
     created_at: new Date().toISOString()
   });
-
-  if(error) {
-    alert('Erreur sauvegarde note : ' + error.message);
-  } else {
-    document.getElementById('note-input').value = '';
-    loadNotes(_currentFicheId);
+  if(error) { showToast('❌ Erreur : ' + error.message); return; }
+  document.getElementById('note-input').value = '';
+  // Mettre à jour dernier échange
+  const l = _leadsCache.find(x => x.id === _currentFicheId);
+  if (l) {
+    const today = new Date().toLocaleDateString('fr-FR');
+    const details = { ...(l.details||{}), dernier_echange: today };
+    await sb.from('leads').update({ details }).eq('id', _currentFicheId);
+    l.details = details;
+    document.getElementById('fiche-dernier-echange').textContent = today;
   }
+  loadNotes(_currentFicheId);
 }
 
 async function loadNotes(leadId) {
   const container = document.getElementById('notes-list');
   container.innerHTML = '<div class="text-xs" style="color:#aaa;text-align:center;padding:8px">Chargement…</div>';
-
-  const { data, error } = await sb.from('contact_notes')
-    .select('*')
-    .eq('lead_id', leadId)
-    .order('created_at', { ascending: false });
-
+  let query = sb.from('contact_notes').select('*').eq('lead_id', leadId).order('created_at', { ascending: false });
+  const { data, error } = await query;
   if(error || !data?.length) {
-    container.innerHTML = '<div class="text-xs" style="color:#aaa;text-align:center;padding:12px">Aucune note pour ce contact</div>';
+    container.innerHTML = '<div class="text-xs" style="color:#aaa;text-align:center;padding:12px">Aucun échange pour ce contact</div>';
     return;
   }
-
-  container.innerHTML = data.map(n => `
-    <div style="padding:9px 11px;background:#F9F8F5;border-radius:7px;margin-bottom:6px;border-left:3px solid #e0deda">
-      <div class="text-xs" style="color:#aaa;margin-bottom:4px">
-        <i class="ti ti-clock" style="font-size:10px"></i>
-        ${new Date(n.created_at).toLocaleDateString('fr-FR', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}
+  const filtered = _currentNoteFilter === 'tous' ? data : data.filter(n => (n.type_note||'note') === _currentNoteFilter);
+  if (!filtered.length) {
+    container.innerHTML = '<div class="text-xs" style="color:#aaa;text-align:center;padding:12px">Aucun échange dans cette catégorie</div>';
+    return;
+  }
+  const typeConfig = {
+    note:    { icon:'📝', color:'#e0deda', label:'Note' },
+    appel:   { icon:'📞', color:'#4F7EF7', label:'Appel' },
+    email:   { icon:'✉️', color:'#22c55e', label:'Email' },
+    notaire: { icon:'🏛️', color:'#a06010', label:'Notaire' },
+  };
+  container.innerHTML = filtered.map(n => {
+    const t = typeConfig[n.type_note||'note'] || typeConfig.note;
+    return `<div style="padding:9px 11px;background:#F9F8F5;border-radius:7px;margin-bottom:6px;border-left:3px solid ${t.color}">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <span style="font-size:10px;font-weight:600;color:${t.color}">${t.icon} ${t.label}</span>
+        <span class="text-xs" style="color:#aaa">${new Date(n.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}</span>
       </div>
       <div style="font-size:13px;color:#444;line-height:1.5">${n.texte}</div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 

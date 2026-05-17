@@ -2149,19 +2149,26 @@ async function qualifierLead() {
   const budget = parseFloat(document.getElementById('q-budget').value) || null;
   const delai = document.getElementById('q-delai').value.trim();
   const financement = document.getElementById('q-financement').value.trim();
+  const email = document.getElementById('q-email')?.value.trim() || null;
+  const telephone = document.getElementById('q-tel')?.value.trim() || null;
+  const source = document.getElementById('q-source')?.value || null;
 
-  if(!nom || !projet) { alert('Nom et projet sont obligatoires.'); return; }
+  if(!nom || !projet) { showToast('⚠️ Nom et projet sont obligatoires'); return; }
 
   document.getElementById('q-btn').disabled = true;
   document.getElementById('thinking-qualify').style.display = 'flex';
   document.getElementById('q-result').style.display = 'none';
   document.getElementById('q-error').style.display = 'none';
 
+  // Récupérer l'agency_id de l'utilisateur connecté
+  const { data: { session } } = await sb.auth.getSession();
+  const agency_id = session?.user?.id || null;
+
   try {
     const res = await fetch(API + '/api/qualify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
-      body: JSON.stringify({ nom, projet, budget, delai, financement })
+      body: JSON.stringify({ nom, projet, budget, delai, financement, agency_id, email, telephone, source })
     });
     const data = await res.json();
     if(!res.ok) throw new Error(data.error || 'Erreur serveur');
@@ -2177,16 +2184,13 @@ async function qualifierLead() {
       `<strong>${d.statut==='chaud'?'🔥':d.statut==='tiede'?'🌡':'❄️'} Score : ${d.score}/100 · ${statLabel[d.statut]}</strong><br>
        ${d.resume}<br><br><em>💡 ${d.recommandation}</em>`;
 
-    const tbody = document.getElementById('leads-tbody');
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td class="name-cell">${nom}</td>
-      <td>${projet.substring(0,28)}${projet.length>28?'…':''}</td>
-      <td>${budget ? budget.toLocaleString('fr-FR')+'€' : '—'}</td>
-      <td><div class="score-wrap"><div class="score-bar"><div class="score-fill" style="width:${d.score}%;background:${color}"></div></div>${d.score}</div></td>
-      <td><span class="badge ${statBadge[d.statut]}">${statLabel[d.statut]}</span></td>`;
-    tbody.insertBefore(tr, tbody.firstChild);
-    ['q-nom','q-projet','q-budget','q-delai','q-financement'].forEach(id => document.getElementById(id).value='');
+    // Recharger la liste des leads depuis Supabase
+    await loadContacts();
+    ['q-nom','q-projet','q-budget','q-delai','q-financement','q-email','q-tel'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    showToast('✅ Lead qualifié et sauvegardé !');
 
   } catch(err) {
     document.getElementById('q-error').style.display = 'block';

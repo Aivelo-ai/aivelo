@@ -2160,45 +2160,76 @@ async function appelImportIA(payload) {
   afficherImportResult(data.data);
 }
 
+const IMPORT_LABELS = {
+  type_bien:'Type de bien', pieces:'Pièces', surface:'Surface', surface_carrez:'Loi Carrez',
+  prix:'Prix', net_vendeur:'Net vendeur', dpe:'DPE', ges:'GES', adresse:'Adresse', ville:'Ville',
+  proprio_nom:'Propriétaire', etage:'Étage', ascenseur:'Ascenseur', exposition:'Exposition',
+  annee_construction:'Année construction', balcon:'Balcon/Terrasse', cave:'Cave', parking:'Parking',
+  taxe_fonciere:'Taxe foncière', residence:'Résidence', numero_lot:'N° lot', charges_copro:'Charges copro',
+  nb_lots:'Nb lots', syndic:'Syndic', mandat_type:'Type mandat', mandat_num:'N° mandat',
+  mandat_debut:'Début mandat', mandat_fin:'Fin mandat', mandat_honoraires:'Honoraires',
+  mandat_charge:'Charge honoraires', mandat_reconduction:'Reconduction', carte_pro:'Carte pro',
+  garantie_fin:'Garantie financière', parcelle_cadastrale:'Parcelle cadastrale'
+};
+
 function afficherImportResult(data) {
   document.getElementById('import-loading').style.display = 'none';
-  const labels = {
-    type_bien:'Type de bien', pieces:'Pièces', surface:'Surface', surface_carrez:'Loi Carrez',
-    prix:'Prix', net_vendeur:'Net vendeur', dpe:'DPE', ges:'GES', adresse:'Adresse', ville:'Ville',
-    proprio_nom:'Propriétaire', etage:'Étage', ascenseur:'Ascenseur', exposition:'Exposition',
-    annee_construction:'Année construction', balcon:'Balcon/Terrasse', cave:'Cave', parking:'Parking',
-    taxe_fonciere:'Taxe foncière', residence:'Résidence', numero_lot:'N° lot', charges_copro:'Charges copro',
-    nb_lots:'Nb lots', syndic:'Syndic', mandat_type:'Type mandat', mandat_num:'N° mandat',
-    mandat_debut:'Début mandat', mandat_fin:'Fin mandat', mandat_honoraires:'Honoraires',
-    mandat_charge:'Charge honoraires', mandat_reconduction:'Reconduction', carte_pro:'Carte pro',
-    garantie_fin:'Garantie financière', parcelle_cadastrale:'Parcelle cadastrale'
-  };
   const entries = Object.entries(data).filter(([,v]) => v);
   const count = entries.length;
-  document.getElementById('import-result-count').textContent = count + ' information' + (count>1?'s':'')+' extraite'+(count>1?'s':'');
+  document.getElementById('import-result-count').textContent = count + ' information' + (count>1?'s':'')+' extraite'+(count>1?'s':'') + ' — décochez ce que vous ne voulez pas importer';
   document.getElementById('import-fields-list').innerHTML = entries.map(([k,v]) =>
-    `<div class="extracted-field"><span class="extracted-label">${labels[k]||k}</span><span class="extracted-val">${v}</span></div>`
+    `<div class="extracted-field" style="cursor:pointer" onclick="toggleImportField(this)" data-key="${k}">
+      <div style="display:flex;align-items:center;gap:8px">
+        <input type="checkbox" checked onclick="event.stopPropagation();toggleImportField(this.closest('.extracted-field'))" style="cursor:pointer;width:14px;height:14px;accent-color:#4F7EF7">
+        <span class="extracted-label">${IMPORT_LABELS[k]||k}</span>
+      </div>
+      <span class="extracted-val">${v}</span>
+    </div>`
   ).join('');
   document.getElementById('import-result').style.display = 'block';
+}
+
+function toggleImportField(el) {
+  const cb = el.querySelector('input[type=checkbox]');
+  if (cb) cb.checked = !cb.checked;
+  el.style.opacity = cb.checked ? '1' : '0.4';
+  el.style.borderLeftColor = cb.checked ? '#22c55e' : '#ddd';
 }
 
 async function validerImportIA() {
   if (!_currentBienId || !Object.keys(_importedData).length) return;
   const b = _biensCache.find(x => x.id === _currentBienId);
   if (!b) return;
+
+  // Récupère uniquement les champs cochés
+  const checkedKeys = [...document.querySelectorAll('#import-fields-list .extracted-field')]
+    .filter(el => el.querySelector('input[type=checkbox]')?.checked)
+    .map(el => el.dataset.key);
+
+  const selectedData = {};
+  checkedKeys.forEach(k => { if (_importedData[k]) selectedData[k] = _importedData[k]; });
+
+  if (!Object.keys(selectedData).length) { showToast('⚠️ Aucun champ sélectionné'); return; }
+
   const updates = {};
-  if (_importedData.type_bien) updates.type_bien = _importedData.type_bien;
-  if (_importedData.surface) updates.surface = parseFloat(_importedData.surface);
-  if (_importedData.prix) updates.prix = parseFloat(String(_importedData.prix).replace(/[^0-9]/g,''));
-  if (_importedData.adresse) updates.adresse = _importedData.adresse;
-  if (_importedData.ville) updates.ville = _importedData.ville;
-  const details = { ...(b.details||{}), ..._importedData };
+  if (selectedData.type_bien) updates.type_bien = selectedData.type_bien;
+  if (selectedData.surface) updates.surface = parseFloat(selectedData.surface);
+  if (selectedData.prix) updates.prix = parseFloat(String(selectedData.prix).replace(/[^0-9]/g,''));
+  if (selectedData.adresse) updates.adresse = selectedData.adresse;
+  if (selectedData.ville) updates.ville = selectedData.ville;
+  const details = { ...(b.details||{}), ...selectedData };
   updates.details = details;
+
   await sb.from('biens').update(updates).eq('id', _currentBienId);
   Object.assign(b, updates);
   const idx = _biensCache.indexOf(b);
+
+  // Ferme le panneau import après validation
+  document.getElementById('import-ia-body').style.display = 'none';
+  document.getElementById('import-ia-toggle-txt').textContent = 'Ouvrir';
+
   openFicheBien(idx);
-  showToast('✅ Dossier mis à jour avec les informations extraites');
+  showToast('✅ ' + Object.keys(selectedData).length + ' champ(s) importé(s) avec succès');
 }
 
 function resetImportIA() {
@@ -2208,6 +2239,9 @@ function resetImportIA() {
   document.getElementById('import-zone-upload').style.display = 'block';
   document.getElementById('import-zone-paste').style.display = 'none';
   document.getElementById('import-zone-scan').style.display = 'none';
+  // Ferme le panneau proprement
+  document.getElementById('import-ia-body').style.display = 'none';
+  document.getElementById('import-ia-toggle-txt').textContent = 'Ouvrir';
   setImportMode('upload');
 }
 

@@ -1730,7 +1730,7 @@ function openFicheBien(index) {
 
   // Lien cadastral
   const adresseEncode = encodeURIComponent((b.adresse||'')+' '+( b.ville||''));
-  document.getElementById('fb-cadastre-btn').href = `https://cadastre.gouv.fr/scpc/rechercherPlan.do?ville=${encodeURIComponent(b.ville||'')}`;
+  document.getElementById('fb-cadastre-btn').href = '#';
 
   // Pipeline étapes
   const etapes = ['Mandat signé','Photos','Annonce publiée','Visite','Offre reçue','Compromis','Acte'];
@@ -1750,11 +1750,35 @@ function setPipelineStep(idx) {
   });
 }
 
-function ouvrirCadastre() {
+async function ouvrirCadastre() {
   const b = _biensCache.find(x => x.id === _currentBienId);
   if(!b) return;
-  const q = encodeURIComponent((b.adresse||'') + ' ' + (b.ville||''));
-  window.open(`https://www.geoportail.gouv.fr/recherche/${encodeURIComponent((b.adresse||'') + ' ' + (b.ville||''))}`, '_blank');
+
+  const adresseFormatee = `${b.adresse || ''} ${b.ville || ''}`.trim();
+
+  try {
+    await navigator.clipboard.writeText(adresseFormatee);
+    showToast('📋 Adresse copiée — Collez avec Ctrl+V dans la barre de recherche puis Entrée');
+  } catch(e) {
+    // Fallback silencieux si clipboard refusé
+  }
+
+  setTimeout(() => {
+    window.open('https://cadastre.data.gouv.fr/map', '_blank');
+  }, 400);
+}
+
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = `
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+    background:#1e2435; color:#e8eaf0; border:1px solid #4F7EF7;
+    padding:10px 18px; border-radius:8px; font-size:13px;
+    z-index:9999; white-space:nowrap; box-shadow:0 4px 16px rgba(0,0,0,0.4);
+  `;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
 }
 
 </script>

@@ -1754,7 +1754,7 @@ function ouvrirCadastre() {
   const b = _biensCache.find(x => x.id === _currentBienId);
   if(!b) return;
   const q = encodeURIComponent((b.adresse||'') + ' ' + (b.ville||''));
-  window.open(`https://cadastre.gouv.fr/scpc/rechercherPlan.do?ville=${encodeURIComponent(b.ville||'')}`, '_blank');
+  window.open(`https://www.geoportail.gouv.fr/recherche/${encodeURIComponent((b.adresse||'') + ' ' + (b.ville||''))}`, '_blank');
 }
 
 </script>

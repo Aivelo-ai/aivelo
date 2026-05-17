@@ -1074,40 +1074,66 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </div>
     </div>
 
-    <!-- ════════ FICHE CLIENT ════════ -->
+    <!-- ════════ FICHE CLIENT v3 ════════ -->
     <div class="pane" id="pane-fiche">
 
-      <!-- Header -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-          <button class="btn btn-sm" onclick="goToPane('contacts')">← Retour</button>
-          <div class="avatar" id="fiche-avatar" style="width:36px;height:36px;font-size:14px;flex-shrink:0">?</div>
-          <div>
-            <div style="font-size:16px;font-weight:600;color:#1a1a1a" id="fiche-nom">—</div>
-            <div style="font-size:11px;color:#888"><span id="fiche-id">—</span> · <span id="fiche-type">Acheteur</span> · Dernier échange : <span id="fiche-dernier-echange" style="color:#1a7a1a;font-weight:500">—</span></div>
+      <!-- HEADER -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+        <button class="btn btn-sm" onclick="goToPane('contacts')">← Retour</button>
+      </div>
+
+      <div class="panel" style="margin-bottom:12px">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px">
+          <div style="display:flex;align-items:center;gap:14px">
+            <div class="avatar" id="fiche-avatar" style="width:44px;height:44px;font-size:16px;font-weight:700;flex-shrink:0">?</div>
+            <div>
+              <div style="font-size:20px;font-weight:700;color:#1a1a1a;line-height:1.2" id="fiche-nom">—</div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap">
+                <span style="font-size:11px;color:#aaa;background:#F5F4F0;padding:2px 7px;border-radius:20px;font-weight:500" id="fiche-id">—</span>
+                <span style="font-size:11px;color:#888" id="fiche-type">Acheteur</span>
+                <span style="color:#ddd">·</span>
+                <a id="fiche-tel-btn" href="#" style="font-size:11px;color:#888;text-decoration:none" id="fiche-tel-display">—</a>
+                <span style="color:#ddd">·</span>
+                <a id="fiche-email-btn" href="#" style="font-size:11px;color:#4F7EF7;text-decoration:none" id="fiche-email-display">—</a>
+              </div>
+              <div style="margin-top:3px;font-size:11px;color:#888">
+                Dernier échange : <span id="fiche-dernier-echange" style="color:#1a7a1a;font-weight:500">—</span>
+                · Source : <span id="fiche-source">—</span>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <select id="fiche-statut-select" onchange="updateStatut(this.value)" style="font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid #e0deda;background:#fff;cursor:pointer;font-weight:500;color:#555">
+              <option value="chaud">🔥 Chaud</option>
+              <option value="tiede">🌡️ Tiède</option>
+              <option value="froid">❄️ Froid</option>
+            </select>
+            <span class="badge badge-blue" id="fiche-score-badge">—/100</span>
+            <button class="btn btn-sm" onclick="ouvrirModalEditContact()">✏️ Modifier</button>
           </div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-          <select id="fiche-statut-select" onchange="updateStatut(this.value)" style="font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid #e0deda;background:#fff;cursor:pointer;font-weight:500;color:#555">
-            <option value="chaud">🔥 Chaud</option>
-            <option value="tiede">🌡️ Tiède</option>
-            <option value="froid">❄️ Froid</option>
-          </select>
-          <span class="badge badge-blue" id="fiche-score-badge">—/100</span>
+        <!-- Actions -->
+        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid #f0ede8">
+          <a id="fiche-tel-action" href="#" class="btn btn-sm">📞 Appeler</a>
+          <a id="fiche-email-action" href="#" class="btn btn-sm">✉️ Email</a>
+          <button class="btn btn-sm" style="border-color:#c5d4f8;color:#2a4eb5;background:#EEF3FF" onclick="envoyerCalendly()">📅 Planifier appel</button>
+          <button class="btn btn-sm" style="border-color:#c5d4f8;color:#2a4eb5;background:#EEF3FF" onclick="envoyerLienCalendly()">🔗 Envoyer Calendly</button>
+          <button class="btn btn-sm" style="color:#aaa" onclick="showToast('Portail client disponible Sprint 4')">🌐 Portail <span style="font-size:9px;background:#F5F4F0;padding:1px 4px;border-radius:3px">bientôt</span></button>
         </div>
       </div>
 
-      <!-- Actions rapides -->
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
-        <a id="fiche-tel-btn" href="#" class="btn btn-sm">📞 Appeler</a>
-        <a id="fiche-email-btn" href="#" class="btn btn-sm">✉️ Email</a>
-        <button class="btn btn-sm" style="border-color:#c5d4f8;color:#2a4eb5;background:#EEF3FF" onclick="envoyerCalendly()">📅 Planifier un appel</button>
-        <button class="btn btn-sm" style="border-color:#c5d4f8;color:#2a4eb5;background:#EEF3FF" onclick="envoyerLienCalendly()">🔗 Envoyer Calendly</button>
-        <button class="btn btn-sm" style="color:#aaa" title="Sprint 4">🌐 Portail client <span style="font-size:9px;background:#F5F4F0;padding:1px 5px;border-radius:4px">bientôt</span></button>
+      <!-- DÉTECTION IA (visible uniquement si détection active) -->
+      <div id="detection-ia-banner" style="display:none;background:#FFF4E0;border:1px solid #fcd89a;border-radius:10px;padding:12px 16px;margin-bottom:12px">
+        <div style="font-size:11px;font-weight:600;color:#a06010;margin-bottom:6px">🤖 Détection IA — Compte-rendu de visite détecté</div>
+        <div style="font-size:12px;color:#555;margin-bottom:8px" id="detection-ia-texte">—</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-sm" style="background:#22c55e;color:#fff;border-color:#22c55e;font-weight:500" onclick="confirmerDetectionVisite()">✅ Confirmer visite → avancer le pipeline</button>
+          <button class="btn btn-sm" onclick="ignorerDetection()">Ignorer</button>
+        </div>
       </div>
 
-      <!-- Import IA -->
-      <div class="import-ia-wrap" style="margin-bottom:14px">
+      <!-- IMPORT IA -->
+      <div class="import-ia-wrap" style="margin-bottom:12px">
         <div class="import-ia-header" onclick="toggleImportIAContact()">
           <div style="display:flex;align-items:center;gap:8px">
             <i class="ti ti-sparkles" style="font-size:14px;color:#4F7EF7"></i>
@@ -1118,162 +1144,132 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         </div>
         <div class="import-ia-body" id="import-ia-contact-body">
           <div class="import-modes">
-            <div class="import-mode active" id="cimode-upload" onclick="setImportModeContact('upload')">
-              <i class="ti ti-upload"></i>
-              <div class="import-mode-label">Téléverser</div>
-              <div class="import-mode-sub">PDF, photo, image</div>
-            </div>
-            <div class="import-mode" id="cimode-paste" onclick="setImportModeContact('paste')">
-              <i class="ti ti-clipboard-text"></i>
-              <div class="import-mode-label">Coller du texte</div>
-              <div class="import-mode-sub">Email, SMS, notes</div>
-            </div>
-            <div class="import-mode" id="cimode-scan" onclick="setImportModeContact('scan')">
-              <i class="ti ti-scan"></i>
-              <div class="import-mode-label">Scanner</div>
-              <div class="import-mode-sub">Photo document</div>
-            </div>
+            <div class="import-mode active" id="cimode-upload" onclick="setImportModeContact('upload')"><i class="ti ti-upload"></i><div class="import-mode-label">Téléverser</div><div class="import-mode-sub">PDF, photo</div></div>
+            <div class="import-mode" id="cimode-paste" onclick="setImportModeContact('paste')"><i class="ti ti-clipboard-text"></i><div class="import-mode-label">Coller texte</div><div class="import-mode-sub">Email, SMS</div></div>
+            <div class="import-mode" id="cimode-scan" onclick="setImportModeContact('scan')"><i class="ti ti-scan"></i><div class="import-mode-label">Scanner</div><div class="import-mode-sub">Photo doc</div></div>
           </div>
           <div id="cimport-zone-upload">
             <div class="import-dropzone" onclick="document.getElementById('cimport-file-input').click()">
-              <i class="ti ti-file-upload" style="font-size:26px;color:#4F7EF7;display:block;margin-bottom:8px"></i>
-              <div style="font-size:13px;font-weight:500;color:#1a1a1a;margin-bottom:4px">Glissez le document ici</div>
-              <div style="font-size:11px;color:#888">Email, fiche client, doc identité — PDF · JPG · PNG</div>
+              <i class="ti ti-file-upload" style="font-size:24px;color:#4F7EF7;display:block;margin-bottom:6px"></i>
+              <div style="font-size:13px;font-weight:500;color:#1a1a1a;margin-bottom:3px">Glissez le document ici</div>
+              <div style="font-size:11px;color:#888">PDF · JPG · PNG</div>
               <input type="file" id="cimport-file-input" style="display:none" accept=".pdf,.jpg,.jpeg,.png" onchange="lancerImportIAContactFile(this)">
             </div>
           </div>
           <div id="cimport-zone-paste" style="display:none">
-            <textarea id="cimport-paste-text" placeholder="Collez ici — email reçu, SMS, fiche papier retranscrite, notes d'appel…" style="width:100%;min-height:80px;border:1px solid #e8e6e0;border-radius:8px;padding:10px;font-size:13px;resize:vertical;box-sizing:border-box"></textarea>
-            <button class="btn btn-primary btn-sm" style="margin-top:8px" onclick="lancerImportIAContactTexte()">
-              <i class="ti ti-sparkles"></i> Analyser et remplir automatiquement
-            </button>
+            <textarea id="cimport-paste-text" placeholder="Collez ici — email, SMS, notes, fiche papier…" style="width:100%;min-height:80px;border:1px solid #e8e6e0;border-radius:8px;padding:10px;font-size:13px;resize:vertical;box-sizing:border-box"></textarea>
+            <button class="btn btn-primary btn-sm" style="margin-top:8px" onclick="lancerImportIAContactTexte()"><i class="ti ti-sparkles"></i> Analyser et remplir</button>
           </div>
           <div id="cimport-zone-scan" style="display:none">
             <div class="import-dropzone" onclick="document.getElementById('cimport-scan-input').click()">
-              <i class="ti ti-camera" style="font-size:26px;color:#4F7EF7;display:block;margin-bottom:8px"></i>
-              <div style="font-size:13px;font-weight:500;color:#1a1a1a;margin-bottom:4px">Photographiez le document</div>
-              <div style="font-size:11px;color:#888">Pièce d'identité, document papier</div>
+              <i class="ti ti-camera" style="font-size:24px;color:#4F7EF7;display:block;margin-bottom:6px"></i>
+              <div style="font-size:13px;font-weight:500;color:#1a1a1a">Photographier le document</div>
               <input type="file" id="cimport-scan-input" style="display:none" accept="image/*" capture="environment" onchange="lancerImportIAContactFile(this)">
             </div>
           </div>
+          <div id="cimport-loading" style="display:none;text-align:center;padding:14px">
+            <div style="font-size:13px;color:#4F7EF7">⏳ Analyse en cours…</div>
+          </div>
           <div id="cimport-result" style="display:none;margin-top:12px">
-            <div style="display:flex;align-items:center;gap:6px;background:#EAFFEA;border:1px solid #b3eab3;border-radius:7px;padding:8px 12px;margin-bottom:10px">
+            <div style="display:flex;align-items:center;gap:6px;background:#EAFFEA;border:1px solid #b3eab3;border-radius:7px;padding:8px 12px;margin-bottom:8px">
               <i class="ti ti-check" style="font-size:14px;color:#1a7a1a"></i>
-              <span style="font-size:12px;color:#1a7a1a;font-weight:500" id="cimport-result-count">Informations extraites</span>
+              <span style="font-size:12px;color:#1a7a1a;font-weight:500" id="cimport-result-count">—</span>
             </div>
             <div style="font-size:10px;color:#aaa;font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Vérifiez avant de valider</div>
             <div id="cimport-fields-list"></div>
             <div style="display:flex;gap:8px;margin-top:10px">
               <button class="btn btn-sm" onclick="resetImportIAContact()">Annuler</button>
-              <button class="btn btn-primary btn-sm" onclick="validerImportIAContact()">✓ Valider et remplir la fiche</button>
+              <button class="btn btn-primary btn-sm" onclick="validerImportIAContact()">✓ Valider et remplir</button>
             </div>
-          </div>
-          <div id="cimport-loading" style="display:none;text-align:center;padding:16px">
-            <div style="font-size:13px;color:#4F7EF7">⏳ Analyse en cours…</div>
           </div>
         </div>
       </div>
 
-      <!-- Informations -->
+      <!-- RÉSUMÉ IA -->
+      <div style="background:#F9FAFF;border:1px solid #c5d4f8;border-radius:10px;padding:13px 16px;margin-bottom:12px">
+        <div style="font-size:10px;font-weight:600;color:#4F7EF7;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">✨ Résumé IA</div>
+        <div style="font-size:13px;color:#333;line-height:1.6" id="fiche-resume">—</div>
+      </div>
+
+      <!-- BIENS LIÉS -->
+      <div class="panel" style="margin-bottom:12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div style="font-size:13px;font-weight:600;color:#1a1a1a">Biens liés</div>
+          <button class="btn btn-sm" style="border-color:#c5d4f8;color:#2a4eb5;background:#EEF3FF" onclick="togglePanelLierBien()">+ Lier un bien</button>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+          <div onclick="togglePanelBiens('intresse')" id="bulle-intresse" style="display:flex;align-items:center;gap:5px;background:#F5F4F0;border:1px solid #e0deda;border-radius:20px;padding:4px 10px;cursor:pointer">
+            <span style="width:6px;height:6px;border-radius:50%;background:#aaa"></span>
+            <span style="font-size:11px;font-weight:600;color:#555" id="count-intresse">0 intéressé</span>
+          </div>
+          <div onclick="togglePanelBiens('planifie')" id="bulle-planifie" style="display:flex;align-items:center;gap:5px;background:#EEF3FF;border:1px solid #c5d4f8;border-radius:20px;padding:4px 10px;cursor:pointer">
+            <span style="width:6px;height:6px;border-radius:50%;background:#4F7EF7"></span>
+            <span style="font-size:11px;font-weight:600;color:#2a4eb5" id="count-planifie">0 visite planifiée</span>
+          </div>
+          <div onclick="togglePanelBiens('realise')" id="bulle-realise" style="display:flex;align-items:center;gap:5px;background:#EAFFEA;border:1px solid #b3eab3;border-radius:20px;padding:4px 10px;cursor:pointer">
+            <span style="width:6px;height:6px;border-radius:50%;background:#22c55e"></span>
+            <span style="font-size:11px;font-weight:600;color:#1a7a1a" id="count-realise">0 visite réalisée</span>
+          </div>
+          <div onclick="togglePanelBiens('offre')" id="bulle-offre" style="display:flex;align-items:center;gap:5px;background:#FFF4E0;border:1px solid #fcd89a;border-radius:20px;padding:4px 10px;cursor:pointer">
+            <span style="width:6px;height:6px;border-radius:50%;background:#f59e0b"></span>
+            <span style="font-size:11px;font-weight:600;color:#a06010" id="count-offre">0 offre</span>
+          </div>
+        </div>
+        <!-- Panel liste biens -->
+        <div id="panel-biens-list-wrap" style="display:none;border:1px solid #e8e6e0;border-radius:8px;overflow:hidden">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#F9F8F5;border-bottom:1px solid #e8e6e0">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span id="panel-biens-dot" style="width:8px;height:8px;border-radius:50%;background:#aaa"></span>
+              <span style="font-size:12px;font-weight:600;color:#1a1a1a" id="panel-biens-titre">Biens</span>
+            </div>
+            <button onclick="fermerPanelBiens()" style="font-size:12px;padding:2px 7px;border-radius:5px;border:1px solid #e0deda;background:#fff;color:#888;cursor:pointer">✕</button>
+          </div>
+          <div id="panel-biens-contenu" style="padding:10px"></div>
+        </div>
+        <!-- Panel lier un bien -->
+        <div id="panel-lier-bien" style="display:none;margin-top:8px;border:1px dashed #c5d4f8;border-radius:8px;padding:12px">
+          <div style="font-size:11px;font-weight:600;color:#2a4eb5;margin-bottom:8px">Lier ce contact à un bien</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <select id="lier-bien-select" style="flex:1;min-width:150px;font-size:12px;padding:7px 10px;border:1px solid #e0deda;border-radius:7px;background:#fff">
+              <option value="">Choisir un bien...</option>
+            </select>
+            <select id="lier-bien-statut" style="font-size:12px;padding:7px 10px;border:1px solid #e0deda;border-radius:7px;background:#fff">
+              <option value="intresse">Intéressé</option>
+              <option value="planifie">Visite planifiée</option>
+              <option value="realise">Visite réalisée</option>
+              <option value="offre">Offre déposée</option>
+            </select>
+            <button class="btn btn-primary btn-sm" onclick="lierBienAuContact()">Lier</button>
+            <button class="btn btn-sm" onclick="document.getElementById('panel-lier-bien').style.display='none'">Annuler</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTACTS ASSOCIÉS -->
       <div class="fb-section" style="margin-bottom:10px">
-        <div class="fb-section-header" style="cursor:default">
-          <div class="fb-section-title">Informations</div>
-          <button class="btn btn-sm" onclick="editContactModal()"><i class="ti ti-pencil"></i> Modifier</button>
-        </div>
-        <div class="fb-section-body" style="padding-top:0">
-          <div class="fb-grid">
-            <div class="fb-card"><div class="fb-card-label">Email</div><div class="fb-card-val" id="fiche-email" style="font-size:12px;word-break:break-all">—</div></div>
-            <div class="fb-card"><div class="fb-card-label">Téléphone</div><div class="fb-card-val" id="fiche-telephone">—</div></div>
-            <div class="fb-card"><div class="fb-card-label">Source</div><div class="fb-card-val" id="fiche-source">—</div></div>
-            <div class="fb-card"><div class="fb-card-label">Budget</div><div class="fb-card-val blue" id="fiche-budget">—</div></div>
-            <div class="fb-card"><div class="fb-card-label">Délai</div><div class="fb-card-val" id="fiche-delai">—</div></div>
-            <div class="fb-card"><div class="fb-card-label">Financement</div><div class="fb-card-val" id="fiche-financement">—</div></div>
-          </div>
-          <div style="margin-top:10px;padding:10px;background:#F9F8F5;border-radius:8px">
-            <div class="fb-card-label" style="margin-bottom:4px">Résumé IA</div>
-            <div style="font-size:12px;color:#555;line-height:1.6" id="fiche-resume">—</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Biens liés (bulles) -->
-      <div class="fb-section" style="margin-bottom:10px">
-        <div class="fb-section-header" style="cursor:default">
-          <div class="fb-section-title">Biens liés</div>
-        </div>
-        <div class="fb-section-body" style="padding-top:0">
-          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 12px;background:#F9F8F5;border-radius:8px;border:1px solid #f0ede8">
-            <span style="font-size:11px;color:#888;font-weight:500;margin-right:2px">Biens</span>
-            <div onclick="ouvrirPanelBiens('visites')" style="display:flex;align-items:center;gap:5px;background:#EAFFEA;border:1px solid #b3eab3;border-radius:20px;padding:4px 10px;cursor:pointer" id="bulle-visites">
-              <span style="width:6px;height:6px;border-radius:50%;background:#22c55e"></span>
-              <span style="font-size:11px;font-weight:600;color:#1a7a1a" id="count-visites">0 visité</span>
-            </div>
-            <div onclick="ouvrirPanelBiens('discussion')" style="display:flex;align-items:center;gap:5px;background:#FFF4E0;border:1px solid #fcd89a;border-radius:20px;padding:4px 10px;cursor:pointer" id="bulle-discussion">
-              <span style="width:6px;height:6px;border-radius:50%;background:#f59e0b"></span>
-              <span style="font-size:11px;font-weight:600;color:#a06010" id="count-discussion">0 en cours</span>
-            </div>
-            <div onclick="ouvrirPanelBiens('suggestions')" style="display:flex;align-items:center;gap:5px;background:#EEF3FF;border:1px solid #c5d4f8;border-radius:20px;padding:4px 10px;cursor:pointer" id="bulle-suggestions">
-              <span style="width:6px;height:6px;border-radius:50%;background:#4F7EF7"></span>
-              <span style="font-size:11px;font-weight:600;color:#2a4eb5" id="count-suggestions">0 suggestion IA</span>
-            </div>
-          </div>
-          <!-- Panel biens -->
-          <div id="panel-biens-contact" style="display:none;margin-top:10px;border:1px solid #e8e6e0;border-radius:8px;overflow:hidden">
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#F9F8F5;border-bottom:1px solid #e8e6e0">
-              <div style="display:flex;align-items:center;gap:8px">
-                <span id="panel-biens-dot" style="width:8px;height:8px;border-radius:50%;background:#22c55e"></span>
-                <span style="font-size:12px;font-weight:600;color:#1a1a1a" id="panel-biens-title">Biens visités</span>
-              </div>
-              <button onclick="document.getElementById('panel-biens-contact').style.display='none';document.getElementById('drawer-bien-contact').style.display='none'" style="font-size:13px;padding:2px 7px;border-radius:5px;border:1px solid #e0deda;background:#fff;color:#888;cursor:pointer">✕</button>
-            </div>
-            <div id="panel-biens-list" style="padding:10px;display:flex;flex-direction:column;gap:6px"></div>
-          </div>
-          <!-- Drawer bien -->
-          <div id="drawer-bien-contact" style="display:none;margin-top:8px;border:1px solid #c5d4f8;border-radius:8px;overflow:hidden;background:#fff">
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#EEF3FF;border-bottom:1px solid #c5d4f8">
-              <div>
-                <div style="font-size:13px;font-weight:600;color:#1a1a1a" id="drawer-bien-ref">—</div>
-                <div style="font-size:11px;color:#888" id="drawer-bien-adresse">—</div>
-              </div>
-              <div style="display:flex;gap:5px;align-items:center">
-                <span id="drawer-bien-statut" style="font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500;background:#EAFFEA;color:#1a7a1a">—</span>
-                <button onclick="document.getElementById('drawer-bien-contact').style.display='none'" style="font-size:12px;padding:2px 7px;border-radius:5px;border:1px solid #c5d4f8;background:#fff;color:#888;cursor:pointer">✕</button>
-              </div>
-            </div>
-            <div style="padding:12px 14px">
-              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:7px;margin-bottom:12px" id="drawer-bien-infos"></div>
-              <div style="display:flex;gap:6px;flex-wrap:wrap">
-                <button class="btn btn-sm" style="border-color:#c5d4f8;color:#2a4eb5;background:#EEF3FF">📅 Planifier visite</button>
-                <button class="btn btn-sm">📋 Envoyer fiche</button>
-                <button class="btn btn-sm" style="color:#4F7EF7" onclick="ouvrirFicheBienDepuisContact()">🔗 Ouvrir dans le CRM →</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Contacts associés -->
-      <div class="fb-section">
-        <div class="fb-section-header" onclick="fbToggle('cassocies')">
+        <div class="fb-section-header" onclick="fbToggle('fc-assoc')">
           <div class="fb-section-title">Contacts associés <span style="font-size:10px;color:#888;font-weight:400;text-transform:none;letter-spacing:0">— co-acheteur, conjoint, garant</span></div>
-          <i class="ti ti-chevron-down fb-chevron" id="chev-cassocies"></i>
+          <i class="ti ti-chevron-down fb-chevron" id="chev-fc-assoc"></i>
         </div>
-        <div class="fb-section-body" id="body-cassocies" style="display:none">
-          <div id="associes-list" style="margin-bottom:8px"></div>
+        <div class="fb-section-body" id="body-fc-assoc" style="display:none">
+          <div id="fc-associes-list" style="margin-bottom:8px"></div>
           <button class="btn btn-sm" style="width:100%;border-style:dashed;color:#aaa" onclick="showToast('Associer un contact — Sprint 4')">+ Associer un contact</button>
         </div>
       </div>
 
-      <!-- Critères de recherche -->
-      <div class="fb-section">
-        <div class="fb-section-header" onclick="fbToggle('ccriteres')">
-          <div class="fb-section-title">Critères de recherche</div>
-          <div style="display:flex;align-items:center;gap:6px" onclick="event.stopPropagation()">
+      <!-- CRITÈRES DE RECHERCHE -->
+      <div class="fb-section" style="margin-bottom:10px">
+        <div class="fb-section-header" onclick="fbToggle('fc-crit')">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="fb-section-title">Critères de recherche</div>
+            <span style="font-size:10px;color:#4F7EF7;background:#EEF3FF;padding:2px 7px;border-radius:20px;font-weight:500">Auto depuis quali</span>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center" onclick="event.stopPropagation()">
             <button class="btn btn-sm" onclick="editCriteresModal()"><i class="ti ti-pencil"></i></button>
-            <i class="ti ti-chevron-down fb-chevron" id="chev-ccriteres"></i>
+            <i class="ti ti-chevron-down fb-chevron" id="chev-fc-crit"></i>
           </div>
         </div>
-        <div class="fb-section-body" id="body-ccriteres" style="display:none">
+        <div class="fb-section-body" id="body-fc-crit" style="display:none">
           <div class="fb-grid">
             <div class="fb-card"><div class="fb-card-label">Type bien</div><div class="fb-card-val" id="fc-type-bien">—</div></div>
             <div class="fb-card"><div class="fb-card-label">Budget max</div><div class="fb-card-val blue" id="fc-budget-max">—</div></div>
@@ -1287,13 +1283,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         </div>
       </div>
 
-      <!-- Notaire acheteur -->
-      <div class="fb-section">
-        <div class="fb-section-header" onclick="fbToggle('cnotaire')">
+      <!-- NOTAIRE ACHETEUR -->
+      <div class="fb-section" style="margin-bottom:10px">
+        <div class="fb-section-header" onclick="fbToggle('fc-not')">
           <div class="fb-section-title">Notaire acheteur</div>
-          <i class="ti ti-chevron-down fb-chevron" id="chev-cnotaire"></i>
+          <i class="ti ti-chevron-down fb-chevron" id="chev-fc-not"></i>
         </div>
-        <div class="fb-section-body" id="body-cnotaire" style="display:none">
+        <div class="fb-section-body" id="body-fc-not" style="display:none">
           <div id="cnotaire-view" style="display:flex;align-items:center;gap:12px">
             <div style="width:34px;height:34px;border-radius:50%;background:#EEF3FF;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#2a4eb5;flex-shrink:0" id="cnotaire-initials">—</div>
             <div style="flex:1">
@@ -1321,53 +1317,75 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         </div>
       </div>
 
-      <!-- Documents dossier -->
-      <div class="fb-section">
-        <div class="fb-section-header" onclick="fbToggle('cdocs')">
-          <div class="fb-section-title">Documents dossier <span id="cdocs-badge"></span></div>
-          <i class="ti ti-chevron-down fb-chevron" id="chev-cdocs"></i>
+      <!-- DOCUMENTS DOSSIER -->
+      <div class="fb-section" style="margin-bottom:10px">
+        <div class="fb-section-header" onclick="fbToggle('fc-docs')">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="fb-section-title">Documents dossier</div>
+            <span id="cdocs-badge"></span>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center" onclick="event.stopPropagation()">
+            <label class="btn btn-sm" style="cursor:pointer">⬆️ Ajouter<input type="file" style="display:none" accept=".pdf,.jpg,.png" onchange="uploadDocContact(this)"></label>
+            <i class="ti ti-chevron-down fb-chevron" id="chev-fc-docs"></i>
+          </div>
         </div>
-        <div class="fb-section-body" id="body-cdocs" style="display:none">
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px">
-            <div class="fb-card" style="cursor:pointer" onclick="toggleDoc('identite')">
-              <div style="display:flex;align-items:center;justify-content:space-between">
+        <div class="fb-section-body" id="body-fc-docs" style="display:none">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px">
+            <div class="fb-card" style="cursor:pointer" onclick="toggleDocContact('identite')">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
                 <div class="fb-card-label">Doc. d'identité</div><span style="font-size:16px">🪪</span>
               </div>
-              <div class="fb-card-val" id="doc-identite" style="font-size:11px;margin-top:4px">⏳ En attente</div>
-            </div>
-            <div class="fb-card" style="cursor:pointer" onclick="toggleDoc('salaire')">
-              <div style="display:flex;align-items:center;justify-content:space-between">
-                <div class="fb-card-label">Bulletins de salaire</div><span style="font-size:16px">📄</span>
+              <div id="doc-c-identite" style="font-size:11px;font-weight:500;color:#a06010">⏳ En attente</div>
+              <div id="doc-c-identite-note" style="font-size:10px;color:#888;margin-top:3px;font-style:italic"></div>
+              <div style="display:flex;gap:4px;margin-top:6px">
+                <button class="btn btn-sm" style="font-size:9px;padding:2px 7px" onclick="event.stopPropagation();relancerDoc('identite')">📤 Relancer</button>
               </div>
-              <div class="fb-card-val" id="doc-salaire" style="font-size:11px;margin-top:4px">⏳ En attente</div>
             </div>
-            <div class="fb-card" style="cursor:pointer" onclick="toggleDoc('impots')">
-              <div style="display:flex;align-items:center;justify-content:space-between">
+            <div class="fb-card" style="cursor:pointer" onclick="toggleDocContact('salaire')">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+                <div class="fb-card-label">Bulletins salaire</div><span style="font-size:16px">📄</span>
+              </div>
+              <div id="doc-c-salaire" style="font-size:11px;font-weight:500;color:#a06010">⏳ En attente</div>
+              <div id="doc-c-salaire-note" style="font-size:10px;color:#888;margin-top:3px;font-style:italic"></div>
+              <div style="display:flex;gap:4px;margin-top:6px">
+                <button class="btn btn-sm" style="font-size:9px;padding:2px 7px" onclick="event.stopPropagation();relancerDoc('salaire')">📤 Relancer</button>
+              </div>
+            </div>
+            <div class="fb-card" style="cursor:pointer" onclick="toggleDocContact('impots')">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
                 <div class="fb-card-label">Avis d'imposition</div><span style="font-size:16px">📋</span>
               </div>
-              <div class="fb-card-val" id="doc-impots" style="font-size:11px;margin-top:4px">⏳ En attente</div>
+              <div id="doc-c-impots" style="font-size:11px;font-weight:500;color:#a06010">⏳ En attente</div>
+              <div id="doc-c-impots-note" style="font-size:10px;color:#888;margin-top:3px;font-style:italic"></div>
+              <div style="display:flex;gap:4px;margin-top:6px">
+                <button class="btn btn-sm" style="font-size:9px;padding:2px 7px" onclick="event.stopPropagation();relancerDoc('impots')">📤 Relancer</button>
+              </div>
             </div>
-            <div class="fb-card" style="cursor:pointer" onclick="toggleDoc('banque')">
-              <div style="display:flex;align-items:center;justify-content:space-between">
+            <div class="fb-card" style="cursor:pointer" onclick="toggleDocContact('banque')">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
                 <div class="fb-card-label">Accord bancaire</div><span style="font-size:16px">🏦</span>
               </div>
-              <div class="fb-card-val" id="doc-banque" style="font-size:11px;margin-top:4px">⏳ En attente</div>
+              <div id="doc-c-banque" style="font-size:11px;font-weight:500;color:#a06010">⏳ En attente</div>
+              <div id="doc-c-banque-note" style="font-size:10px;color:#888;margin-top:3px;font-style:italic"></div>
+              <div style="display:flex;gap:4px;margin-top:6px">
+                <button class="btn btn-sm" style="font-size:9px;padding:2px 7px" onclick="event.stopPropagation();relancerDoc('banque')">📤 Relancer</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Notes & Échanges -->
-      <div class="panel" style="margin-top:10px">
-        <div class="panel-header">
+      <!-- NOTES & ÉCHANGES -->
+      <div class="panel">
+        <div class="panel-header" style="margin-bottom:10px">
           <div class="panel-title">Notes & Échanges</div>
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
-          <span class="badge badge-gray" style="cursor:pointer" onclick="filtrerNotes('tous')" id="filter-tous">Tout</span>
-          <span class="badge" style="cursor:pointer;background:#F5F4F0;color:#666" onclick="filtrerNotes('appel')" id="filter-appel">📞 Appels</span>
-          <span class="badge" style="cursor:pointer;background:#F5F4F0;color:#666" onclick="filtrerNotes('email')" id="filter-email">✉️ Emails</span>
-          <span class="badge" style="cursor:pointer;background:#F5F4F0;color:#666" onclick="filtrerNotes('note')" id="filter-note">📝 Notes</span>
-          <span class="badge" style="cursor:pointer;background:#F5F4F0;color:#666" onclick="filtrerNotes('notaire')" id="filter-notaire">🏛️ Notaire</span>
+          <span class="badge badge-blue" id="filter-tous" style="cursor:pointer" onclick="filtrerNotes('tous')">Tout</span>
+          <span class="badge" style="cursor:pointer;background:#F5F4F0;color:#666" id="filter-appel" onclick="filtrerNotes('appel')">📞 Appels</span>
+          <span class="badge" style="cursor:pointer;background:#F5F4F0;color:#666" id="filter-email" onclick="filtrerNotes('email')">✉️ Emails</span>
+          <span class="badge" style="cursor:pointer;background:#F5F4F0;color:#666" id="filter-note" onclick="filtrerNotes('note')">📝 Notes</span>
+          <span class="badge" style="cursor:pointer;background:#F5F4F0;color:#666" id="filter-notaire" onclick="filtrerNotes('notaire')">🏛️ Notaire</span>
         </div>
         <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
           <select id="note-type-select" style="font-size:12px;padding:6px 10px;border:1px solid #e0deda;border-radius:7px;background:#fff;color:#555">
@@ -1380,6 +1398,30 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <button class="btn btn-primary btn-sm" onclick="saveNote()" style="align-self:flex-end;white-space:nowrap">+ Ajouter</button>
         </div>
         <div id="notes-list"><div class="text-xs" style="color:#aaa;text-align:center;padding:12px">Aucun échange pour ce contact</div></div>
+      </div>
+
+      <!-- MODALS -->
+      <!-- Modal edit contact -->
+      <div class="modal-overlay" id="modal-edit-contact">
+        <div class="modal-box" style="width:480px">
+          <div class="modal-header">
+            <div class="modal-title">Modifier le contact</div>
+            <button class="modal-close" onclick="document.getElementById('modal-edit-contact').classList.remove('open')">✕</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="form-field" style="grid-column:1/-1"><label>Nom complet</label><input id="ec-nom" placeholder="Jean Dupont"></div>
+            <div class="form-field"><label>Email</label><input id="ec-email" type="email" placeholder="jean@email.fr"></div>
+            <div class="form-field"><label>Téléphone</label><input id="ec-tel" placeholder="06 12 34 56 78"></div>
+            <div class="form-field"><label>Budget (€)</label><input id="ec-budget" type="number" placeholder="350000"></div>
+            <div class="form-field"><label>Délai</label><input id="ec-delai" placeholder="3 mois"></div>
+            <div class="form-field"><label>Financement</label><input id="ec-financement" placeholder="Accord bancaire obtenu"></div>
+            <div class="form-field"><label>Source</label><input id="ec-source" placeholder="SeLoger, LeBonCoin..."></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">
+            <button class="btn btn-sm" onclick="document.getElementById('modal-edit-contact').classList.remove('open')">Annuler</button>
+            <button class="btn btn-primary btn-sm" onclick="saveEditContact()">💾 Sauvegarder</button>
+          </div>
+        </div>
       </div>
 
       <!-- Modal critères -->
@@ -1395,13 +1437,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
             <div class="form-field"><label>Surface min (m²)</label><input id="cr-surface-min" type="number" placeholder="60"></div>
             <div class="form-field"><label>Pièces min</label><input id="cr-pieces-min" placeholder="3P"></div>
             <div class="form-field"><label>Secteur / Ville</label><input id="cr-secteur" placeholder="Chartrons, Bordeaux"></div>
-            <div class="form-field"><label>Délai d'achat</label><input id="cr-delai-achat" placeholder="< 3 mois"></div>
+            <div class="form-field"><label>Délai d'achat</label><input id="cr-delai-achat" placeholder="3 mois"></div>
             <div class="form-field"><label>Accord bancaire</label>
               <select id="cr-accord" style="width:100%;padding:8px 10px;border:1px solid #e0deda;border-radius:7px;font-size:13px">
-                <option value="">Non précisé</option>
-                <option value="Oui">Oui</option>
-                <option value="Non">Non</option>
-                <option value="En cours">En cours</option>
+                <option value="">Non précisé</option><option value="Oui">Oui</option><option value="Non">Non</option><option value="En cours">En cours</option>
               </select>
             </div>
             <div class="form-field"><label>Critères importants</label><input id="cr-criteres" placeholder="Parking, balcon, jardin…"></div>
@@ -1655,81 +1694,129 @@ async function loadContacts() {
 
 function openFiche(index) {
   const l = _leadsCache[index];
-  if(!l) return;
+  if (!l) return;
   _currentFicheId = l.id;
+  _currentNoteFilter = 'tous';
   const d = l.details || {};
 
-  // Header
-  const initials = l.nom.split(' ').map(p=>p[0]?.toUpperCase()||'').join('').slice(0,2);
+  // ── Header ──
+  const initials = l.nom.split(' ').filter(Boolean).map(p => p[0]?.toUpperCase() || '').join('').slice(0, 2);
   document.getElementById('fiche-avatar').textContent = initials;
   document.getElementById('fiche-nom').textContent = l.nom;
-  document.getElementById('fiche-id').textContent = 'CLI-' + l.id?.slice(0,6).toUpperCase();
+  document.getElementById('fiche-id').textContent = 'CLI-' + (l.id || '').slice(0, 6).toUpperCase();
   document.getElementById('fiche-type').textContent = l.type || 'Acheteur';
-  document.getElementById('fiche-score-badge').textContent = (l.score||'—') + '/100';
+  document.getElementById('fiche-score-badge').textContent = (l.score || '—') + '/100';
   document.getElementById('fiche-statut-select').value = l.statut || 'froid';
 
-  // Dernier échange
-  const dernierEchange = d.dernier_echange || (l.created_at ? new Date(l.created_at).toLocaleDateString('fr-FR') : '—');
-  document.getElementById('fiche-dernier-echange').textContent = dernierEchange;
-
-  // Actions rapides
-  const telBtn = document.getElementById('fiche-tel-btn');
-  const emailBtn = document.getElementById('fiche-email-btn');
-  telBtn.href = l.telephone ? 'tel:'+l.telephone : '#';
-  emailBtn.href = l.email ? 'mailto:'+l.email : '#';
-
-  // Informations
-  document.getElementById('fiche-email').textContent = l.email || '—';
-  document.getElementById('fiche-telephone').textContent = l.telephone || '—';
+  // Contact info
+  const tel = l.telephone || '';
+  const email = l.email || '';
+  document.getElementById('fiche-tel-display').textContent = tel || '—';
+  document.getElementById('fiche-tel-action').href = tel ? 'tel:' + tel : '#';
+  document.getElementById('fiche-email-display').textContent = email || '—';
+  document.getElementById('fiche-email-action').href = email ? 'mailto:' + email : '#';
+  document.getElementById('fiche-email-btn').href = email ? 'mailto:' + email : '#';
   document.getElementById('fiche-source').textContent = l.source || '—';
-  document.getElementById('fiche-budget').textContent = l.budget ? Number(l.budget).toLocaleString('fr-FR')+'€' : '—';
-  document.getElementById('fiche-delai').textContent = l.delai || '—';
-  document.getElementById('fiche-financement').textContent = l.financement || '—';
+  document.getElementById('fiche-dernier-echange').textContent = d.dernier_echange || (l.created_at ? new Date(l.created_at).toLocaleDateString('fr-FR') : '—');
+
+  // ── Résumé IA ──
   document.getElementById('fiche-resume').textContent = l.resume || '—';
 
-  // Critères de recherche
-  document.getElementById('fc-type-bien').textContent = d.type_bien_recherche || '—';
-  document.getElementById('fc-budget-max').textContent = d.budget_max ? Number(d.budget_max).toLocaleString('fr-FR')+'€' : '—';
-  document.getElementById('fc-surface-min').textContent = d.surface_min ? d.surface_min+' m²' : '—';
-  document.getElementById('fc-pieces-min').textContent = d.pieces_min || '—';
-  document.getElementById('fc-secteur').textContent = d.secteur || '—';
-  document.getElementById('fc-delai-achat').textContent = d.delai_achat || l.delai || '—';
-  document.getElementById('fc-accord').textContent = d.accord_bancaire || (l.financement ? l.financement : '—');
-  document.getElementById('fc-criteres').textContent = d.criteres_importants || '—';
+  // ── Détection IA (si en attente) ──
+  const detection = d.detection_pending || null;
+  const banner = document.getElementById('detection-ia-banner');
+  if (detection && detection.texte) {
+    document.getElementById('detection-ia-texte').textContent = '"' + detection.texte + '"';
+    banner.style.display = 'block';
+  } else {
+    banner.style.display = 'none';
+  }
 
-  // Notaire acheteur
+  // ── Biens liés ──
+  const biens = d.biens_lies || { intresse: [], planifie: [], realise: [], offre: [] };
+  window._currentBiensLies = biens;
+  const maj = (id, val, suf) => {
+    const el = document.getElementById('count-' + id);
+    if (el) el.textContent = val + ' ' + suf + (val > 1 ? 's' : '');
+  };
+  maj('intresse', (biens.intresse || []).length, 'intéressé');
+  maj('planifie', (biens.planifie || []).length, 'visite planifiée');
+  maj('realise', (biens.realise || []).length, 'visite réalisée');
+  maj('offre', (biens.offre || []).length, 'offre');
+  fermerPanelBiens();
+
+  // Alimenter le select de liaison avec les biens disponibles
+  const sel = document.getElementById('lier-bien-select');
+  if (sel) {
+    sel.innerHTML = '<option value="">Choisir un bien...</option>';
+    (_biensCache || []).forEach(b => {
+      const opt = document.createElement('option');
+      opt.value = b.id;
+      opt.textContent = (b.reference || '—') + ' · ' + (b.adresse || b.ville || '—');
+      sel.appendChild(opt);
+    });
+  }
+
+  // ── Critères — auto-alimentés depuis quali si vides ──
+  const criteres = {
+    type_bien_recherche: d.type_bien_recherche || '',
+    budget_max: d.budget_max || (l.budget ? String(l.budget) : ''),
+    surface_min: d.surface_min || '',
+    pieces_min: d.pieces_min || '',
+    secteur: d.secteur || '',
+    delai_achat: d.delai_achat || l.delai || '',
+    accord_bancaire: d.accord_bancaire || l.financement || '',
+    criteres_importants: d.criteres_importants || '',
+  };
+  document.getElementById('fc-type-bien').textContent = criteres.type_bien_recherche || '—';
+  document.getElementById('fc-budget-max').textContent = criteres.budget_max ? Number(criteres.budget_max).toLocaleString('fr-FR') + ' €' : '—';
+  document.getElementById('fc-surface-min').textContent = criteres.surface_min ? criteres.surface_min + ' m²' : '—';
+  document.getElementById('fc-pieces-min').textContent = criteres.pieces_min || '—';
+  document.getElementById('fc-secteur').textContent = criteres.secteur || '—';
+  document.getElementById('fc-delai-achat').textContent = criteres.delai_achat || '—';
+  document.getElementById('fc-accord').textContent = criteres.accord_bancaire || '—';
+  document.getElementById('fc-criteres').textContent = criteres.criteres_importants || '—';
+
+  // ── Notaire acheteur ──
   const cn = d.notaire_acheteur || {};
   const cnNom = cn.nom || '';
-  document.getElementById('cnotaire-initials').textContent = cnNom ? cnNom.split(' ').filter(Boolean).map(x=>x[0]).join('').slice(0,2).toUpperCase() : '—';
+  document.getElementById('cnotaire-initials').textContent = cnNom ? cnNom.split(' ').filter(Boolean).map(x => x[0]).join('').slice(0, 2).toUpperCase() : '—';
   document.getElementById('cnotaire-nom').textContent = cnNom || 'Non renseigné';
   document.getElementById('cnotaire-cabinet').textContent = cn.cabinet || '';
   document.getElementById('cnotaire-contact').textContent = [cn.email, cn.telephone].filter(Boolean).join(' · ');
-  document.getElementById('cnotaire-email-btn').href = cn.email ? 'mailto:'+cn.email : '#';
+  document.getElementById('cnotaire-email-btn').href = cn.email ? 'mailto:' + cn.email : '#';
   document.getElementById('cnotaire-input-nom').value = cn.nom || '';
   document.getElementById('cnotaire-input-cabinet').value = cn.cabinet || '';
   document.getElementById('cnotaire-input-email').value = cn.email || '';
   document.getElementById('cnotaire-input-tel').value = cn.telephone || '';
+  // Masquer le form d'édition
+  document.getElementById('cnotaire-view').style.display = 'flex';
+  document.getElementById('cnotaire-edit').style.display = 'none';
 
-  // Documents
+  // ── Documents ──
   const docs = d.docs || {};
-  const docStatus = (key) => docs[key] ? '<span style="color:#1a7a1a">✅ Reçu</span>' : '<span style="color:#a06010">⏳ En attente</span>';
-  document.getElementById('doc-identite').innerHTML = docStatus('identite');
-  document.getElementById('doc-salaire').innerHTML = docStatus('salaire');
-  document.getElementById('doc-impots').innerHTML = docStatus('impots');
-  document.getElementById('doc-banque').innerHTML = docStatus('banque');
-  const docsCount = Object.values(docs).filter(Boolean).length;
-  document.getElementById('cdocs-badge').innerHTML = docsCount > 0 ? `<span class="badge badge-green" style="font-size:9px;padding:2px 6px">${docsCount}/4</span>` : '';
+  const docKeys = ['identite', 'salaire', 'impots', 'banque'];
+  let docsCount = 0;
+  docKeys.forEach(k => {
+    const el = document.getElementById('doc-c-' + k);
+    const noteEl = document.getElementById('doc-c-' + k + '-note');
+    const recu = docs[k] && docs[k].recu;
+    if (recu) docsCount++;
+    if (el) {
+      el.innerHTML = recu
+        ? '<span style="color:#1a7a1a">&#x2705; Reçu</span>'
+        : '<span style="color:#a06010">&#x23F3; En attente</span>';
+    }
+    if (noteEl) noteEl.textContent = (docs[k] && docs[k].note) || '';
+  });
+  const badge = document.getElementById('cdocs-badge');
+  if (badge) {
+    badge.innerHTML = docsCount > 0
+      ? '<span class="badge badge-green" style="font-size:9px;padding:2px 6px">' + docsCount + '/4</span>'
+      : '';
+  }
 
-  // Biens liés (depuis details)
-  const biensList = d.biens_lies || { visites: [], discussion: [], suggestions: [] };
-  document.getElementById('count-visites').textContent = biensList.visites.length + ' visité' + (biensList.visites.length > 1 ? 's' : '');
-  document.getElementById('count-discussion').textContent = biensList.discussion.length + ' en cours';
-  document.getElementById('count-suggestions').textContent = biensList.suggestions.length + ' suggestion' + (biensList.suggestions.length > 1 ? 's' : '') + ' IA';
-  window._currentBiensLies = biensList;
-
-  // Reset panels
-  document.getElementById('panel-biens-contact').style.display = 'none';
-  document.getElementById('drawer-bien-contact').style.display = 'none';
+  // ── Reset import IA ──
   resetImportIAContact();
 
   loadNotes(l.id);
@@ -1737,62 +1824,255 @@ function openFiche(index) {
 }
 
 // ── Biens liés ────────────────────────────────────────────────────────────────
-const PANEL_CONFIG = {
-  visites:     { title:'Biens visités',           dot:'#22c55e' },
-  discussion:  { title:'En discussion / Offres',  dot:'#f59e0b' },
-  suggestions: { title:'Suggestions IA',          dot:'#4F7EF7' }
+let _panelBiensType = null;
+
+const BIENS_CONFIG = {
+  intresse:  { label: 'Intéressés',        dot: '#aaa',     border: '#e0deda' },
+  planifie:  { label: 'Visites planifiées', dot: '#4F7EF7',  border: '#c5d4f8' },
+  realise:   { label: 'Visites réalisées',  dot: '#22c55e',  border: '#b3eab3' },
+  offre:     { label: 'Offres déposées',    dot: '#f59e0b',  border: '#fcd89a' },
 };
 
-function ouvrirPanelBiens(type) {
-  const cfg = PANEL_CONFIG[type];
-  const biens = (window._currentBiensLies || {})[type] || [];
-  document.getElementById('panel-biens-title').textContent = cfg.title;
-  document.getElementById('panel-biens-dot').style.background = cfg.dot;
-  document.getElementById('drawer-bien-contact').style.display = 'none';
+function togglePanelBiens(type) {
+  // Si même type déjà ouvert → ferme
+  if (_panelBiensType === type) { fermerPanelBiens(); return; }
+  _panelBiensType = type;
+  const cfg = BIENS_CONFIG[type] || {};
+  const wrap = document.getElementById('panel-biens-list-wrap');
+  const titre = document.getElementById('panel-biens-titre');
+  const dot = document.getElementById('panel-biens-dot');
+  const contenu = document.getElementById('panel-biens-contenu');
+  if (!wrap) return;
 
-  if (!biens.length) {
-    document.getElementById('panel-biens-list').innerHTML = '<div class="empty-state">Aucun bien dans cette catégorie</div>';
+  if (titre) titre.textContent = cfg.label || type;
+  if (dot) dot.style.background = cfg.dot || '#aaa';
+  wrap.style.borderColor = cfg.border || '#e8e6e0';
+
+  const liste = (window._currentBiensLies || {})[type] || [];
+  if (!liste.length) {
+    contenu.innerHTML = '<div class="empty-state">Aucun bien dans cette catégorie</div>';
   } else {
-    const colors = { green:'#22c55e', amber:'#f59e0b', blue:'#4F7EF7', gray:'#ccc' };
-    window._panelBiensData = biens;
-    document.getElementById('panel-biens-list').innerHTML = biens.map((b,i) => {
-      const dot = colors[b.color||'gray'];
-      return '<div onclick="ouvrirDrawerBien(' + i + ')" style="display:flex;align-items:center;gap:10px;padding:9px 11px;background:#F9F8F5;border-radius:8px;border:1px solid #f0ede8;cursor:pointer">'
-        + '<span style="width:7px;height:7px;border-radius:50%;background:' + dot + ';flex-shrink:0"></span>'
-        + '<div style="flex:1"><div style="font-size:12px;font-weight:500;color:#1a1a1a">' + b.ref + ' · ' + (b.adresse||'') + '</div>'
-        + '<div style="font-size:10px;color:#888;margin-top:2px">' + (b.type||'') + (b.prix?' · '+b.prix:'') + (b.date?' · '+b.date:'') + '</div>'
-        + (b.note ? '<div style="font-size:10px;color:#555;font-style:italic;margin-top:2px">' + b.note + '</div>' : '')
-        + '</div>'
-        + (b.match ? '<span style="font-size:10px;font-weight:600;background:#EEF3FF;color:#2a4eb5;padding:2px 8px;border-radius:20px">' + b.match + '</span>' : '')
-        + '<span style="font-size:13px;color:#4F7EF7">→</span></div>';
-    }).join('');
+    contenu.innerHTML = '';
+    liste.forEach((b, i) => {
+      const div = document.createElement('div');
+      div.style.cssText = 'display:flex;align-items:flex-start;gap:10px;padding:9px 10px;background:#F9F8F5;border-radius:7px;margin-bottom:6px;cursor:pointer';
+      div.innerHTML =
+        '<div style="flex:1">' +
+          '<div style="font-size:12px;font-weight:500;color:#1a1a1a">' + (b.ref || '—') + ' · ' + (b.adresse || '') + '</div>' +
+          '<div style="font-size:10px;color:#888;margin-top:2px">' + (b.type || '') + (b.prix ? ' · ' + b.prix : '') + (b.date ? ' · ' + b.date : '') + '</div>' +
+          (b.note ? '<div style="font-size:11px;color:#555;margin-top:4px;padding:5px 8px;background:#fff;border:1px solid #e8e6e0;border-radius:5px">' + b.note + '</div>' : '') +
+        '</div>' +
+        '<select onchange="changerStatutBien(' + i + ',\'' + type + '\',this.value)" style="font-size:10px;padding:3px 6px;border:1px solid #e0deda;border-radius:6px;background:#fff;cursor:pointer;flex-shrink:0">' +
+          '<option value="intresse"' + (type === 'intresse' ? ' selected' : '') + '>Intéressé</option>' +
+          '<option value="planifie"' + (type === 'planifie' ? ' selected' : '') + '>Visite planifiée</option>' +
+          '<option value="realise"' + (type === 'realise' ? ' selected' : '') + '>Visite réalisée</option>' +
+          '<option value="offre"' + (type === 'offre' ? ' selected' : '') + '>Offre déposée</option>' +
+          '<option value="sans_suite">Sans suite</option>' +
+        '</select>';
+      contenu.appendChild(div);
+    });
   }
-  document.getElementById('panel-biens-contact').style.display = 'block';
+  wrap.style.display = 'block';
+  document.getElementById('panel-lier-bien').style.display = 'none';
 }
 
-function ouvrirDrawerBien(indexOrObj) {
-  const b = typeof indexOrObj === 'number' ? (window._panelBiensData||[])[indexOrObj] : indexOrObj;
+function fermerPanelBiens() {
+  _panelBiensType = null;
+  const wrap = document.getElementById('panel-biens-list-wrap');
+  if (wrap) wrap.style.display = 'none';
+}
+
+function togglePanelLierBien() {
+  fermerPanelBiens();
+  const p = document.getElementById('panel-lier-bien');
+  p.style.display = p.style.display === 'block' ? 'none' : 'block';
+}
+
+async function lierBienAuContact() {
+  if (!_currentFicheId) return;
+  const bienId = document.getElementById('lier-bien-select').value;
+  const statut = document.getElementById('lier-bien-statut').value;
+  if (!bienId) { showToast('Choisissez un bien'); return; }
+
+  const b = (_biensCache || []).find(x => x.id === bienId);
   if (!b) return;
-  document.getElementById('drawer-bien-ref').textContent = b.ref || '—';
-  document.getElementById('drawer-bien-adresse').textContent = b.adresse || '—';
-  const s = document.getElementById('drawer-bien-statut');
-  s.textContent = b.statut || '—';
-  const infos = [['Type', b.type], ['Prix', b.prix], ['Date visite', b.date], ['Match IA', b.match], ['Note', b.note]].filter(([,v])=>v);
-  document.getElementById('drawer-bien-infos').innerHTML = infos.map(([l,v])=>`
-    <div class="fb-card"><div class="fb-card-label">${l}</div><div class="fb-card-val" style="font-size:11px">${v}</div></div>`).join('');
-  window._drawerBienRef = b.ref;
-  document.getElementById('drawer-bien-contact').style.display = 'block';
+
+  const l = _leadsCache.find(x => x.id === _currentFicheId);
+  if (!l) return;
+
+  const biens = JSON.parse(JSON.stringify(l.details?.biens_lies || { intresse: [], planifie: [], realise: [], offre: [] }));
+  if (!biens[statut]) biens[statut] = [];
+
+  // Vérifier si déjà lié
+  const deja = Object.values(biens).flat().find(x => x.bienId === bienId);
+  if (deja) { showToast('Ce bien est déjà lié à ce contact'); return; }
+
+  biens[statut].push({
+    bienId: b.id,
+    ref: b.reference || '—',
+    adresse: (b.adresse || '') + (b.ville ? ', ' + b.ville : ''),
+    type: b.type_bien || '',
+    prix: b.prix ? Number(b.prix).toLocaleString('fr-FR') + ' €' : '',
+    date: new Date().toLocaleDateString('fr-FR'),
+    note: '',
+  });
+
+  const details = { ...(l.details || {}), biens_lies: biens };
+  const { error } = await sb.from('leads').update({ details }).eq('id', _currentFicheId);
+  if (error) { showToast('Erreur : ' + error.message); return; }
+
+  l.details = details;
+  window._currentBiensLies = biens;
+  const idx = _leadsCache.indexOf(l);
+  openFiche(idx);
+  showToast('✅ Bien lié avec succès');
 }
 
-function ouvrirFicheBienDepuisContact() {
-  const ref = window._drawerBienRef;
-  if (!ref) return;
-  const idx = _biensCache.findIndex(b => b.reference === ref);
-  if (idx >= 0) openFicheBien(idx);
-  else showToast('Bien non trouvé dans le CRM');
+async function changerStatutBien(itemIdx, ancienType, nouveauStatut) {
+  if (!_currentFicheId) return;
+  const l = _leadsCache.find(x => x.id === _currentFicheId);
+  if (!l) return;
+
+  const biens = JSON.parse(JSON.stringify(l.details?.biens_lies || { intresse: [], planifie: [], realise: [], offre: [] }));
+  if (!biens[ancienType] || !biens[ancienType][itemIdx]) return;
+
+  const item = biens[ancienType].splice(itemIdx, 1)[0];
+
+  if (nouveauStatut !== 'sans_suite') {
+    if (!biens[nouveauStatut]) biens[nouveauStatut] = [];
+    biens[nouveauStatut].push(item);
+  }
+
+  const details = { ...(l.details || {}), biens_lies: biens };
+  await sb.from('leads').update({ details }).eq('id', _currentFicheId);
+  l.details = details;
+  window._currentBiensLies = biens;
+  const idx = _leadsCache.indexOf(l);
+  openFiche(idx);
+  showToast('✅ Statut mis à jour');
 }
 
-// ── Notaire acheteur (fiche contact) ─────────────────────────────────────────
+// ── Détection visite ──────────────────────────────────────────────────────────
+const MOTS_VISITE = ['visite', 'visité', 'visites', 'vu le bien', 'passé voir', 'compte-rendu', 'cr visite', 'recap visite'];
+
+function detecterVisite(texte) {
+  if (!texte) return false;
+  const t = texte.toLowerCase();
+  return MOTS_VISITE.some(m => t.includes(m));
+}
+
+async function confirmerDetectionVisite() {
+  if (!_currentFicheId) return;
+  const l = _leadsCache.find(x => x.id === _currentFicheId);
+  if (!l) return;
+  const detection = l.details?.detection_pending;
+  if (!detection) return;
+
+  // Déplacer le bien vers "realise" si c'était "planifie"
+  const biens = JSON.parse(JSON.stringify(l.details?.biens_lies || { intresse: [], planifie: [], realise: [], offre: [] }));
+  if (detection.bienId) {
+    const idx = (biens.planifie || []).findIndex(b => b.bienId === detection.bienId);
+    if (idx >= 0) {
+      const item = biens.planifie.splice(idx, 1)[0];
+      item.note = detection.texte;
+      item.date = new Date().toLocaleDateString('fr-FR');
+      biens.realise = biens.realise || [];
+      biens.realise.push(item);
+    }
+  }
+
+  const details = { ...(l.details || {}), biens_lies: biens, detection_pending: null };
+  await sb.from('leads').update({ details }).eq('id', _currentFicheId);
+  l.details = details;
+  const fidx = _leadsCache.indexOf(l);
+  openFiche(fidx);
+  showToast('✅ Visite confirmée — pipeline avancé');
+}
+
+function ignorerDetection() {
+  const banner = document.getElementById('detection-ia-banner');
+  if (banner) banner.style.display = 'none';
+}
+
+// ── Documents dossier contact ─────────────────────────────────────────────────
+async function toggleDocContact(key) {
+  if (!_currentFicheId) return;
+  const l = _leadsCache.find(x => x.id === _currentFicheId);
+  if (!l) return;
+  const docs = JSON.parse(JSON.stringify(l.details?.docs || {}));
+  docs[key] = docs[key] || {};
+  docs[key].recu = !docs[key].recu;
+  if (docs[key].recu) docs[key].date = new Date().toLocaleDateString('fr-FR');
+
+  const details = { ...(l.details || {}), docs };
+  const { error } = await sb.from('leads').update({ details }).eq('id', _currentFicheId);
+  if (error) { showToast('Erreur : ' + error.message); return; }
+  l.details = details;
+
+  const el = document.getElementById('doc-c-' + key);
+  if (el) el.innerHTML = docs[key].recu
+    ? '<span style="color:#1a7a1a">&#x2705; Reçu</span>'
+    : '<span style="color:#a06010">&#x23F3; En attente</span>';
+
+  let count = Object.values(docs).filter(v => v && v.recu).length;
+  const badge = document.getElementById('cdocs-badge');
+  if (badge) badge.innerHTML = count > 0 ? '<span class="badge badge-green" style="font-size:9px;padding:2px 6px">' + count + '/4</span>' : '';
+
+  showToast(docs[key].recu ? '✅ Document marqué reçu' : 'Document remis en attente');
+}
+
+function relancerDoc(key) {
+  const l = _leadsCache.find(x => x.id === _currentFicheId);
+  const email = l?.email;
+  if (email) {
+    showToast('📤 Relance envoyée à ' + email + ' pour le document ' + key);
+  } else {
+    showToast('⚠️ Email du contact manquant pour relancer');
+  }
+}
+
+async function uploadDocContact(input) {
+  showToast('📎 Upload document — Sprint 4 : stockage Supabase Storage');
+}
+
+// ── Edit contact modal ────────────────────────────────────────────────────────
+function ouvrirModalEditContact() {
+  const l = _leadsCache.find(x => x.id === _currentFicheId);
+  if (!l) return;
+  document.getElementById('ec-nom').value = l.nom || '';
+  document.getElementById('ec-email').value = l.email || '';
+  document.getElementById('ec-tel').value = l.telephone || '';
+  document.getElementById('ec-budget').value = l.budget || '';
+  document.getElementById('ec-delai').value = l.delai || '';
+  document.getElementById('ec-financement').value = l.financement || '';
+  document.getElementById('ec-source').value = l.source || '';
+  document.getElementById('modal-edit-contact').classList.add('open');
+}
+
+async function saveEditContact() {
+  if (!_currentFicheId) return;
+  const l = _leadsCache.find(x => x.id === _currentFicheId);
+  if (!l) return;
+  const updates = {
+    nom:        document.getElementById('ec-nom').value.trim(),
+    email:      document.getElementById('ec-email').value.trim() || null,
+    telephone:  document.getElementById('ec-tel').value.trim() || null,
+    budget:     parseFloat(document.getElementById('ec-budget').value) || null,
+    delai:      document.getElementById('ec-delai').value.trim() || null,
+    financement: document.getElementById('ec-financement').value.trim() || null,
+    source:     document.getElementById('ec-source').value.trim() || null,
+  };
+  if (!updates.nom) { showToast('Le nom est obligatoire'); return; }
+  const { error } = await sb.from('leads').update(updates).eq('id', _currentFicheId);
+  if (error) { showToast('Erreur : ' + error.message); return; }
+  Object.assign(l, updates);
+  document.getElementById('modal-edit-contact').classList.remove('open');
+  const idx = _leadsCache.indexOf(l);
+  openFiche(idx);
+  showToast('✅ Contact mis à jour');
+}
+
+// ── Notaire acheteur ──────────────────────────────────────────────────────────
 function toggleEditCNotaire() {
   const view = document.getElementById('cnotaire-view');
   const edit = document.getElementById('cnotaire-edit');
@@ -1806,38 +2086,23 @@ async function saveCNotaire() {
   const l = _leadsCache.find(x => x.id === _currentFicheId);
   if (!l) return;
   const cn = {
-    nom: document.getElementById('cnotaire-input-nom').value,
-    cabinet: document.getElementById('cnotaire-input-cabinet').value,
-    email: document.getElementById('cnotaire-input-email').value,
-    telephone: document.getElementById('cnotaire-input-tel').value,
+    nom:       document.getElementById('cnotaire-input-nom').value.trim(),
+    cabinet:   document.getElementById('cnotaire-input-cabinet').value.trim(),
+    email:     document.getElementById('cnotaire-input-email').value.trim(),
+    telephone: document.getElementById('cnotaire-input-tel').value.trim(),
   };
-  const details = { ...(l.details||{}), notaire_acheteur: cn };
-  await sb.from('leads').update({ details }).eq('id', _currentFicheId);
+  const details = { ...(l.details || {}), notaire_acheteur: cn };
+  const { error } = await sb.from('leads').update({ details }).eq('id', _currentFicheId);
+  if (error) { showToast('Erreur : ' + error.message); return; }
   l.details = details;
   document.getElementById('cnotaire-nom').textContent = cn.nom || 'Non renseigné';
   document.getElementById('cnotaire-cabinet').textContent = cn.cabinet || '';
   document.getElementById('cnotaire-contact').textContent = [cn.email, cn.telephone].filter(Boolean).join(' · ');
-  const initials = cn.nom ? cn.nom.split(' ').filter(Boolean).map(x=>x[0]).join('').slice(0,2).toUpperCase() : '—';
+  const initials = cn.nom ? cn.nom.split(' ').filter(Boolean).map(x => x[0]).join('').slice(0, 2).toUpperCase() : '—';
   document.getElementById('cnotaire-initials').textContent = initials;
+  document.getElementById('cnotaire-email-btn').href = cn.email ? 'mailto:' + cn.email : '#';
   toggleEditCNotaire();
   showToast('✅ Notaire sauvegardé');
-}
-
-// ── Documents dossier ─────────────────────────────────────────────────────────
-async function toggleDoc(key) {
-  if (!_currentFicheId) return;
-  const l = _leadsCache.find(x => x.id === _currentFicheId);
-  if (!l) return;
-  const docs = { ...(l.details?.docs || {}) };
-  docs[key] = !docs[key];
-  const details = { ...(l.details||{}), docs };
-  await sb.from('leads').update({ details }).eq('id', _currentFicheId);
-  l.details = details;
-  const el = document.getElementById('doc-'+key);
-  el.innerHTML = docs[key] ? '<span style="color:#1a7a1a">✅ Reçu</span>' : '<span style="color:#a06010">⏳ En attente</span>';
-  const count = Object.values(docs).filter(Boolean).length;
-  document.getElementById('cdocs-badge').innerHTML = count > 0 ? `<span class="badge badge-green" style="font-size:9px;padding:2px 6px">${count}/4</span>` : '';
-  showToast(docs[key] ? '✅ Document marqué reçu' : 'Document remis en attente');
 }
 
 // ── Critères de recherche ─────────────────────────────────────────────────────
@@ -1846,11 +2111,11 @@ function editCriteresModal() {
   const l = _leadsCache.find(x => x.id === _currentFicheId);
   const d = l?.details || {};
   document.getElementById('cr-type-bien').value = d.type_bien_recherche || '';
-  document.getElementById('cr-budget-max').value = d.budget_max || '';
+  document.getElementById('cr-budget-max').value = d.budget_max || (l?.budget || '');
   document.getElementById('cr-surface-min').value = d.surface_min || '';
   document.getElementById('cr-pieces-min').value = d.pieces_min || '';
   document.getElementById('cr-secteur').value = d.secteur || '';
-  document.getElementById('cr-delai-achat').value = d.delai_achat || '';
+  document.getElementById('cr-delai-achat').value = d.delai_achat || (l?.delai || '');
   document.getElementById('cr-accord').value = d.accord_bancaire || '';
   document.getElementById('cr-criteres').value = d.criteres_importants || '';
   document.getElementById('modal-criteres').classList.add('open');
@@ -1860,54 +2125,70 @@ async function saveCriteres() {
   if (!_currentFicheId) return;
   const l = _leadsCache.find(x => x.id === _currentFicheId);
   if (!l) return;
-  const criteres = {
-    type_bien_recherche: document.getElementById('cr-type-bien').value,
-    budget_max: document.getElementById('cr-budget-max').value,
-    surface_min: document.getElementById('cr-surface-min').value,
-    pieces_min: document.getElementById('cr-pieces-min').value,
-    secteur: document.getElementById('cr-secteur').value,
-    delai_achat: document.getElementById('cr-delai-achat').value,
-    accord_bancaire: document.getElementById('cr-accord').value,
-    criteres_importants: document.getElementById('cr-criteres').value,
+  const crit = {
+    type_bien_recherche: document.getElementById('cr-type-bien').value.trim(),
+    budget_max:          document.getElementById('cr-budget-max').value,
+    surface_min:         document.getElementById('cr-surface-min').value,
+    pieces_min:          document.getElementById('cr-pieces-min').value.trim(),
+    secteur:             document.getElementById('cr-secteur').value.trim(),
+    delai_achat:         document.getElementById('cr-delai-achat').value.trim(),
+    accord_bancaire:     document.getElementById('cr-accord').value,
+    criteres_importants: document.getElementById('cr-criteres').value.trim(),
   };
-  const details = { ...(l.details||{}), ...criteres };
-  await sb.from('leads').update({ details }).eq('id', _currentFicheId);
+  const details = { ...(l.details || {}), ...crit };
+  const { error } = await sb.from('leads').update({ details }).eq('id', _currentFicheId);
+  if (error) { showToast('Erreur : ' + error.message); return; }
   l.details = details;
-  document.getElementById('fc-type-bien').textContent = criteres.type_bien_recherche || '—';
-  document.getElementById('fc-budget-max').textContent = criteres.budget_max ? Number(criteres.budget_max).toLocaleString('fr-FR')+'€' : '—';
-  document.getElementById('fc-surface-min').textContent = criteres.surface_min ? criteres.surface_min+' m²' : '—';
-  document.getElementById('fc-pieces-min').textContent = criteres.pieces_min || '—';
-  document.getElementById('fc-secteur').textContent = criteres.secteur || '—';
-  document.getElementById('fc-delai-achat').textContent = criteres.delai_achat || '—';
-  document.getElementById('fc-accord').textContent = criteres.accord_bancaire || '—';
-  document.getElementById('fc-criteres').textContent = criteres.criteres_importants || '—';
+  document.getElementById('fc-type-bien').textContent = crit.type_bien_recherche || '—';
+  document.getElementById('fc-budget-max').textContent = crit.budget_max ? Number(crit.budget_max).toLocaleString('fr-FR') + ' €' : '—';
+  document.getElementById('fc-surface-min').textContent = crit.surface_min ? crit.surface_min + ' m²' : '—';
+  document.getElementById('fc-pieces-min').textContent = crit.pieces_min || '—';
+  document.getElementById('fc-secteur').textContent = crit.secteur || '—';
+  document.getElementById('fc-delai-achat').textContent = crit.delai_achat || '—';
+  document.getElementById('fc-accord').textContent = crit.accord_bancaire || '—';
+  document.getElementById('fc-criteres').textContent = crit.criteres_importants || '—';
   document.getElementById('modal-criteres').classList.remove('open');
   showToast('✅ Critères sauvegardés');
 }
 
-// ── Actions rapides contact ───────────────────────────────────────────────────
+// ── Filtres notes ─────────────────────────────────────────────────────────────
+let _currentNoteFilter = 'tous';
+
+function filtrerNotes(type) {
+  _currentNoteFilter = type;
+  ['tous', 'appel', 'email', 'note', 'notaire'].forEach(t => {
+    const el = document.getElementById('filter-' + t);
+    if (!el) return;
+    if (t === type) {
+      el.className = 'badge badge-blue';
+      el.style.cssText = 'cursor:pointer';
+    } else {
+      el.className = 'badge';
+      el.style.cssText = 'cursor:pointer;background:#F5F4F0;color:#666';
+    }
+  });
+  if (_currentFicheId) loadNotes(_currentFicheId);
+}
+
+// ── Calendly ──────────────────────────────────────────────────────────────────
 async function envoyerCalendly() {
-  const { data: agency } = await sb.from('agencies').select('calendly_url').single();
-  const url = agency?.calendly_url;
-  if (url) window.open(url, '_blank');
-  else showToast('⚠️ Lien Calendly non configuré — vérifiez vos Paramètres');
+  try {
+    const { data: agency } = await sb.from('agencies').select('calendly_url').single();
+    const url = agency?.calendly_url;
+    if (url) window.open(url, '_blank');
+    else showToast('⚠️ Lien Calendly non configuré — vérifiez les Paramètres');
+  } catch(e) { showToast('⚠️ Calendly non configuré'); }
 }
 
 async function envoyerLienCalendly() {
-  const { data: agency } = await sb.from('agencies').select('calendly_url').single();
-  const url = agency?.calendly_url;
-  const l = _leadsCache.find(x => x.id === _currentFicheId);
-  if (!url) { showToast('⚠️ Lien Calendly non configuré'); return; }
-  if (l?.email) {
-    showToast('📅 Lien Calendly copié — envoyez-le par email à ' + l.email);
-    await navigator.clipboard.writeText(url).catch(()=>{});
-  } else {
-    showToast('⚠️ Email du contact manquant');
-  }
-}
-
-function editContactModal() {
-  showToast("💡 Utilisez l'Import IA ou l'Agent Qualification pour modifier");
+  try {
+    const { data: agency } = await sb.from('agencies').select('calendly_url').single();
+    const url = agency?.calendly_url;
+    const l = _leadsCache.find(x => x.id === _currentFicheId);
+    if (!url) { showToast('⚠️ Lien Calendly non configuré'); return; }
+    await navigator.clipboard.writeText(url).catch(() => {});
+    showToast('📅 Lien Calendly copié' + (l?.email ? ' — envoyez à ' + l.email : ''));
+  } catch(e) { showToast('⚠️ Erreur Calendly'); }
 }
 
 // ── Import IA Contact ─────────────────────────────────────────────────────────
@@ -1916,37 +2197,34 @@ let _cImportedData = {};
 function toggleImportIAContact() {
   const body = document.getElementById('import-ia-contact-body');
   const txt = document.getElementById('import-ia-contact-toggle-txt');
+  if (!body) return;
   const open = body.style.display === 'block';
   body.style.display = open ? 'none' : 'block';
   txt.textContent = open ? 'Ouvrir' : 'Fermer';
 }
 
 function setImportModeContact(mode) {
-  ['upload','paste','scan'].forEach(m => {
-    document.getElementById('cimode-'+m).classList.toggle('active', m === mode);
-    document.getElementById('cimport-zone-'+m).style.display = m === mode ? 'block' : 'none';
+  ['upload', 'paste', 'scan'].forEach(m => {
+    const btn = document.getElementById('cimode-' + m);
+    const zone = document.getElementById('cimport-zone-' + m);
+    if (btn) btn.classList.toggle('active', m === mode);
+    if (zone) zone.style.display = m === mode ? 'block' : 'none';
   });
-  document.getElementById('cimport-result').style.display = 'none';
+  const res = document.getElementById('cimport-result');
+  const load = document.getElementById('cimport-loading');
+  if (res) res.style.display = 'none';
+  if (load) load.style.display = 'none';
 }
 
 const CIMPORT_LABELS = {
-  nom:'Nom', email:'Email', telephone:'Téléphone', source:'Source',
-  type_bien_recherche:'Type bien recherché', budget_max:'Budget max',
-  surface_min:'Surface min', pieces_min:'Pièces min', secteur:'Secteur',
-  delai_achat:'Délai achat', accord_bancaire:'Accord bancaire', criteres_importants:'Critères importants',
-  notaire_nom:'Notaire - Nom', notaire_cabinet:'Notaire - Cabinet',
-  notaire_email:'Notaire - Email', notaire_tel:'Notaire - Tél'
+  nom: 'Nom', email: 'Email', telephone: 'Téléphone', source: 'Source',
+  type_bien_recherche: 'Type bien', budget_max: 'Budget max',
+  surface_min: 'Surface min', pieces_min: 'Pièces min',
+  secteur: 'Secteur', delai_achat: 'Délai achat',
+  accord_bancaire: 'Accord bancaire', criteres_importants: 'Critères',
+  notaire_nom: 'Notaire - Nom', notaire_cabinet: 'Notaire - Cabinet',
+  notaire_email: 'Notaire - Email', notaire_tel: 'Notaire - Tél',
 };
-
-const CIMPORT_PROMPT = `Tu es un expert immobilier. Analyse ce contenu et extrais les informations sur l'acheteur / candidat.
-Réponds UNIQUEMENT en JSON valide sans markdown, avec les champs disponibles parmi :
-{
-  "nom": "", "email": "", "telephone": "", "source": "",
-  "type_bien_recherche": "", "budget_max": "", "surface_min": "", "pieces_min": "",
-  "secteur": "", "delai_achat": "", "accord_bancaire": "", "criteres_importants": "",
-  "notaire_nom": "", "notaire_cabinet": "", "notaire_email": "", "notaire_tel": ""
-}
-N'inclus que les champs trouvés. Laisse vide si non trouvé.`;
 
 async function lancerImportIAContactFile(input) {
   const file = input.files?.[0];
@@ -1957,46 +2235,55 @@ async function lancerImportIAContactFile(input) {
   try {
     const base64full = await fileToBase64(file);
     const payload = file.type.startsWith('image/')
-      ? { image_base64: base64full.split(',')[1], image_type: file.type, prompt_override: CIMPORT_PROMPT }
-      : { texte: '[Document PDF — extrais les informations acheteur]', prompt_override: CIMPORT_PROMPT };
+      ? { image_base64: base64full.split(',')[1], image_type: file.type }
+      : { texte: 'Document PDF contact' };
     await appelImportIAContact(payload);
-  } catch(e) { showToast('❌ '+e.message); resetImportIAContact(); }
+  } catch(e) { showToast('Erreur : ' + e.message); resetImportIAContact(); }
 }
 
 async function lancerImportIAContactTexte() {
-  const texte = document.getElementById('cimport-paste-text').value.trim();
+  const texte = document.getElementById('cimport-paste-text')?.value.trim();
   if (!texte) return;
   document.getElementById('cimport-zone-paste').style.display = 'none';
   document.getElementById('cimport-loading').style.display = 'block';
   try {
-    await appelImportIAContact({ texte, prompt_override: CIMPORT_PROMPT });
-  } catch(e) { showToast('❌ '+e.message); resetImportIAContact(); }
+    await appelImportIAContact({ texte });
+  } catch(e) { showToast('Erreur : ' + e.message); resetImportIAContact(); }
 }
 
 async function appelImportIAContact(payload) {
   const res = await fetch('https://aivelo-production.up.railway.app/api/import-bien', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-api-key': 'aivelo-2026-ArthurS-immo' },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   });
   const data = await res.json();
   if (!data.success) throw new Error(data.error || 'Erreur import');
-  _cImportedData = data.data;
-  afficherImportResultContact(data.data);
+  _cImportedData = data.data || {};
+  afficherImportResultContact(_cImportedData);
 }
 
 function afficherImportResultContact(data) {
   document.getElementById('cimport-loading').style.display = 'none';
-  const entries = Object.entries(data).filter(([,v]) => v);
-  document.getElementById('cimport-result-count').textContent = entries.length + ' information(s) extraite(s) — décochez ce que vous ne voulez pas importer';
-  document.getElementById('cimport-fields-list').innerHTML = entries.map(([k,v]) =>
-    `<div class="extracted-field" style="cursor:pointer" onclick="toggleImportField(this)" data-key="${k}">
-      <div style="display:flex;align-items:center;gap:8px">
-        <input type="checkbox" checked onclick="event.stopPropagation();toggleImportField(this.parentElement.parentElement)" style="cursor:pointer;width:14px;height:14px;accent-color:#4F7EF7">
-        <span class="extracted-label">${CIMPORT_LABELS[k]||k}</span>
-      </div>
-      <span class="extracted-val">${v}</span>
-    </div>`).join('');
+  const entries = Object.entries(data).filter(([, v]) => v);
+  document.getElementById('cimport-result-count').textContent =
+    entries.length + ' information(s) extraite(s) — décochez ce que vous ne voulez pas importer';
+  const list = document.getElementById('cimport-fields-list');
+  list.innerHTML = '';
+  entries.forEach(([k, v]) => {
+    const div = document.createElement('div');
+    div.className = 'extracted-field';
+    div.dataset.key = k;
+    div.style.cursor = 'pointer';
+    div.onclick = function() { toggleImportField(this); };
+    div.innerHTML =
+      '<div style="display:flex;align-items:center;gap:8px">' +
+        '<input type="checkbox" checked onclick="event.stopPropagation();toggleImportField(this.parentElement.parentElement)" style="cursor:pointer;width:14px;height:14px;accent-color:#4F7EF7">' +
+        '<span class="extracted-label">' + (CIMPORT_LABELS[k] || k) + '</span>' +
+      '</div>' +
+      '<span class="extracted-val">' + v + '</span>';
+    list.appendChild(div);
+  });
   document.getElementById('cimport-result').style.display = 'block';
 }
 
@@ -2004,69 +2291,64 @@ async function validerImportIAContact() {
   if (!_currentFicheId || !Object.keys(_cImportedData).length) return;
   const l = _leadsCache.find(x => x.id === _currentFicheId);
   if (!l) return;
-  const checkedKeys = [...document.querySelectorAll('#cimport-fields-list .extracted-field')]
+  const checked = [...document.querySelectorAll('#cimport-fields-list .extracted-field')]
     .filter(el => el.querySelector('input[type=checkbox]')?.checked)
     .map(el => el.dataset.key);
   const sel = {};
-  checkedKeys.forEach(k => { if (_cImportedData[k]) sel[k] = _cImportedData[k]; });
-  if (!Object.keys(sel).length) { showToast('⚠️ Aucun champ sélectionné'); return; }
+  checked.forEach(k => { if (_cImportedData[k]) sel[k] = _cImportedData[k]; });
+  if (!Object.keys(sel).length) { showToast('Aucun champ sélectionné'); return; }
+
   const updates = {};
   if (sel.nom) updates.nom = sel.nom;
   if (sel.email) updates.email = sel.email;
   if (sel.telephone) updates.telephone = sel.telephone;
   if (sel.source) updates.source = sel.source;
+
   const notaire = {};
   if (sel.notaire_nom) notaire.nom = sel.notaire_nom;
   if (sel.notaire_cabinet) notaire.cabinet = sel.notaire_cabinet;
   if (sel.notaire_email) notaire.email = sel.notaire_email;
   if (sel.notaire_tel) notaire.telephone = sel.notaire_tel;
-  const details = {
-    ...(l.details||{}),
-    ...(sel.type_bien_recherche && {type_bien_recherche: sel.type_bien_recherche}),
-    ...(sel.budget_max && {budget_max: sel.budget_max}),
-    ...(sel.surface_min && {surface_min: sel.surface_min}),
-    ...(sel.pieces_min && {pieces_min: sel.pieces_min}),
-    ...(sel.secteur && {secteur: sel.secteur}),
-    ...(sel.delai_achat && {delai_achat: sel.delai_achat}),
-    ...(sel.accord_bancaire && {accord_bancaire: sel.accord_bancaire}),
-    ...(sel.criteres_importants && {criteres_importants: sel.criteres_importants}),
-    ...(Object.keys(notaire).length && {notaire_acheteur: notaire}),
-  };
+
+  const details = { ...(l.details || {}) };
+  if (sel.type_bien_recherche) details.type_bien_recherche = sel.type_bien_recherche;
+  if (sel.budget_max) details.budget_max = sel.budget_max;
+  if (sel.surface_min) details.surface_min = sel.surface_min;
+  if (sel.pieces_min) details.pieces_min = sel.pieces_min;
+  if (sel.secteur) details.secteur = sel.secteur;
+  if (sel.delai_achat) details.delai_achat = sel.delai_achat;
+  if (sel.accord_bancaire) details.accord_bancaire = sel.accord_bancaire;
+  if (sel.criteres_importants) details.criteres_importants = sel.criteres_importants;
+  if (Object.keys(notaire).length) details.notaire_acheteur = { ...(details.notaire_acheteur || {}), ...notaire };
+
   updates.details = details;
-  await sb.from('leads').update(updates).eq('id', _currentFicheId);
+  const { error } = await sb.from('leads').update(updates).eq('id', _currentFicheId);
+  if (error) { showToast('Erreur : ' + error.message); return; }
   Object.assign(l, updates);
+
+  resetImportIAContact();
   const idx = _leadsCache.indexOf(l);
-  document.getElementById('import-ia-contact-body').style.display = 'none';
-  document.getElementById('import-ia-contact-toggle-txt').textContent = 'Ouvrir';
   openFiche(idx);
   showToast('✅ ' + Object.keys(sel).length + ' champ(s) importé(s)');
 }
 
 function resetImportIAContact() {
   _cImportedData = {};
-  document.getElementById('cimport-result').style.display = 'none';
-  document.getElementById('cimport-loading').style.display = 'none';
-  document.getElementById('cimport-zone-upload').style.display = 'block';
-  document.getElementById('cimport-zone-paste').style.display = 'none';
-  document.getElementById('cimport-zone-scan').style.display = 'none';
-  document.getElementById('import-ia-contact-body').style.display = 'none';
-  document.getElementById('import-ia-contact-toggle-txt').textContent = 'Ouvrir';
+  const ids = ['cimport-result', 'cimport-loading'];
+  ids.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+  const upload = document.getElementById('cimport-zone-upload');
+  const paste = document.getElementById('cimport-zone-paste');
+  const scan = document.getElementById('cimport-zone-scan');
+  if (upload) upload.style.display = 'block';
+  if (paste) paste.style.display = 'none';
+  if (scan) scan.style.display = 'none';
   const ta = document.getElementById('cimport-paste-text');
   if (ta) ta.value = '';
+  const body = document.getElementById('import-ia-contact-body');
+  const txt = document.getElementById('import-ia-contact-toggle-txt');
+  if (body) body.style.display = 'none';
+  if (txt) txt.textContent = 'Ouvrir';
   setImportModeContact('upload');
-}
-
-// ── Filtrer notes ─────────────────────────────────────────────────────────────
-let _currentNoteFilter = 'tous';
-function filtrerNotes(type) {
-  _currentNoteFilter = type;
-  ['tous','appel','email','note','notaire'].forEach(t => {
-    const el = document.getElementById('filter-'+t);
-    if (el) el.className = t === type ? 'badge badge-blue' : 'badge';
-    if (el && t !== type) el.style.cssText = 'cursor:pointer;background:#F5F4F0;color:#666';
-    if (el && t === type) el.style.cssText = '';
-  });
-  if (_currentFicheId) loadNotes(_currentFicheId);
 }
 
 // ── Charger les relances ──────────────────────────────────────────────────────
@@ -2149,26 +2431,19 @@ async function qualifierLead() {
   const budget = parseFloat(document.getElementById('q-budget').value) || null;
   const delai = document.getElementById('q-delai').value.trim();
   const financement = document.getElementById('q-financement').value.trim();
-  const email = document.getElementById('q-email')?.value.trim() || null;
-  const telephone = document.getElementById('q-tel')?.value.trim() || null;
-  const source = document.getElementById('q-source')?.value || null;
 
-  if(!nom || !projet) { showToast('⚠️ Nom et projet sont obligatoires'); return; }
+  if(!nom || !projet) { alert('Nom et projet sont obligatoires.'); return; }
 
   document.getElementById('q-btn').disabled = true;
   document.getElementById('thinking-qualify').style.display = 'flex';
   document.getElementById('q-result').style.display = 'none';
   document.getElementById('q-error').style.display = 'none';
 
-  // Récupérer l'agency_id de l'utilisateur connecté
-  const { data: { session } } = await sb.auth.getSession();
-  const agency_id = session?.user?.id || null;
-
   try {
     const res = await fetch(API + '/api/qualify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': API_KEY },
-      body: JSON.stringify({ nom, projet, budget, delai, financement, agency_id, email, telephone, source })
+      body: JSON.stringify({ nom, projet, budget, delai, financement })
     });
     const data = await res.json();
     if(!res.ok) throw new Error(data.error || 'Erreur serveur');
@@ -2184,13 +2459,16 @@ async function qualifierLead() {
       `<strong>${d.statut==='chaud'?'🔥':d.statut==='tiede'?'🌡':'❄️'} Score : ${d.score}/100 · ${statLabel[d.statut]}</strong><br>
        ${d.resume}<br><br><em>💡 ${d.recommandation}</em>`;
 
-    // Recharger la liste des leads depuis Supabase
-    await loadContacts();
-    ['q-nom','q-projet','q-budget','q-delai','q-financement','q-email','q-tel'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.value = '';
-    });
-    showToast('✅ Lead qualifié et sauvegardé !');
+    const tbody = document.getElementById('leads-tbody');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="name-cell">${nom}</td>
+      <td>${projet.substring(0,28)}${projet.length>28?'…':''}</td>
+      <td>${budget ? budget.toLocaleString('fr-FR')+'€' : '—'}</td>
+      <td><div class="score-wrap"><div class="score-bar"><div class="score-fill" style="width:${d.score}%;background:${color}"></div></div>${d.score}</div></td>
+      <td><span class="badge ${statBadge[d.statut]}">${statLabel[d.statut]}</span></td>`;
+    tbody.insertBefore(tr, tbody.firstChild);
+    ['q-nom','q-projet','q-budget','q-delai','q-financement'].forEach(id => document.getElementById(id).value='');
 
   } catch(err) {
     document.getElementById('q-error').style.display = 'block';
@@ -2431,58 +2709,91 @@ async function updateStatut(newStatut) {
 
 // ── Notes libres ─────────────────────────────────────────────────────────────
 async function saveNote() {
-  const texte = document.getElementById('note-input').value.trim();
+  const texte = document.getElementById('note-input')?.value.trim();
   const type = document.getElementById('note-type-select')?.value || 'note';
-  if(!texte || !_currentFicheId) return;
+  if (!texte || !_currentFicheId) return;
+
   const { error } = await sb.from('contact_notes').insert({
     lead_id: _currentFicheId,
     texte,
     type_note: type,
-    created_at: new Date().toISOString()
+    created_at: new Date().toISOString(),
   });
-  if(error) { showToast('❌ Erreur : ' + error.message); return; }
+
+  if (error) { showToast('Erreur : ' + error.message); return; }
+
   document.getElementById('note-input').value = '';
+
   // Mettre à jour dernier échange
   const l = _leadsCache.find(x => x.id === _currentFicheId);
   if (l) {
     const today = new Date().toLocaleDateString('fr-FR');
-    const details = { ...(l.details||{}), dernier_echange: today };
+    const details = { ...(l.details || {}), dernier_echange: today };
     await sb.from('leads').update({ details }).eq('id', _currentFicheId);
     l.details = details;
-    document.getElementById('fiche-dernier-echange').textContent = today;
+    const el = document.getElementById('fiche-dernier-echange');
+    if (el) el.textContent = today;
   }
+
+  // Détection visite automatique
+  if (detecterVisite(texte) && l) {
+    // Chercher si un bien est planifié pour proposer la confirmation
+    const biens = l.details?.biens_lies || {};
+    const planifie = (biens.planifie || [])[0] || null;
+    const details = { ...(l.details || {}), detection_pending: { texte, bienId: planifie?.bienId || null } };
+    await sb.from('leads').update({ details }).eq('id', _currentFicheId);
+    l.details = details;
+    const banner = document.getElementById('detection-ia-banner');
+    const texteEl = document.getElementById('detection-ia-texte');
+    if (banner && texteEl) {
+      texteEl.textContent = '"' + texte + '"';
+      banner.style.display = 'block';
+      banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+
   loadNotes(_currentFicheId);
 }
 
 async function loadNotes(leadId) {
   const container = document.getElementById('notes-list');
+  if (!container) return;
   container.innerHTML = '<div class="text-xs" style="color:#aaa;text-align:center;padding:8px">Chargement…</div>';
-  let query = sb.from('contact_notes').select('*').eq('lead_id', leadId).order('created_at', { ascending: false });
-  const { data, error } = await query;
-  if(error || !data?.length) {
+
+  const { data, error } = await sb.from('contact_notes')
+    .select('*')
+    .eq('lead_id', leadId)
+    .order('created_at', { ascending: false });
+
+  if (error || !data?.length) {
     container.innerHTML = '<div class="text-xs" style="color:#aaa;text-align:center;padding:12px">Aucun échange pour ce contact</div>';
     return;
   }
-  const filtered = _currentNoteFilter === 'tous' ? data : data.filter(n => (n.type_note||'note') === _currentNoteFilter);
+
+  const filtered = _currentNoteFilter === 'tous' ? data : data.filter(n => (n.type_note || 'note') === _currentNoteFilter);
+
   if (!filtered.length) {
     container.innerHTML = '<div class="text-xs" style="color:#aaa;text-align:center;padding:12px">Aucun échange dans cette catégorie</div>';
     return;
   }
+
   const typeConfig = {
-    note:    { icon:'📝', color:'#e0deda', label:'Note' },
-    appel:   { icon:'📞', color:'#4F7EF7', label:'Appel' },
-    email:   { icon:'✉️', color:'#22c55e', label:'Email' },
-    notaire: { icon:'🏛️', color:'#a06010', label:'Notaire' },
+    note:    { icon: '📝', color: '#e0deda', label: 'Note' },
+    appel:   { icon: '📞', color: '#4F7EF7', label: 'Appel' },
+    email:   { icon: '✉️', color: '#22c55e', label: 'Email' },
+    notaire: { icon: '🏛️', color: '#a06010', label: 'Notaire' },
   };
+
   container.innerHTML = filtered.map(n => {
-    const t = typeConfig[n.type_note||'note'] || typeConfig.note;
-    return `<div style="padding:9px 11px;background:#F9F8F5;border-radius:7px;margin-bottom:6px;border-left:3px solid ${t.color}">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-        <span style="font-size:10px;font-weight:600;color:${t.color}">${t.icon} ${t.label}</span>
-        <span class="text-xs" style="color:#aaa">${new Date(n.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}</span>
-      </div>
-      <div style="font-size:13px;color:#444;line-height:1.5">${n.texte}</div>
-    </div>`;
+    const t = typeConfig[n.type_note || 'note'] || typeConfig.note;
+    const date = new Date(n.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+    return '<div style="padding:9px 11px;background:#F9F8F5;border-radius:7px;margin-bottom:6px;border-left:3px solid ' + t.color + '">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">' +
+        '<span style="font-size:10px;font-weight:600;color:' + t.color + '">' + t.icon + ' ' + t.label + '</span>' +
+        '<span style="font-size:10px;color:#aaa">' + date + '</span>' +
+      '</div>' +
+      '<div style="font-size:13px;color:#444;line-height:1.5">' + n.texte + '</div>' +
+    '</div>';
   }).join('');
 }
 
@@ -2858,7 +3169,7 @@ function afficherImportResult(data) {
   document.getElementById('import-fields-list').innerHTML = entries.map(([k,v]) =>
     `<div class="extracted-field" style="cursor:pointer" onclick="toggleImportField(this)" data-key="${k}">
       <div style="display:flex;align-items:center;gap:8px">
-        <input type="checkbox" checked onclick="event.stopPropagation();toggleImportField(this.parentElement.parentElement)" style="cursor:pointer;width:14px;height:14px;accent-color:#4F7EF7">
+        <input type="checkbox" checked onclick="event.stopPropagation();toggleImportField(this.closest('.extracted-field'))" style="cursor:pointer;width:14px;height:14px;accent-color:#4F7EF7">
         <span class="extracted-label">${IMPORT_LABELS[k]||k}</span>
       </div>
       <span class="extracted-val">${v}</span>

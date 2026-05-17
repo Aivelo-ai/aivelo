@@ -52,6 +52,45 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .modal-title{font-size:15px;font-weight:700;color:#222}
 .modal-close{background:none;border:none;font-size:18px;color:#888;cursor:pointer;line-height:1}
 .modal-close:hover{color:#222}
+/* ── Fiche bien refonte ── */
+.fb-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.fb-proprio{display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:7px;border:1px solid #e8e6e0;background:#F5F4F0;cursor:pointer;transition:all .15s}
+.fb-proprio:hover{border-color:#4F7EF7;background:#eef3ff}
+.fb-proprio-avatar{width:22px;height:22px;border-radius:50%;background:#EEF3FF;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#2a4eb5}
+.fb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-top:8px}
+.fb-card{background:#F9F8F5;border-radius:8px;padding:9px 11px;border:1px solid #f0ede8}
+.fb-card-label{font-size:10px;color:#aaa;margin-bottom:3px;font-weight:500;text-transform:uppercase;letter-spacing:.4px}
+.fb-card-val{font-size:13px;font-weight:500;color:#1a1a1a}
+.fb-card-val.blue{color:#4F7EF7}
+.fb-card-val.green{color:#1a7a1a}
+.fb-card-val.warn{color:#a06010}
+.fb-card-val.muted{color:#aaa}
+.fb-card.clickable{cursor:pointer;transition:all .15s}
+.fb-card.clickable:hover{border-color:#4F7EF7;background:#f0f4ff}
+.fb-section{background:#fff;border:1px solid #e8e6e0;border-radius:10px;margin-bottom:10px;overflow:hidden}
+.fb-section-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;transition:background .15s}
+.fb-section-header:hover{background:#FAFAF8}
+.fb-section-title{font-size:12px;font-weight:600;color:#1a1a1a;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:8px}
+.fb-section-body{padding:0 16px 14px}
+.fb-chevron{font-size:14px;color:#aaa;transition:transform .2s}
+.fb-chevron.open{transform:rotate(180deg)}
+.import-ia-wrap{border:1px solid #c5d4f8;border-radius:10px;margin-bottom:14px;overflow:hidden}
+.import-ia-header{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;background:#EEF3FF;cursor:pointer}
+.import-ia-body{padding:14px 16px;background:#fff;display:none}
+.import-modes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+.import-mode{border:1px solid #e8e6e0;border-radius:8px;padding:10px;text-align:center;cursor:pointer;transition:all .15s}
+.import-mode.active{border-color:#4F7EF7;background:#EEF3FF}
+.import-mode i{font-size:20px;color:#aaa;display:block;margin-bottom:4px}
+.import-mode.active i{color:#4F7EF7}
+.import-mode-label{font-size:11px;font-weight:600;color:#555}
+.import-mode.active .import-mode-label{color:#2a4eb5}
+.import-mode-sub{font-size:10px;color:#aaa;margin-top:2px}
+.import-dropzone{border:2px dashed #c5d4f8;border-radius:8px;padding:20px;text-align:center;background:#F9FAFF;cursor:pointer}
+.import-dropzone:hover{border-color:#4F7EF7;background:#EEF3FF}
+.extracted-field{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:#F9F8F5;border-radius:6px;border-left:3px solid #22c55e;margin-bottom:5px}
+.extracted-field.warn{border-left-color:#f59e0b}
+.extracted-label{font-size:11px;color:#888}
+.extracted-val{font-size:12px;font-weight:500;color:#1a1a1a}
 .main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
 /* ── Topbar ── */
 .topbar{background:#fff;border-bottom:1px solid #e8e6e0;padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:50}
@@ -412,26 +451,213 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
     <!-- ════════ FICHE BIEN ════════ -->
     <div class="pane" id="pane-fiche-bien">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
-        <button class="btn btn-sm" onclick="goToPane('biens')">← Retour aux biens</button>
-        <a id="fb-cadastre-btn" href="#" target="_blank" class="btn btn-sm" onclick="ouvrirCadastre();return false">
-          <i class="ti ti-map-2"></i> Lien cadastral
-        </a>
-      </div>
 
-      <!-- Infos bien -->
-      <div class="panel">
-        <div class="panel-header">
-          <div>
-            <div class="panel-title" id="fb-ref">—</div>
-            <div class="text-xs" id="fb-adresse" style="color:#888;margin-top:2px">—</div>
+      <!-- Header -->
+      <div class="fb-header">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-sm" onclick="goToPane('biens')">← Retour</button>
+          <span style="font-size:16px;font-weight:600;color:#1a1a1a" id="fb-ref">—</span>
+          <span style="color:#ccc">·</span>
+          <div class="fb-proprio" id="fb-proprio-badge" onclick="void(0)">
+            <div class="fb-proprio-avatar" id="fb-proprio-initials">—</div>
+            <span style="font-size:12px;font-weight:500;color:#2a4eb5" id="fb-proprio-nom">Propriétaire</span>
+            <i class="ti ti-external-link" style="font-size:11px;color:#4F7EF7"></i>
           </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <button class="btn btn-sm" onclick="ouvrirCadastre()"><i class="ti ti-map-2"></i> Cadastral</button>
           <span class="badge badge-green" id="fb-statut">—</span>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px">
-          <div><div class="section-label">Type</div><div id="fb-type" style="font-size:13px;font-weight:500">—</div></div>
-          <div><div class="section-label">Surface</div><div id="fb-surface" style="font-size:13px;font-weight:500">—</div></div>
-          <div><div class="section-label">Prix</div><div id="fb-prix" style="font-size:13px;font-weight:500;color:#4F7EF7">—</div></div>
+      </div>
+
+      <!-- Import IA -->
+      <div class="import-ia-wrap">
+        <div class="import-ia-header" onclick="toggleImportIA()">
+          <div style="display:flex;align-items:center;gap:8px">
+            <i class="ti ti-sparkles" style="font-size:14px;color:#4F7EF7"></i>
+            <span style="font-size:12px;font-weight:600;color:#2a4eb5">Import intelligent IA</span>
+            <span style="font-size:11px;color:#4F7EF7;opacity:.8">— Remplissage automatique par scan de document</span>
+          </div>
+          <span style="font-size:11px;color:#4F7EF7;font-weight:500" id="import-ia-toggle-txt">Ouvrir</span>
+        </div>
+        <div class="import-ia-body" id="import-ia-body">
+          <div class="import-modes">
+            <div class="import-mode active" id="imode-upload" onclick="setImportMode('upload')">
+              <i class="ti ti-upload"></i>
+              <div class="import-mode-label">Téléverser</div>
+              <div class="import-mode-sub">PDF, photo, image</div>
+            </div>
+            <div class="import-mode" id="imode-paste" onclick="setImportMode('paste')">
+              <i class="ti ti-clipboard-text"></i>
+              <div class="import-mode-label">Coller du texte</div>
+              <div class="import-mode-sub">Email, SMS, notes</div>
+            </div>
+            <div class="import-mode" id="imode-scan" onclick="setImportMode('scan')">
+              <i class="ti ti-scan"></i>
+              <div class="import-mode-label">Scanner</div>
+              <div class="import-mode-sub">Photo document</div>
+            </div>
+          </div>
+          <div id="import-zone-upload">
+            <div class="import-dropzone" onclick="document.getElementById('import-file-input').click()">
+              <i class="ti ti-file-upload" style="font-size:26px;color:#4F7EF7;display:block;margin-bottom:8px"></i>
+              <div style="font-size:13px;font-weight:500;color:#1a1a1a;margin-bottom:4px">Glissez votre document ici</div>
+              <div style="font-size:11px;color:#888">Mandat, compromis, fiche bien, email notaire — PDF · JPG · PNG</div>
+              <input type="file" id="import-file-input" style="display:none" accept=".pdf,.jpg,.jpeg,.png" onchange="lancerImportIA(this)">
+            </div>
+          </div>
+          <div id="import-zone-paste" style="display:none">
+            <textarea id="import-paste-text" placeholder="Collez ici le contenu à analyser — email, SMS, description bien, extrait de compromis, notes de visite…" style="width:100%;min-height:90px;border:1px solid #e8e6e0;border-radius:8px;padding:10px;font-size:13px;resize:vertical;box-sizing:border-box"></textarea>
+            <button class="btn btn-primary btn-sm" style="margin-top:8px" onclick="lancerImportIATexte()">
+              <i class="ti ti-sparkles"></i> Analyser et remplir automatiquement
+            </button>
+          </div>
+          <div id="import-zone-scan" style="display:none">
+            <div class="import-dropzone" onclick="document.getElementById('import-scan-input').click()">
+              <i class="ti ti-camera" style="font-size:26px;color:#4F7EF7;display:block;margin-bottom:8px"></i>
+              <div style="font-size:13px;font-weight:500;color:#1a1a1a;margin-bottom:4px">Photographiez le document</div>
+              <div style="font-size:11px;color:#888">Mandat papier, fiche, courrier notaire</div>
+              <input type="file" id="import-scan-input" style="display:none" accept="image/*" capture="environment" onchange="lancerImportIA(this)">
+            </div>
+          </div>
+          <div id="import-result" style="display:none;margin-top:12px">
+            <div style="display:flex;align-items:center;gap:6px;background:#EAFFEA;border:1px solid #b3eab3;border-radius:7px;padding:8px 12px;margin-bottom:10px">
+              <i class="ti ti-check" style="font-size:14px;color:#1a7a1a"></i>
+              <span style="font-size:12px;color:#1a7a1a;font-weight:500" id="import-result-count">Informations extraites</span>
+            </div>
+            <div style="font-size:10px;color:#aaa;font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Champs détectés — vérifiez avant de valider</div>
+            <div id="import-fields-list"></div>
+            <div style="display:flex;gap:8px;margin-top:10px">
+              <button class="btn btn-sm" onclick="resetImportIA()">Annuler</button>
+              <button class="btn btn-primary btn-sm" onclick="validerImportIA()">✓ Valider et remplir le dossier</button>
+            </div>
+          </div>
+          <div id="import-loading" style="display:none;text-align:center;padding:16px">
+            <div style="font-size:13px;color:#4F7EF7">⏳ Analyse en cours…</div>
+            <div style="font-size:11px;color:#aaa;margin-top:4px">L'IA extrait les informations du document</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Essentiel (toujours visible) -->
+      <div class="fb-section" style="margin-bottom:10px">
+        <div class="fb-section-header" style="cursor:default">
+          <div class="fb-section-title">Essentiel
+            <span style="font-size:10px;color:#888;font-weight:400;text-transform:none;letter-spacing:0" id="fb-adresse-small">—</span>
+          </div>
+          <button class="btn btn-sm" onclick="editEssentielModal()"><i class="ti ti-pencil"></i> Modifier</button>
+        </div>
+        <div class="fb-section-body" style="padding-top:0">
+          <div class="fb-grid">
+            <div class="fb-card"><div class="fb-card-label">Type</div><div class="fb-card-val" id="fb-type">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Pièces / Ch.</div><div class="fb-card-val" id="fb-pieces">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Surface hab.</div><div class="fb-card-val" id="fb-surface">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Loi Carrez</div><div class="fb-card-val" id="fb-carrez">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Prix affiché</div><div class="fb-card-val blue" id="fb-prix">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Net vendeur</div><div class="fb-card-val" id="fb-net-vendeur">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">DPE / GES</div><div class="fb-card-val" id="fb-dpe">—</div></div>
+            <div class="fb-card clickable" onclick="ouvrirModalNotaire('vendeur')">
+              <div class="fb-card-label">Notaire vendeur</div>
+              <div style="display:flex;align-items:center;gap:5px">
+                <span id="dot-notaire-v" style="width:7px;height:7px;border-radius:50%;background:#ddd;display:inline-block;flex-shrink:0"></span>
+                <span class="fb-card-val" id="badge-v-nom" style="font-size:12px">—</span>
+                <i class="ti ti-eye" style="font-size:12px;color:#4F7EF7;margin-left:auto"></i>
+              </div>
+            </div>
+            <div class="fb-card clickable" onclick="ouvrirModalNotaire('acheteur')">
+              <div class="fb-card-label">Notaire acheteur</div>
+              <div style="display:flex;align-items:center;gap:5px">
+                <span id="dot-notaire-a" style="width:7px;height:7px;border-radius:50%;background:#ddd;display:inline-block;flex-shrink:0"></span>
+                <span class="fb-card-val" id="badge-a-nom" style="font-size:12px">—</span>
+                <i class="ti ti-eye" style="font-size:12px;color:#4F7EF7;margin-left:auto"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Caractéristiques (repliable) -->
+      <div class="fb-section">
+        <div class="fb-section-header" onclick="fbToggle('caract')">
+          <div class="fb-section-title">Caractéristiques détaillées</div>
+          <i class="ti ti-chevron-down fb-chevron" id="chev-caract"></i>
+        </div>
+        <div class="fb-section-body" id="body-caract" style="display:none">
+          <div class="fb-grid">
+            <div class="fb-card"><div class="fb-card-label">Étage</div><div class="fb-card-val" id="fb-etage">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Ascenseur</div><div class="fb-card-val" id="fb-ascenseur">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Exposition</div><div class="fb-card-val" id="fb-exposition">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Année constr.</div><div class="fb-card-val" id="fb-annee">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Balcon / Terr.</div><div class="fb-card-val" id="fb-balcon">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Cave</div><div class="fb-card-val" id="fb-cave">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Parking</div><div class="fb-card-val" id="fb-parking">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Taxe foncière</div><div class="fb-card-val" id="fb-taxe">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Copropriété (repliable) -->
+      <div class="fb-section">
+        <div class="fb-section-header" onclick="fbToggle('copro')">
+          <div class="fb-section-title">Copropriété</div>
+          <i class="ti ti-chevron-down fb-chevron" id="chev-copro"></i>
+        </div>
+        <div class="fb-section-body" id="body-copro" style="display:none">
+          <div class="fb-grid">
+            <div class="fb-card"><div class="fb-card-label">Résidence</div><div class="fb-card-val" id="fb-residence">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">N° lot</div><div class="fb-card-val" id="fb-lot">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Charges</div><div class="fb-card-val" id="fb-charges">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Nb. lots</div><div class="fb-card-val" id="fb-nb-lots">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Syndic</div><div class="fb-card-val" id="fb-syndic">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Procédure</div><div class="fb-card-val" id="fb-procedure">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Diagnostics (repliable) -->
+      <div class="fb-section">
+        <div class="fb-section-header" onclick="fbToggle('diag')">
+          <div class="fb-section-title">Diagnostics <span id="diag-alert-badge"></span></div>
+          <i class="ti ti-chevron-down fb-chevron" id="chev-diag"></i>
+        </div>
+        <div class="fb-section-body" id="body-diag" style="display:none">
+          <div class="fb-grid">
+            <div class="fb-card"><div class="fb-card-label">DPE</div><div class="fb-card-val" id="fb-diag-dpe">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Amiante</div><div class="fb-card-val" id="fb-diag-amiante">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Plomb</div><div class="fb-card-val" id="fb-diag-plomb">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Électricité</div><div class="fb-card-val" id="fb-diag-elec">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Gaz</div><div class="fb-card-val" id="fb-diag-gaz">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">ERP</div><div class="fb-card-val" id="fb-diag-erp">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mandat (repliable) -->
+      <div class="fb-section">
+        <div class="fb-section-header" onclick="fbToggle('mandat')">
+          <div class="fb-section-title">Mandat <span id="mandat-alert-badge"></span></div>
+          <div style="display:flex;align-items:center;gap:8px" onclick="event.stopPropagation()">
+            <button class="btn btn-sm" style="border-color:#c5d4f8;color:#4F7EF7" onclick="document.getElementById('import-ia-body').style.display='block';document.getElementById('import-ia-toggle-txt').textContent='Fermer'">
+              <i class="ti ti-scan"></i> Scanner
+            </button>
+            <i class="ti ti-chevron-down fb-chevron" id="chev-mandat"></i>
+          </div>
+        </div>
+        <div class="fb-section-body" id="body-mandat" style="display:none">
+          <div class="fb-grid">
+            <div class="fb-card"><div class="fb-card-label">Type mandat</div><div class="fb-card-val" id="fb-mandat-type">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">N° mandat</div><div class="fb-card-val" id="fb-mandat-num">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Signé le</div><div class="fb-card-val" id="fb-mandat-debut">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Expiration</div><div class="fb-card-val" id="fb-mandat-fin">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Honoraires</div><div class="fb-card-val" id="fb-mandat-honoraires">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Charge</div><div class="fb-card-val" id="fb-mandat-charge">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Reconduction</div><div class="fb-card-val" id="fb-mandat-reconduction">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Substitution</div><div class="fb-card-val" id="fb-mandat-substitution">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Clause pénale</div><div class="fb-card-val" id="fb-mandat-penale">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Carte pro</div><div class="fb-card-val" id="fb-mandat-carte">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Garantie fin.</div><div class="fb-card-val" id="fb-mandat-garantie">—</div></div>
+            <div class="fb-card"><div class="fb-card-label">Parcelle cad.</div><div class="fb-card-val" id="fb-mandat-parcelle">—</div></div>
+          </div>
         </div>
       </div>
 
@@ -441,57 +667,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div class="pipeline-wrap" id="fb-pipeline"></div>
       </div>
 
-      <!-- Notaires -->
-      <div class="panel">
-        <div class="panel-header"><div class="panel-title">Notaires</div></div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">
-          <div class="notaire-badge" onclick="ouvrirModalNotaire('vendeur')">
-            <span class="notaire-dot" id="dot-notaire-v">●</span>
-            <span class="notaire-badge-label">🏠 Vendeur</span>
-            <span class="notaire-badge-name" id="badge-v-nom">Non renseigné</span>
-            <span class="notaire-loupe">🔍</span>
-          </div>
-          <div class="notaire-badge" onclick="ouvrirModalNotaire('acheteur')">
-            <span class="notaire-dot" id="dot-notaire-a">●</span>
-            <span class="notaire-badge-label">🤝 Acheteur</span>
-            <span class="notaire-badge-name" id="badge-a-nom">Non renseigné</span>
-            <span class="notaire-loupe">🔍</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Modal Notaire -->
-      <div class="modal-overlay" id="modal-notaire">
-        <div class="modal-box">
-          <div class="modal-header">
-            <div class="modal-title" id="modal-notaire-title">Notaire vendeur</div>
-            <button class="modal-close" onclick="fermerModalNotaire()">✕</button>
-          </div>
-          <div class="form-grid" style="grid-template-columns:1fr">
-            <div class="form-field"><label>Nom</label><input id="mn-nom" placeholder="Me Dupont"></div>
-            <div class="form-field"><label>Cabinet</label><input id="mn-cabinet" placeholder="Dupont & Associés"></div>
-            <div class="form-field"><label>Email</label><input id="mn-email" placeholder="contact@notaire.fr"></div>
-            <div class="form-field"><label>Téléphone</label><input id="mn-tel" placeholder="04 78 ..."></div>
-          </div>
-          <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">
-            <button class="btn btn-sm" onclick="fermerModalNotaire()">Annuler</button>
-            <button class="btn btn-primary btn-sm" onclick="saveNotaireModal()">💾 Sauvegarder</button>
-          </div>
-        </div>
-      </div>
-
       <!-- Documents -->
       <div class="panel">
         <div class="panel-header">
           <div class="panel-title">Documents</div>
           <label class="btn btn-sm" style="cursor:pointer">
-            <i class="ti ti-upload"></i> Ajouter un document
+            <i class="ti ti-upload"></i> Ajouter
             <input type="file" id="fb-doc-upload" style="display:none" onchange="uploadDocument(this)" accept=".pdf,.jpg,.png,.doc,.docx">
           </label>
         </div>
-        <div id="fb-docs-list">
-          <div class="empty-state">Aucun document — mandat, compromis, diagnostics…</div>
-        </div>
+        <div id="fb-docs-list"><div class="empty-state">Aucun document — mandat, compromis, diagnostics…</div></div>
         <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
           <span class="badge badge-gray" style="cursor:pointer" onclick="document.getElementById('fb-doc-upload').click()">📄 Mandat</span>
           <span class="badge badge-gray" style="cursor:pointer" onclick="document.getElementById('fb-doc-upload').click()">📋 Compromis</span>
@@ -507,12 +692,31 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
             <div class="panel-title">🤖 Matching IA — Candidats potentiels</div>
             <div class="text-xs" style="color:#888;margin-top:2px">Acheteurs qualifiés les plus compatibles avec ce bien</div>
           </div>
-          <button class="btn btn-primary btn-sm" onclick="lancerMatching()" id="btn-matching">✨ Analyser les candidats</button>
+          <button class="btn btn-primary btn-sm" onclick="lancerMatching()" id="btn-matching">✨ Analyser</button>
         </div>
-        <div id="matching-result">
-          <div class="empty-state">Cliquez sur "Analyser les candidats" pour lancer le matching IA</div>
+        <div id="matching-result"><div class="empty-state">Cliquez sur "Analyser" pour lancer le matching IA</div></div>
+      </div>
+
+      <!-- Modal Notaire -->
+      <div class="modal-overlay" id="modal-notaire">
+        <div class="modal-box">
+          <div class="modal-header">
+            <div class="modal-title" id="modal-notaire-title">Notaire</div>
+            <button class="modal-close" onclick="fermerModalNotaire()">✕</button>
+          </div>
+          <div class="form-grid" style="grid-template-columns:1fr">
+            <div class="form-field"><label>Nom</label><input id="mn-nom" placeholder="Me Dupont"></div>
+            <div class="form-field"><label>Cabinet</label><input id="mn-cabinet" placeholder="Dupont & Associés"></div>
+            <div class="form-field"><label>Email</label><input id="mn-email" placeholder="contact@notaire.fr"></div>
+            <div class="form-field"><label>Téléphone</label><input id="mn-tel" placeholder="04 78 ..."></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">
+            <button class="btn btn-sm" onclick="fermerModalNotaire()">Annuler</button>
+            <button class="btn btn-primary btn-sm" onclick="saveNotaireModal()">💾 Sauvegarder</button>
+          </div>
         </div>
       </div>
+
     </div>
 
     <!-- ════════ CONTACTS ════════ -->
@@ -1797,19 +2001,77 @@ function openFicheBien(index) {
   const b = _biensCache[index];
   if(!b) return;
   _currentBienId = b.id;
+  const d = b.details || {};
 
+  // Header
   document.getElementById('fb-ref').textContent = b.reference || '—';
-  document.getElementById('fb-type').textContent = b.type_bien || '—';
-  document.getElementById('fb-adresse').textContent = (b.adresse ? b.adresse+', ' : '') + (b.ville||'—');
-  document.getElementById('fb-surface').textContent = b.surface ? b.surface+'m²' : '—';
-  document.getElementById('fb-prix').textContent = b.prix ? Number(b.prix).toLocaleString('fr-FR')+'€' : '—';
   document.getElementById('fb-statut').textContent = b.statut || '—';
+  document.getElementById('fb-adresse-small').textContent = (b.adresse ? b.adresse + ', ' : '') + (b.ville || '—');
 
-  // Lien cadastral
-  const adresseEncode = encodeURIComponent((b.adresse||'')+' '+( b.ville||''));
-  document.getElementById('fb-cadastre-btn').href = '#';
+  // Propriétaire
+  const nomProprio = d.proprio_nom || '—';
+  const initiales = nomProprio !== '—' ? nomProprio.split(' ').map(x=>x[0]).join('').toUpperCase().slice(0,2) : '?';
+  document.getElementById('fb-proprio-nom').textContent = nomProprio;
+  document.getElementById('fb-proprio-initials').textContent = initiales;
 
-  // Pipeline étapes
+  // Essentiel
+  document.getElementById('fb-type').textContent = b.type_bien || '—';
+  document.getElementById('fb-pieces').textContent = d.pieces || '—';
+  document.getElementById('fb-surface').textContent = b.surface ? b.surface + ' m²' : '—';
+  document.getElementById('fb-carrez').textContent = d.surface_carrez ? d.surface_carrez + ' m²' : '—';
+  document.getElementById('fb-prix').textContent = b.prix ? Number(b.prix).toLocaleString('fr-FR') + ' €' : '—';
+  document.getElementById('fb-net-vendeur').textContent = d.net_vendeur ? Number(d.net_vendeur).toLocaleString('fr-FR') + ' €' : '—';
+  document.getElementById('fb-dpe').textContent = d.dpe ? d.dpe + (d.ges ? ' / ' + d.ges : '') : '—';
+
+  // Caractéristiques
+  document.getElementById('fb-etage').textContent = d.etage || '—';
+  document.getElementById('fb-ascenseur').textContent = d.ascenseur || '—';
+  document.getElementById('fb-exposition').textContent = d.exposition || '—';
+  document.getElementById('fb-annee').textContent = d.annee_construction || '—';
+  document.getElementById('fb-balcon').textContent = d.balcon || '—';
+  document.getElementById('fb-cave').textContent = d.cave || '—';
+  document.getElementById('fb-parking').textContent = d.parking || '—';
+  document.getElementById('fb-taxe').textContent = d.taxe_fonciere ? d.taxe_fonciere + ' €/an' : '—';
+
+  // Copropriété
+  document.getElementById('fb-residence').textContent = d.residence || '—';
+  document.getElementById('fb-lot').textContent = d.numero_lot || '—';
+  document.getElementById('fb-charges').textContent = d.charges_copro ? d.charges_copro + ' €/mois' : '—';
+  document.getElementById('fb-nb-lots').textContent = d.nb_lots || '—';
+  document.getElementById('fb-syndic').textContent = d.syndic || '—';
+  document.getElementById('fb-procedure').textContent = d.procedure || 'Aucune';
+
+  // Diagnostics
+  document.getElementById('fb-diag-dpe').textContent = d.diag_dpe || '—';
+  document.getElementById('fb-diag-amiante').textContent = d.diag_amiante || '—';
+  document.getElementById('fb-diag-plomb').textContent = d.diag_plomb || '—';
+  document.getElementById('fb-diag-elec').textContent = d.diag_elec || '—';
+  document.getElementById('fb-diag-gaz').textContent = d.diag_gaz || '—';
+  document.getElementById('fb-diag-erp').textContent = d.diag_erp || '—';
+
+  // Mandat
+  document.getElementById('fb-mandat-type').textContent = b.mandats?.[0]?.type || d.mandat_type || '—';
+  document.getElementById('fb-mandat-num').textContent = d.mandat_num || '—';
+  document.getElementById('fb-mandat-debut').textContent = b.mandats?.[0]?.date_debut || d.mandat_debut || '—';
+  const finMandat = b.mandats?.[0]?.date_fin || d.mandat_fin || null;
+  const finEl = document.getElementById('fb-mandat-fin');
+  const badgeMandat = document.getElementById('mandat-alert-badge');
+  if(finMandat) {
+    const jRestants = Math.ceil((new Date(finMandat) - new Date()) / 86400000);
+    finEl.textContent = finMandat;
+    finEl.className = 'fb-card-val' + (jRestants <= 15 ? ' warn' : '');
+    badgeMandat.innerHTML = jRestants <= 30 ? `<span class="badge badge-amber" style="font-size:9px;padding:2px 6px">J-${jRestants}</span>` : '';
+  } else { finEl.textContent = '—'; badgeMandat.innerHTML = ''; }
+  document.getElementById('fb-mandat-honoraires').textContent = b.mandats?.[0]?.honoraires || d.mandat_honoraires || '—';
+  document.getElementById('fb-mandat-charge').textContent = d.mandat_charge || '—';
+  document.getElementById('fb-mandat-reconduction').textContent = d.mandat_reconduction || '—';
+  document.getElementById('fb-mandat-substitution').textContent = d.mandat_substitution || '—';
+  document.getElementById('fb-mandat-penale').textContent = d.mandat_penale || '—';
+  document.getElementById('fb-mandat-carte').textContent = d.carte_pro || '—';
+  document.getElementById('fb-mandat-garantie').textContent = d.garantie_fin || '—';
+  document.getElementById('fb-mandat-parcelle').textContent = d.parcelle_cadastrale || '—';
+
+  // Pipeline
   const etapes = ['Mandat signé','Photos','Annonce publiée','Visite','Offre reçue','Compromis','Acte'];
   document.getElementById('fb-pipeline').innerHTML = etapes.map((e,i) => `
     <div class="pipeline-step ${i===0?'active':''}" onclick="setPipelineStep(${i})" id="ps-${i}">
@@ -1817,7 +2079,166 @@ function openFicheBien(index) {
       <div class="pipeline-label">${e}</div>
     </div>`).join('<div class="pipeline-arrow">→</div>');
 
+  loadNotaires(b.id);
+  loadDocuments(b.id);
+  resetImportIA();
   goToPane('fiche-bien');
+}
+
+// ── Accordéon sections fiche bien ─────────────────────────────────────────────
+function fbToggle(id) {
+  const body = document.getElementById('body-' + id);
+  const chev = document.getElementById('chev-' + id);
+  const open = body.style.display === 'block';
+  body.style.display = open ? 'none' : 'block';
+  if(chev) chev.classList.toggle('open', !open);
+}
+
+// ── Import IA ─────────────────────────────────────────────────────────────────
+function toggleImportIA() {
+  const body = document.getElementById('import-ia-body');
+  const txt = document.getElementById('import-ia-toggle-txt');
+  const open = body.style.display === 'block';
+  body.style.display = open ? 'none' : 'block';
+  txt.textContent = open ? 'Ouvrir' : 'Fermer';
+}
+
+function setImportMode(mode) {
+  ['upload','paste','scan'].forEach(m => {
+    document.getElementById('imode-'+m).classList.toggle('active', m === mode);
+    document.getElementById('import-zone-'+m).style.display = m === mode ? 'block' : 'none';
+  });
+  document.getElementById('import-result').style.display = 'none';
+  document.getElementById('import-loading').style.display = 'none';
+}
+
+let _importedData = {};
+
+async function lancerImportIA(input) {
+  const file = input.files?.[0];
+  if (!file) return;
+  document.getElementById('import-zone-upload').style.display = 'none';
+  document.getElementById('import-zone-scan').style.display = 'none';
+  document.getElementById('import-loading').style.display = 'block';
+  try {
+    const base64 = await fileToBase64(file);
+    const isImage = file.type.startsWith('image/');
+    const messages = isImage ? [{
+      role: 'user',
+      content: [
+        { type: 'image', source: { type: 'base64', media_type: file.type, data: base64.split(',')[1] } },
+        { type: 'text', text: IMPORT_PROMPT }
+      ]
+    }] : [{ role: 'user', content: IMPORT_PROMPT + '\n\n[Document PDF uploadé — extrais les infos visibles]' }];
+    await appelImportIA(messages);
+  } catch(e) {
+    showToast('❌ Erreur import : ' + e.message);
+    resetImportIA();
+  }
+}
+
+async function lancerImportIATexte() {
+  const texte = document.getElementById('import-paste-text').value.trim();
+  if (!texte) return;
+  document.getElementById('import-zone-paste').style.display = 'none';
+  document.getElementById('import-loading').style.display = 'block';
+  try {
+    await appelImportIA([{ role: 'user', content: IMPORT_PROMPT + '\n\nContenu à analyser :\n' + texte }]);
+  } catch(e) {
+    showToast('❌ Erreur import : ' + e.message);
+    resetImportIA();
+  }
+}
+
+const IMPORT_PROMPT = `Tu es un expert immobilier. Analyse ce document et extrais les informations disponibles sur le bien immobilier.
+Réponds UNIQUEMENT en JSON valide sans markdown, avec les champs disponibles parmi :
+{
+  "type_bien": "", "pieces": "", "surface": "", "surface_carrez": "", "prix": "", "net_vendeur": "",
+  "dpe": "", "ges": "", "adresse": "", "ville": "",
+  "proprio_nom": "", "etage": "", "ascenseur": "", "exposition": "", "annee_construction": "",
+  "balcon": "", "cave": "", "parking": "", "taxe_fonciere": "",
+  "residence": "", "numero_lot": "", "charges_copro": "", "nb_lots": "", "syndic": "",
+  "mandat_type": "", "mandat_num": "", "mandat_debut": "", "mandat_fin": "", "mandat_honoraires": "",
+  "mandat_charge": "", "mandat_reconduction": "", "carte_pro": "", "garantie_fin": "", "parcelle_cadastrale": ""
+}
+N'inclus que les champs trouvés dans le document. Laisse vide si non trouvé.`;
+
+async function appelImportIA(messages) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages })
+  });
+  const data = await res.json();
+  const text = data.content?.[0]?.text || '{}';
+  let parsed;
+  try { parsed = JSON.parse(text.replace(/```json|```/g,'').trim()); } catch { parsed = {}; }
+  _importedData = parsed;
+  afficherImportResult(parsed);
+}
+
+function afficherImportResult(data) {
+  document.getElementById('import-loading').style.display = 'none';
+  const labels = {
+    type_bien:'Type de bien', pieces:'Pièces', surface:'Surface', surface_carrez:'Loi Carrez',
+    prix:'Prix', net_vendeur:'Net vendeur', dpe:'DPE', ges:'GES', adresse:'Adresse', ville:'Ville',
+    proprio_nom:'Propriétaire', etage:'Étage', ascenseur:'Ascenseur', exposition:'Exposition',
+    annee_construction:'Année construction', balcon:'Balcon/Terrasse', cave:'Cave', parking:'Parking',
+    taxe_fonciere:'Taxe foncière', residence:'Résidence', numero_lot:'N° lot', charges_copro:'Charges copro',
+    nb_lots:'Nb lots', syndic:'Syndic', mandat_type:'Type mandat', mandat_num:'N° mandat',
+    mandat_debut:'Début mandat', mandat_fin:'Fin mandat', mandat_honoraires:'Honoraires',
+    mandat_charge:'Charge honoraires', mandat_reconduction:'Reconduction', carte_pro:'Carte pro',
+    garantie_fin:'Garantie financière', parcelle_cadastrale:'Parcelle cadastrale'
+  };
+  const entries = Object.entries(data).filter(([,v]) => v);
+  const count = entries.length;
+  document.getElementById('import-result-count').textContent = count + ' information' + (count>1?'s':'')+' extraite'+(count>1?'s':'');
+  document.getElementById('import-fields-list').innerHTML = entries.map(([k,v]) =>
+    `<div class="extracted-field"><span class="extracted-label">${labels[k]||k}</span><span class="extracted-val">${v}</span></div>`
+  ).join('');
+  document.getElementById('import-result').style.display = 'block';
+}
+
+async function validerImportIA() {
+  if (!_currentBienId || !Object.keys(_importedData).length) return;
+  const b = _biensCache.find(x => x.id === _currentBienId);
+  if (!b) return;
+  const updates = {};
+  if (_importedData.type_bien) updates.type_bien = _importedData.type_bien;
+  if (_importedData.surface) updates.surface = parseFloat(_importedData.surface);
+  if (_importedData.prix) updates.prix = parseFloat(String(_importedData.prix).replace(/[^0-9]/g,''));
+  if (_importedData.adresse) updates.adresse = _importedData.adresse;
+  if (_importedData.ville) updates.ville = _importedData.ville;
+  const details = { ...(b.details||{}), ..._importedData };
+  updates.details = details;
+  await sb.from('biens').update(updates).eq('id', _currentBienId);
+  Object.assign(b, updates);
+  const idx = _biensCache.indexOf(b);
+  openFicheBien(idx);
+  showToast('✅ Dossier mis à jour avec les informations extraites');
+}
+
+function resetImportIA() {
+  _importedData = {};
+  document.getElementById('import-result').style.display = 'none';
+  document.getElementById('import-loading').style.display = 'none';
+  document.getElementById('import-zone-upload').style.display = 'block';
+  document.getElementById('import-zone-paste').style.display = 'none';
+  document.getElementById('import-zone-scan').style.display = 'none';
+  setImportMode('upload');
+}
+
+function fileToBase64(file) {
+  return new Promise((res,rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+function editEssentielModal() {
+  showToast('💡 Utilisez l\'import IA ou modifiez directement via le formulaire de création de bien');
 }
 
 function setPipelineStep(idx) {

@@ -73,8 +73,6 @@ Financement : ${financement || 'Non précisé'}
       score,
       statut,
       resume,
-      qualification_at: new Date().toISOString(),
-      dernier_contact:  new Date().toISOString(),
     })
     .select()
     .single();

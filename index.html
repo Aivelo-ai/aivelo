@@ -27,6 +27,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .agency-status{font-size:11px;color:#2da82d;margin-top:2px;display:flex;align-items:center;gap:4px}
 .status-dot{width:6px;height:6px;border-radius:50%;background:#2da82d}
 .logout-btn{display:flex;align-items:center;gap:6px;margin-top:10px;font-size:11px;color:#e05050;cursor:pointer;padding:4px 0}
+.pipeline-wrap{display:flex;align-items:center;gap:0;overflow-x:auto;padding:12px 0;margin-bottom:8px}
+.pipeline-step{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;min-width:80px;opacity:0.4;transition:opacity .2s}
+.pipeline-step.active{opacity:1}
+.pipeline-step.done .pipeline-dot{background:#2da82d}
+.pipeline-step.active:not(.done) .pipeline-dot{background:#4F7EF7}
+.pipeline-dot{width:14px;height:14px;border-radius:50%;background:#e0deda;border:2px solid #fff;box-shadow:0 0 0 2px #e0deda}
+.pipeline-step.active .pipeline-dot{box-shadow:0 0 0 3px #4F7EF720}
+.pipeline-label{font-size:10px;color:#555;text-align:center;font-weight:500;line-height:1.3}
+.pipeline-arrow{color:#e0deda;font-size:16px;padding:0 2px;margin-bottom:12px}
+.notaire-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.notaire-card{background:#F9F8F5;border-radius:8px;padding:12px;border:1px solid #e0deda}
+.notaire-card-title{font-size:11px;font-weight:600;color:#4F7EF7;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
 .main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
 /* ── Topbar ── */
 .topbar{background:#fff;border-bottom:1px solid #e8e6e0;padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:50}
@@ -218,7 +230,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="sidebar-footer">
       <div class="agency-name">Agence Martineau</div>
       <div class="agency-status"><div class="status-dot"></div>Agent IA actif</div>
-      <div class="logout-btn" onclick="async function logout() {   await sb.auth.signOut();   window.location.href = 'login.html'; }">
+      <div class="logout-btn" onclick="doLogout()">
         <i class="ti ti-logout" style="font-size:13px"></i> Déconnexion
       </div>
     </div>
@@ -382,6 +394,86 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
             <tr><td colspan="6"><div class="empty-state">Aucun bien enregistré — créez votre premier dossier</div></td></tr>
           </tbody>
         </table>
+      </div>
+    </div>
+
+    </div>
+
+    <!-- ════════ FICHE BIEN ════════ -->
+    <div class="pane" id="pane-fiche-bien">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+        <button class="btn btn-sm" onclick="goToPane('biens')">← Retour aux biens</button>
+        <a id="fb-cadastre-btn" href="#" target="_blank" class="btn btn-sm" onclick="ouvrirCadastre();return false">
+          <i class="ti ti-map-2"></i> Lien cadastral
+        </a>
+      </div>
+
+      <!-- Infos bien -->
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title" id="fb-ref">—</div>
+            <div class="text-xs" id="fb-adresse" style="color:#888;margin-top:2px">—</div>
+          </div>
+          <span class="badge badge-green" id="fb-statut">—</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px">
+          <div><div class="section-label">Type</div><div id="fb-type" style="font-size:13px;font-weight:500">—</div></div>
+          <div><div class="section-label">Surface</div><div id="fb-surface" style="font-size:13px;font-weight:500">—</div></div>
+          <div><div class="section-label">Prix</div><div id="fb-prix" style="font-size:13px;font-weight:500;color:#4F7EF7">—</div></div>
+        </div>
+      </div>
+
+      <!-- Pipeline transaction -->
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">Pipeline de transaction</div></div>
+        <div class="pipeline-wrap" id="fb-pipeline"></div>
+      </div>
+
+      <!-- Notaires -->
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">Notaires</div></div>
+        <div class="notaire-grid">
+          <div class="notaire-card">
+            <div class="notaire-card-title">🏠 Notaire vendeur</div>
+            <div class="form-grid" style="grid-template-columns:1fr">
+              <div class="form-field"><label>Nom</label><input id="fb-notaire-v-nom" placeholder="Me Dupont"></div>
+              <div class="form-field"><label>Cabinet</label><input id="fb-notaire-v-cabinet" placeholder="Dupont & Associés"></div>
+              <div class="form-field"><label>Email</label><input id="fb-notaire-v-email" placeholder="contact@notaire.fr"></div>
+              <div class="form-field"><label>Téléphone</label><input id="fb-notaire-v-tel" placeholder="04 78 ..."></div>
+            </div>
+          </div>
+          <div class="notaire-card">
+            <div class="notaire-card-title">🤝 Notaire acheteur</div>
+            <div class="form-grid" style="grid-template-columns:1fr">
+              <div class="form-field"><label>Nom</label><input id="fb-notaire-a-nom" placeholder="Me Martin"></div>
+              <div class="form-field"><label>Cabinet</label><input id="fb-notaire-a-cabinet" placeholder="Martin Notaires"></div>
+              <div class="form-field"><label>Email</label><input id="fb-notaire-a-email" placeholder="contact@martin-notaire.fr"></div>
+              <div class="form-field"><label>Téléphone</label><input id="fb-notaire-a-tel" placeholder="04 72 ..."></div>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-sm" style="margin-top:12px" onclick="saveNotaires()">💾 Sauvegarder notaires</button>
+      </div>
+
+      <!-- Documents -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Documents</div>
+          <label class="btn btn-sm" style="cursor:pointer">
+            <i class="ti ti-upload"></i> Ajouter un document
+            <input type="file" id="fb-doc-upload" style="display:none" onchange="uploadDocument(this)" accept=".pdf,.jpg,.png,.doc,.docx">
+          </label>
+        </div>
+        <div id="fb-docs-list">
+          <div class="empty-state">Aucun document — mandat, compromis, diagnostics…</div>
+        </div>
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+          <span class="badge badge-gray" style="cursor:pointer" onclick="document.getElementById('fb-doc-upload').click()">📄 Mandat</span>
+          <span class="badge badge-gray" style="cursor:pointer" onclick="document.getElementById('fb-doc-upload').click()">📋 Compromis</span>
+          <span class="badge badge-gray" style="cursor:pointer" onclick="document.getElementById('fb-doc-upload').click()">🏘️ Cadastral</span>
+          <span class="badge badge-gray" style="cursor:pointer" onclick="document.getElementById('fb-doc-upload').click()">🔍 Diagnostics</span>
+        </div>
       </div>
     </div>
 
@@ -864,7 +956,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div style="display:flex;gap:8px">
           <button class="btn btn-danger btn-sm">Exporter mes données</button>
           <button class="btn btn-danger btn-sm">Supprimer un contact</button>
-          <button class="btn btn-danger btn-sm" onclick="alert('Déconnexion sécurisée')"><i class="ti ti-logout"></i> Déconnexion</button>
+          <button class="btn btn-danger btn-sm" onclick="doLogout()"><i class="ti ti-logout"></i> Déconnexion</button>
         </div>
         <div class="text-xs" style="margin-top:10px">Conformément au RGPD, vous pouvez à tout moment exporter ou supprimer les données personnelles de vos contacts.</div>
       </div>
@@ -931,6 +1023,8 @@ function goToPane(pane) {
   const items = document.querySelectorAll('.sidebar-item');
   const i = idx.indexOf(pane);
   nav(i >= 0 ? items[i] : null, pane);
+  if(pane === 'biens') loadBiens();
+  if(pane === 'contacts') loadContacts();
 }
 
 // ── Recherche globale ─────────────────────────────────────────────────────────
@@ -1476,15 +1570,185 @@ async function loadNotes(leadId) {
 function filterByType(type, el) {
   document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
   el.classList.add('active');
-  loadContacts(); // à filtrer côté Supabase en Sprint 2
+  loadContacts();
 }
 
-function filterBiens(q) { /* Sprint 2 */ }
-function filterContacts(q) { /* Sprint 2 */ }
+function filterBiens(q) {
+  const rows = document.querySelectorAll('#biens-tbody tr[data-bien-id]');
+  rows.forEach(r => {
+    r.style.display = r.innerText.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
+  });
+}
+function filterContacts(q) {
+  const rows = document.querySelectorAll('#contacts-tbody tr');
+  rows.forEach(r => {
+    r.style.display = r.innerText.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
+  });
+}
 function filterRelances(type, el) {
   document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
   el.classList.add('active');
 }
+
+// ── Déconnexion ───────────────────────────────────────────────────────────────
+async function saveNotaires() {
+  if(!_currentBienId) return;
+  const notaires = [
+    { type:'vendeur', nom: document.getElementById('fb-notaire-v-nom').value, cabinet: document.getElementById('fb-notaire-v-cabinet').value, email: document.getElementById('fb-notaire-v-email').value, telephone: document.getElementById('fb-notaire-v-tel').value },
+    { type:'acheteur', nom: document.getElementById('fb-notaire-a-nom').value, cabinet: document.getElementById('fb-notaire-a-cabinet').value, email: document.getElementById('fb-notaire-a-email').value, telephone: document.getElementById('fb-notaire-a-tel').value },
+  ];
+  for(const n of notaires) {
+    if(!n.nom) continue;
+    await sb.from('notaires').upsert({ bien_id: _currentBienId, ...n }, { onConflict: 'bien_id,type' });
+  }
+  alert('✅ Notaires sauvegardés');
+}
+
+async function uploadDocument(input) {
+  if(!input.files?.[0] || !_currentBienId) return;
+  const file = input.files[0];
+  const path = `biens/${_currentBienId}/${Date.now()}_${file.name}`;
+  const { error } = await sb.storage.from('documents').upload(path, file);
+  if(error) { alert('Erreur upload : ' + error.message); return; }
+  const { data: { publicUrl } } = sb.storage.from('documents').getPublicUrl(path);
+  await sb.from('documents_bien').insert({ bien_id: _currentBienId, type_doc: file.name, url_storage: publicUrl });
+  loadDocuments(_currentBienId);
+  input.value = '';
+}
+
+async function loadDocuments(bienId) {
+  const { data, error } = await sb.from('documents_bien').select('*').eq('bien_id', bienId).order('created_at', { ascending: false });
+  const container = document.getElementById('fb-docs-list');
+  if(error || !data?.length) {
+    container.innerHTML = '<div class="empty-state">Aucun document — mandat, compromis, diagnostics…</div>';
+    return;
+  }
+  container.innerHTML = data.map(d => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#F9F8F5;border-radius:6px;margin-bottom:6px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <i class="ti ti-file" style="color:#4F7EF7"></i>
+        <span style="font-size:12px;font-weight:500">${d.type_doc}</span>
+      </div>
+      <a href="${d.url_storage}" target="_blank" class="btn btn-sm">Voir</a>
+    </div>`).join('');
+}
+
+async function doLogout() {
+  await sb.auth.signOut();
+  window.location.href = 'login.html';
+}
+
+// ── Dossier Bien — Supabase ───────────────────────────────────────────────────
+let _biensCache = [];
+let _currentBienId = null;
+
+async function loadBiens() {
+  try {
+    const { data, error } = await sb.from('biens').select('*,mandats(type,date_fin,honoraires)').order('created_at', { ascending: false });
+    const tbody = document.getElementById('biens-tbody');
+    if(error || !data?.length) {
+      tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">Aucun bien enregistré — créez votre premier dossier</div></td></tr>';
+      return;
+    }
+    _biensCache = data;
+    tbody.innerHTML = data.map((b, i) => {
+      const badge = b.statut === 'disponible' ? 'badge-green' : b.statut === 'sous_compromis' ? 'badge-amber' : 'badge-gray';
+      const label = b.statut === 'disponible' ? 'Disponible' : b.statut === 'sous_compromis' ? 'Sous compromis' : b.statut === 'vendu' ? 'Vendu' : 'Loué';
+      const mandat = b.mandats?.[0];
+      const mandatLabel = mandat ? mandat.type : '—';
+      const mandatBadge = mandatLabel === 'exclusif' ? 'badge-blue' : 'badge-gray';
+      return `<tr onclick="openFicheBien(${i})" style="cursor:pointer" data-bien-id="${b.id}">
+        <td class="name-cell">${b.reference || '—'}</td>
+        <td>${b.type || '—'}</td>
+        <td>${b.adresse ? b.adresse+', '+b.ville : b.ville || '—'}</td>
+        <td>${b.prix ? Number(b.prix).toLocaleString('fr-FR')+'€' : '—'}</td>
+        <td><span class="badge ${mandatBadge}">${mandatLabel}</span></td>
+        <td><span class="badge ${badge}">${label}</span></td>
+      </tr>`;
+    }).join('');
+  } catch(e) { console.error('Erreur biens:', e); }
+}
+
+async function saveBien() {
+  const ref = document.getElementById('b-ref').value.trim();
+  const type = document.getElementById('b-type').value;
+  const adresse = document.getElementById('b-adresse').value.trim();
+  const ville = document.getElementById('b-ville').value.trim();
+  const surface = parseFloat(document.getElementById('b-surface').value) || null;
+  const prix = parseFloat(document.getElementById('b-prix').value) || null;
+  const statut = document.getElementById('b-statut').value;
+  if(!ref || !ville) { alert('Référence et ville obligatoires'); return; }
+
+  const { data: { session } } = await sb.auth.getSession();
+  const agency_id = session?.user?.id || null;
+
+  const { data: bien, error } = await sb.from('biens').insert({
+    reference: ref, type, adresse, ville, surface, prix, statut, agency_id
+  }).select().single();
+
+  if(error) { alert('Erreur : ' + error.message); return; }
+
+  // Sauvegarder le mandat
+  const mType = document.getElementById('m-type')?.value;
+  const mDebut = document.getElementById('m-debut')?.value;
+  const mFin = document.getElementById('m-fin')?.value;
+  const mHonoraires = parseFloat(document.getElementById('m-honoraires')?.value) || null;
+  if(mType && bien?.id) {
+    await sb.from('mandats').insert({
+      bien_id: bien.id, type: mType, date_debut: mDebut||null,
+      date_fin: mFin||null, honoraires: mHonoraires
+    });
+  }
+
+  document.getElementById('bien-form').style.display = 'none';
+  // Reset form
+  ['b-ref','b-adresse','b-ville','b-surface','b-prix','m-honoraires','m-debut','m-fin'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value = '';
+  });
+  loadBiens();
+}
+
+function openFicheBien(index) {
+  const b = _biensCache[index];
+  if(!b) return;
+  _currentBienId = b.id;
+
+  document.getElementById('fb-ref').textContent = b.reference || '—';
+  document.getElementById('fb-type').textContent = b.type || '—';
+  document.getElementById('fb-adresse').textContent = (b.adresse ? b.adresse+', ' : '') + (b.ville||'—');
+  document.getElementById('fb-surface').textContent = b.surface ? b.surface+'m²' : '—';
+  document.getElementById('fb-prix').textContent = b.prix ? Number(b.prix).toLocaleString('fr-FR')+'€' : '—';
+  document.getElementById('fb-statut').textContent = b.statut || '—';
+
+  // Lien cadastral
+  const adresseEncode = encodeURIComponent((b.adresse||'')+' '+( b.ville||''));
+  document.getElementById('fb-cadastre-btn').href = `https://cadastre.gouv.fr/scpc/rechercherPlan.do?ville=${encodeURIComponent(b.ville||'')}`;
+
+  // Pipeline étapes
+  const etapes = ['Mandat signé','Photos','Annonce publiée','Visite','Offre reçue','Compromis','Acte'];
+  document.getElementById('fb-pipeline').innerHTML = etapes.map((e,i) => `
+    <div class="pipeline-step ${i===0?'active':''}" onclick="setPipelineStep(${i})" id="ps-${i}">
+      <div class="pipeline-dot"></div>
+      <div class="pipeline-label">${e}</div>
+    </div>`).join('<div class="pipeline-arrow">→</div>');
+
+  goToPane('fiche-bien');
+}
+
+function setPipelineStep(idx) {
+  document.querySelectorAll('.pipeline-step').forEach((s,i) => {
+    s.classList.toggle('active', i <= idx);
+    s.classList.toggle('done', i < idx);
+  });
+}
+
+function ouvrirCadastre() {
+  const b = _biensCache.find(x => x.id === _currentBienId);
+  if(!b) return;
+  const q = encodeURIComponent((b.adresse||'') + ' ' + (b.ville||''));
+  window.open(`https://cadastre.gouv.fr/scpc/rechercherPlan.do?ville=${encodeURIComponent(b.ville||'')}`, '_blank');
+}
+
 </script>
 </body>
 </html>

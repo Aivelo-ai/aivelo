@@ -1712,10 +1712,10 @@ function openFiche(index) {
   const tel = l.telephone || '';
   const email = l.email || '';
   const telEl = document.getElementById('fiche-tel-display'); if (telEl) telEl.textContent = tel || '—';
-  document.getElementById('fiche-tel-action').href = tel ? 'tel:' + tel : '#';
-  document.getElementById('fiche-email-display').textContent = email || '—';
-  document.getElementById('fiche-email-action').href = email ? 'mailto:' + email : '#';
-  document.getElementById('fiche-email-btn').href = email ? 'mailto:' + email : '#';
+  const telAction = document.getElementById('fiche-tel-action'); if(telAction) telAction.href = tel ? 'tel:' + tel : '#';
+  const emailDisplay = document.getElementById('fiche-email-display'); if(emailDisplay) emailDisplay.textContent = email || '—';
+  const emailAction = document.getElementById('fiche-email-action'); if(emailAction) emailAction.href = email ? 'mailto:' + email : '#';
+  const emailBtn = document.getElementById('fiche-email-btn'); if(emailBtn) emailBtn.href = email ? 'mailto:' + email : '#';
   document.getElementById('fiche-source').textContent = l.source || '—';
   document.getElementById('fiche-dernier-echange').textContent = d.dernier_echange || (l.created_at ? new Date(l.created_at).toLocaleDateString('fr-FR') : '—');
 

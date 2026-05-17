@@ -61,15 +61,15 @@ Financement : ${financement || 'Non précisé'}
   const { data: lead, error } = await supabase
     .from('leads')
     .insert({
-      agency_id:        agency_id ?? null,
+      agency_id:   agency_id ?? null,
       nom,
       projet,
-      budget:           budget ?? null,
-      delai:            delai ?? null,
-      financement:      financement ?? null,
-      email:            email ?? null,
-      telephone:        telephone ?? null,
-      source:           source ?? null,
+      budget:      budget ?? null,
+      delai:       delai ?? null,
+      financement: financement ?? null,
+      email:       email ?? null,
+      telephone:   telephone ?? null,
+      source:      source ?? null,
       score,
       statut,
       resume,

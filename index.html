@@ -250,6 +250,44 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .text-sm{font-size:12px;color:#888}
 .text-xs{font-size:11px;color:#aaa}
 .fw500{font-weight:500}
+/* ── Mon espace ── */
+.me-header{display:flex;align-items:center;gap:14px;padding:16px 18px;background:#fff;border:1px solid #e8e6e0;border-radius:10px;margin-bottom:14px}
+.me-avatar{width:46px;height:46px;border-radius:50%;background:#EEF3FF;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#2a4eb5;flex-shrink:0}
+.me-tabs{display:flex;gap:2px;background:#F5F4F0;border-radius:8px;padding:3px;margin-bottom:14px}
+.me-tab{font-size:12px;padding:5px 12px;border-radius:6px;cursor:pointer;color:#666;border:none;background:none;font-weight:500;transition:all .15s}
+.me-tab.active{background:#fff;color:#1a1a1a;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.event-type-btn{flex:1;padding:7px 5px;border-radius:7px;border:1px solid #e0deda;text-align:center;cursor:pointer;font-size:11px;color:#666;transition:all .15s}
+.event-type-btn.active{border-color:#4F7EF7;background:#EEF3FF;color:#2a4eb5;font-weight:500}
+.agenda-event{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:7px;margin-bottom:5px;border-left:3px solid #4F7EF7}
+.agenda-event.admin{border-left-color:#a78bfa;background:#F9F7FF}
+.agenda-event.demo{border-left-color:#4F7EF7;background:#F0F5FF}
+.agenda-event.brief{border-left-color:#f59e0b;background:#FFFBF0}
+.agenda-event.perso{border-left-color:#22c55e;background:#F0FFF4}
+.agenda-event.indispo{border-left-color:#ef4444;background:#FFF5F5}
+.agenda-event.visite{border-left-color:#4F7EF7;background:#F0F5FF}
+.dossier-cat-btn{font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid #e0deda;cursor:pointer;color:#666;background:#fff;transition:all .15s;white-space:nowrap}
+.dossier-cat-btn.active{background:#4F7EF7;color:#fff;border-color:#4F7EF7}
+.dossier-card{display:flex;align-items:center;gap:10px;padding:9px 11px;background:#F9F8F5;border-radius:7px;margin-bottom:5px;cursor:pointer;transition:all .15s;border:1px solid transparent}
+.dossier-card:hover{border-color:#4F7EF7;background:#F0F5FF}
+.days-badge{font-size:10px;background:#F5F4F0;color:#888;padding:2px 7px;border-radius:20px;white-space:nowrap;margin-left:auto}
+/* ── Mandats ── */
+.mandat-stat{background:#fff;border:1px solid #e8e6e0;border-radius:8px;padding:12px 14px;text-align:center}
+.mandat-stat-val{font-size:22px;font-weight:600;color:#1a1a1a}
+.mandat-stat-label{font-size:11px;color:#888;margin-top:2px}
+.mandat-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid #F0EEE8;font-size:12px;cursor:pointer;transition:background .1s}
+.mandat-row:hover{background:#FAFAF8}
+.mandat-row:last-child{border-bottom:none}
+/* ── Objectifs ── */
+.obj-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.obj-label{font-size:12px;color:#555;min-width:120px}
+.obj-track{flex:1;height:6px;background:#F0EEE8;border-radius:3px;overflow:hidden}
+.obj-fill{height:100%;border-radius:3px;transition:width .3s}
+.obj-val{font-size:11px;font-weight:600;color:#1a1a1a;min-width:40px;text-align:right}
+/* ── Sidebar footer clickable ── */
+.sidebar-footer{margin-top:auto;padding:14px 20px;border-top:1px solid #e8e6e0;cursor:pointer;transition:background .15s}
+.sidebar-footer:hover{background:#F5F4F0}
+.sidebar-footer-hint{font-size:10px;color:#4F7EF7;margin-top:3px;opacity:0;transition:opacity .15s}
+.sidebar-footer:hover .sidebar-footer-hint{opacity:1}
 </style>
 </head>
 <body>
@@ -267,6 +305,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="sidebar-item active" onclick="nav(this,'overview')"><i class="ti ti-layout-dashboard"></i>Vue d'ensemble</div>
     <div class="sidebar-item" onclick="nav(this,'biens')"><i class="ti ti-building"></i>Biens <span class="sidebar-badge">3</span></div>
     <div class="sidebar-item" onclick="nav(this,'contacts')"><i class="ti ti-users"></i>Contacts <span class="sidebar-badge">2</span></div>
+    <div class="sidebar-item" onclick="nav(this,'mandats')"><i class="ti ti-file-certificate"></i>Mandats</div>
     <div class="sidebar-item" onclick="nav(this,'pipeline')"><i class="ti ti-layout-kanban"></i>Pipeline</div>
 
     <div class="sidebar-section">Agents IA</div>
@@ -279,12 +318,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="sidebar-item" onclick="nav(this,'rapports')"><i class="ti ti-chart-bar"></i>Rapports</div>
     <div class="sidebar-item" onclick="nav(this,'settings')"><i class="ti ti-settings"></i>Paramètres</div>
 
-    <div class="sidebar-footer">
-      <div class="agency-name">Agence Martineau</div>
-      <div class="agency-status"><div class="status-dot"></div>Agent IA actif</div>
-      <div class="logout-btn" onclick="doLogout()">
-        <i class="ti ti-logout" style="font-size:13px"></i> Déconnexion
-      </div>
+    <div class="sidebar-footer" onclick="nav(null,'monespace')">
+      <div class="agency-name" id="sf-agency-name">Agence Martineau</div>
+      <div class="agency-status"><div class="status-dot"></div><span id="sf-agent-name">Mon espace</span></div>
+      <div class="sidebar-footer-hint">→ Ouvrir mon espace</div>
     </div>
   </div>
 
@@ -309,23 +346,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
     <!-- ════════ VUE D'ENSEMBLE ════════ -->
     <div class="pane active" id="pane-overview">
+      <!-- Metrics cliquables -->
       <div class="metrics" id="metrics-overview">
-        <div class="metric">
+        <div class="metric" onclick="goToPane('contacts')" style="cursor:pointer" title="Voir les contacts">
           <div class="metric-val" id="m-leads">—</div>
           <div class="metric-label">Leads ce mois</div>
           <div class="metric-delta" id="m-leads-delta">Chargement…</div>
         </div>
-        <div class="metric">
+        <div class="metric" onclick="goToPane('contacts')" style="cursor:pointer">
           <div class="metric-val" id="m-score">—</div>
           <div class="metric-label">Score moyen</div>
           <div class="metric-delta" id="m-chaud">— chauds</div>
         </div>
-        <div class="metric">
+        <div class="metric" onclick="goToPane('annonces')" style="cursor:pointer">
           <div class="metric-val" id="m-annonces">—</div>
           <div class="metric-label">Annonces générées</div>
           <div class="metric-delta">Ce mois</div>
         </div>
-        <div class="metric">
+        <div class="metric" onclick="goToPane('relances')" style="cursor:pointer">
           <div class="metric-val" id="m-relances">—</div>
           <div class="metric-label">Relances envoyées</div>
           <div class="metric-delta">Ce mois</div>
@@ -353,37 +391,70 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div class="panel">
           <div class="panel-header">
             <div class="panel-title">Agenda du jour</div>
-            <span class="badge badge-blue">Calendly</span>
+            <button class="btn btn-sm" onclick="nav(null,'monespace');setTimeout(()=>switchMeTab('agenda'),100)">+ Ajouter</button>
           </div>
-          <div class="cal-item">
-            <div class="cal-time">10h30</div>
-            <div style="flex:1"><div class="fw500 text-sm">Visite Apt 72m² — Lyon 6e</div><div class="text-xs">Marie Dupont · Score 87</div></div>
-            <span class="badge badge-green">Confirmée</span>
-          </div>
-          <div class="cal-item">
-            <div class="cal-time">14h00</div>
-            <div style="flex:1"><div class="fw500 text-sm">Visite Maison — Villeurbanne</div><div class="text-xs">Thomas Bernard · Score 61</div></div>
-            <span class="badge badge-amber">En attente</span>
-          </div>
-          <div style="margin-top:10px">
-            <button class="btn" style="width:100%;font-size:11px" onclick="alert('Configurez votre lien Calendly dans Paramètres')">
-              <i class="ti ti-calendar-plus"></i> Planifier via Calendly
-            </button>
+          <div id="overview-agenda-list">
+            <div class="cal-item">
+              <div class="cal-time">10h30</div>
+              <div style="flex:1"><div class="fw500 text-sm">Visite Apt 72m² — Lyon 6e</div><div class="text-xs">Marie Dupont · Score 87</div></div>
+              <span class="badge badge-green">Confirmée</span>
+            </div>
+            <div class="cal-item">
+              <div class="cal-time">14h00</div>
+              <div style="flex:1"><div class="fw500 text-sm">Visite Maison — Villeurbanne</div><div class="text-xs">Thomas Bernard · Score 61</div></div>
+              <span class="badge badge-amber">En attente</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title">Leads récents</div>
-          <button class="btn btn-sm" onclick="goToPane('contacts')">Voir tous →</button>
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Leads récents</div>
+            <button class="btn btn-sm" onclick="goToPane('contacts')">Voir tous →</button>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Contact</th><th>Type</th><th>Projet</th><th>Score</th><th>Statut</th><th>Date</th></tr></thead>
+            <tbody id="overview-leads">
+              <tr><td colspan="6" style="text-align:center;color:#aaa;padding:20px">Chargement des leads…</td></tr>
+            </tbody>
+          </table>
         </div>
-        <table class="data-table">
-          <thead><tr><th>Contact</th><th>Type</th><th>Projet</th><th>Score</th><th>Statut</th><th>Date</th></tr></thead>
-          <tbody id="overview-leads">
-            <tr><td colspan="6" style="text-align:center;color:#aaa;padding:20px">Chargement des leads…</td></tr>
-          </tbody>
-        </table>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Objectifs du mois</div>
+            <button class="btn btn-sm" onclick="ouvrirModalObjectifs()">✏️ Modifier</button>
+          </div>
+          <div id="objectifs-list">
+            <div class="obj-row"><div class="obj-label">Nouveaux leads</div><div class="obj-track"><div class="obj-fill" id="obj-fill-leads" style="width:0%;background:#4F7EF7"></div></div><div class="obj-val" id="obj-val-leads">—</div></div>
+            <div class="obj-row"><div class="obj-label">Visites planifiées</div><div class="obj-track"><div class="obj-fill" id="obj-fill-visites" style="width:0%;background:#a78bfa"></div></div><div class="obj-val" id="obj-val-visites">—</div></div>
+            <div class="obj-row"><div class="obj-label">Offres reçues</div><div class="obj-track"><div class="obj-fill" id="obj-fill-offres" style="width:0%;background:#f59e0b"></div></div><div class="obj-val" id="obj-val-offres">—</div></div>
+            <div class="obj-row"><div class="obj-label">Mandats signés</div><div class="obj-track"><div class="obj-fill" id="obj-fill-mandats" style="width:0%;background:#22c55e"></div></div><div class="obj-val" id="obj-val-mandats">—</div></div>
+            <div id="obj-ia-tip" style="margin-top:8px;padding:7px 10px;background:#F0F5FF;border-radius:6px;font-size:11px;color:#2a4eb5;display:none">💡 <span id="obj-ia-txt"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal objectifs -->
+    <div class="modal-overlay" id="modal-objectifs">
+      <div class="modal-box" style="width:420px">
+        <div class="modal-header">
+          <div class="modal-title">Objectifs du mois</div>
+          <button class="modal-close" onclick="document.getElementById('modal-objectifs').classList.remove('open')">✕</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="form-field"><label>Leads cible</label><input id="obj-i-leads" type="number" placeholder="10"></div>
+          <div class="form-field"><label>Visites cible</label><input id="obj-i-visites" type="number" placeholder="5"></div>
+          <div class="form-field"><label>Offres cible</label><input id="obj-i-offres" type="number" placeholder="3"></div>
+          <div class="form-field"><label>Mandats cible</label><input id="obj-i-mandats" type="number" placeholder="2"></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">
+          <button class="btn btn-sm" onclick="document.getElementById('modal-objectifs').classList.remove('open')">Annuler</button>
+          <button class="btn btn-primary btn-sm" onclick="sauvegarderObjectifs()">💾 Sauvegarder</button>
+        </div>
       </div>
     </div>
 
@@ -1455,6 +1526,206 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
 
 
+    <!-- ════════ MON ESPACE ════════ -->
+    <div class="pane" id="pane-monespace">
+      <!-- Header agent -->
+      <div class="me-header">
+        <div class="me-avatar" id="me-avatar">?</div>
+        <div style="flex:1">
+          <div style="font-size:18px;font-weight:700;color:#1a1a1a;line-height:1.2" id="me-nom">Mon espace</div>
+          <div style="font-size:12px;color:#888;margin-top:3px" id="me-agence">Agence · Plan Pro · <span style="color:#2da82d">Agent IA actif</span></div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn btn-sm" onclick="nav(null,'settings')"><i class="ti ti-settings"></i> Paramètres</button>
+          <button class="btn btn-danger btn-sm" onclick="doLogout()"><i class="ti ti-logout"></i> Déconnexion</button>
+        </div>
+      </div>
+
+      <div class="me-tabs">
+        <button class="me-tab active" onclick="switchMeTab('agenda',this)">📅 Agenda</button>
+        <button class="me-tab" onclick="switchMeTab('dossiers',this)">📁 Mes dossiers</button>
+        <button class="me-tab" onclick="switchMeTab('notes',this)">📝 Notes</button>
+        <button class="me-tab" onclick="switchMeTab('stats',this)">📊 Mes stats</button>
+        <button class="me-tab" onclick="switchMeTab('profil',this)">👤 Profil</button>
+      </div>
+
+      <!-- AGENDA -->
+      <div id="me-tab-agenda">
+        <div class="panel" style="margin-bottom:12px">
+          <div class="panel-header">
+            <div class="panel-title">Ajouter un créneau</div>
+          </div>
+          <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+            <div class="event-type-btn active" id="evt-demo" onclick="selectEventType('demo',this)">🎯 Demo Aivelo</div>
+            <div class="event-type-btn" id="evt-admin" onclick="selectEventType('admin',this)">📋 Admin</div>
+            <div class="event-type-btn" id="evt-brief" onclick="selectEventType('brief',this)">💬 Brief</div>
+            <div class="event-type-btn" id="evt-perso" onclick="selectEventType('perso',this)">🏠 Perso</div>
+            <div class="event-type-btn" id="evt-indispo" onclick="selectEventType('indispo',this)">🔴 Indispo</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
+            <div class="form-field" style="flex:2;min-width:140px"><label>Titre</label><input id="evt-titre" placeholder="Demo Aivelo — Agence Martin"></div>
+            <div class="form-field"><label>Date</label><input id="evt-date" type="date"></div>
+            <div class="form-field"><label>Heure début</label><input id="evt-heure" type="time" value="09:00"></div>
+            <div class="form-field"><label>Durée (min)</label><input id="evt-duree" type="number" value="60" style="width:70px"></div>
+            <button class="btn btn-primary btn-sm" onclick="ajouterEvenement()" style="align-self:flex-end">+ Ajouter</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Agenda — <span id="me-agenda-date"></span></div></div>
+          <div id="me-agenda-list"><div class="empty-state">Aucun événement — ajoutez des créneaux ci-dessus</div></div>
+        </div>
+      </div>
+
+      <!-- DOSSIERS -->
+      <div id="me-tab-dossiers" style="display:none">
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+          <div class="dossier-cat-btn active" onclick="filterDossiers('tous',this)">Tous</div>
+          <div class="dossier-cat-btn" onclick="filterDossiers('client',this)">Clients</div>
+          <div class="dossier-cat-btn" onclick="filterDossiers('bien',this)">Biens</div>
+          <div class="dossier-cat-btn" onclick="filterDossiers('locatif',this)">Locatif</div>
+          <div class="dossier-cat-btn" onclick="filterDossiers('bailleur',this)">Bailleur</div>
+          <div class="dossier-cat-btn" onclick="filterDossiers('proprio',this)">Proprio</div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Mes dossiers assignés</div><span class="badge badge-blue" id="dossiers-count">0</span></div>
+          <div id="me-dossiers-list"><div class="empty-state">Chargement…</div></div>
+        </div>
+      </div>
+
+      <!-- NOTES -->
+      <div id="me-tab-notes" style="display:none">
+        <div class="panel" style="margin-bottom:12px">
+          <div class="panel-header"><div class="panel-title">Note rapide</div></div>
+          <div style="display:flex;gap:8px;align-items:flex-end">
+            <textarea id="me-note-input" placeholder="Ajouter une note, un rappel, une idée…" style="flex:1;padding:8px 10px;border-radius:7px;border:1px solid #e0deda;font-size:13px;resize:none;height:60px;font-family:inherit;outline:none"></textarea>
+            <button class="btn btn-primary btn-sm" onclick="ajouterNoteMe()" style="align-self:flex-end">+ Ajouter</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Mes notes</div></div>
+          <div id="me-notes-list"><div class="empty-state">Aucune note pour l'instant</div></div>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div id="me-tab-stats" style="display:none">
+        <div class="metrics" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+          <div class="metric"><div class="metric-val" id="me-stat-leads">—</div><div class="metric-label">Mes leads</div></div>
+          <div class="metric"><div class="metric-val" id="me-stat-biens">—</div><div class="metric-label">Mes biens</div></div>
+          <div class="metric"><div class="metric-val" id="me-stat-score">—</div><div class="metric-label">Score moyen</div></div>
+          <div class="metric"><div class="metric-val" id="me-stat-ca">—</div><div class="metric-label">CA potentiel</div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Objectifs personnels du mois</div><button class="btn btn-sm" onclick="ouvrirModalObjectifs()">✏️ Modifier</button></div>
+          <div id="me-objectifs-list">
+            <div class="obj-row"><div class="obj-label">Leads</div><div class="obj-track"><div class="obj-fill" style="width:0%;background:#4F7EF7" id="me-obj-leads"></div></div><div class="obj-val" id="me-obj-leads-val">—</div></div>
+            <div class="obj-row"><div class="obj-label">Visites</div><div class="obj-track"><div class="obj-fill" style="width:0%;background:#a78bfa" id="me-obj-visites"></div></div><div class="obj-val" id="me-obj-visites-val">—</div></div>
+            <div class="obj-row"><div class="obj-label">Offres</div><div class="obj-track"><div class="obj-fill" style="width:0%;background:#f59e0b" id="me-obj-offres"></div></div><div class="obj-val" id="me-obj-offres-val">—</div></div>
+            <div class="obj-row"><div class="obj-label">Mandats</div><div class="obj-track"><div class="obj-fill" style="width:0%;background:#22c55e" id="me-obj-mandats"></div></div><div class="obj-val" id="me-obj-mandats-val">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROFIL -->
+      <div id="me-tab-profil" style="display:none">
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Ma fiche agent</div><button class="btn btn-sm" onclick="saveProfilAgent()">💾 Sauvegarder</button></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="form-field"><label>Nom complet</label><input id="profil-nom" placeholder="Arthur Semelier"></div>
+            <div class="form-field"><label>Email pro</label><input id="profil-email" type="email" placeholder="arthur@agence.fr"></div>
+            <div class="form-field"><label>Téléphone</label><input id="profil-tel" placeholder="06 12 34 56 78"></div>
+            <div class="form-field"><label>Lien Calendly</label><input id="profil-calendly" placeholder="https://calendly.com/..."></div>
+            <div class="form-field"><label>Carte pro N°</label><input id="profil-carte" placeholder="CPI 69-2020-000-000"></div>
+            <div class="form-field"><label>Spécialités</label><input id="profil-spe" placeholder="Résidentiel, Investissement..."></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ MANDATS ════════ -->
+    <div class="pane" id="pane-mandats">
+      <div class="panel" style="margin-bottom:14px">
+        <div class="panel-header">
+          <div class="panel-title">Mandats</div>
+          <button class="btn btn-primary btn-sm" onclick="showMandatForm()">+ Nouveau mandat</button>
+        </div>
+        <div class="search-box">
+          <i class="ti ti-search" style="font-size:14px;color:#aaa"></i>
+          <input id="search-mandats" placeholder="Référence, titulaire, date, type…" oninput="filterMandats(this.value)"/>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+          <div class="dossier-cat-btn active" onclick="filterMandatCat('tous',this)">Tous</div>
+          <div class="dossier-cat-btn" onclick="filterMandatCat('vente',this)">Vente</div>
+          <div class="dossier-cat-btn" onclick="filterMandatCat('achat',this)">Achat</div>
+          <div class="dossier-cat-btn" onclick="filterMandatCat('locatif',this)">Locatif</div>
+          <div class="dossier-cat-btn" onclick="filterMandatCat('gestion',this)">Gestion</div>
+          <div class="dossier-cat-btn" onclick="filterMandatCat('bailleur',this)">Bailleur</div>
+        </div>
+      </div>
+
+      <!-- Stats mandats -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
+        <div class="mandat-stat"><div class="mandat-stat-val" id="ms-total">—</div><div class="mandat-stat-label">Total mandats</div></div>
+        <div class="mandat-stat"><div class="mandat-stat-val" id="ms-actifs">—</div><div class="mandat-stat-label">Actifs</div></div>
+        <div class="mandat-stat"><div class="mandat-stat-val" style="color:#E9A020" id="ms-expirent">—</div><div class="mandat-stat-label">Expirent J-30</div></div>
+        <div class="mandat-stat"><div class="mandat-stat-val" style="color:#e05050" id="ms-expires">—</div><div class="mandat-stat-label">Expirés</div></div>
+      </div>
+
+      <!-- Formulaire nouveau mandat avec auto-remplissage -->
+      <div class="panel" id="mandat-form" style="display:none;margin-bottom:14px">
+        <div class="panel-header">
+          <div class="panel-title">Nouveau mandat</div>
+          <button class="btn btn-sm" onclick="document.getElementById('mandat-form').style.display='none'">✕</button>
+        </div>
+        <div style="margin-bottom:12px;padding:10px;background:#EEF3FF;border-radius:8px;border:1px solid #c5d4f8">
+          <div style="font-size:11px;font-weight:600;color:#2a4eb5;margin-bottom:6px">✨ Auto-remplissage depuis un bien</div>
+          <div style="display:flex;gap:8px">
+            <select id="mandat-bien-select" style="flex:1;font-size:12px;padding:6px 10px;border:1px solid #e0deda;border-radius:7px;background:#fff" onchange="autoRemplirMandat(this.value)">
+              <option value="">Choisir un bien pour auto-remplir…</option>
+            </select>
+            <button class="btn btn-sm" style="border-color:#4F7EF7;color:#4F7EF7" onclick="autoRemplirMandat(document.getElementById('mandat-bien-select').value)">✨ Remplir</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px">
+          <div class="form-field"><label>Type de mandat</label>
+            <select id="mf-type">
+              <option value="vente_exclusif">Vente — Exclusif</option>
+              <option value="vente_simple">Vente — Simple</option>
+              <option value="vente_co_exclusif">Vente — Co-exclusif</option>
+              <option value="achat">Recherche acheteur</option>
+              <option value="locatif">Locatif simple</option>
+              <option value="gestion">Gestion locative</option>
+              <option value="bailleur">Mandat bailleur</option>
+            </select>
+          </div>
+          <div class="form-field"><label>N° mandat</label><input id="mf-num" placeholder="M-2026-001"></div>
+          <div class="form-field"><label>Titulaire / Mandant</label><input id="mf-titulaire" placeholder="Jean Dupont"></div>
+          <div class="form-field"><label>Bien concerné</label><input id="mf-bien-ref" placeholder="BDX-0001" readonly></div>
+          <div class="form-field"><label>Date signature</label><input id="mf-debut" type="date"></div>
+          <div class="form-field"><label>Date expiration</label><input id="mf-fin" type="date"></div>
+          <div class="form-field"><label>Honoraires (%)</label><input id="mf-honoraires" type="number" placeholder="5"></div>
+          <div class="form-field"><label>Charge</label>
+            <select id="mf-charge"><option value="vendeur">Vendeur</option><option value="acheteur">Acheteur</option><option value="partage">Partagé</option></select>
+          </div>
+          <div class="form-field"><label>Statut</label>
+            <select id="mf-statut"><option value="actif">Actif</option><option value="en_cours">En cours signature</option><option value="expire">Expiré</option></select>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="saveMandat()">💾 Enregistrer le mandat</button>
+      </div>
+
+      <!-- Liste mandats -->
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">Liste des mandats</div></div>
+        <table class="data-table">
+          <thead><tr><th>N° Mandat</th><th>Type</th><th>Titulaire</th><th>Bien</th><th>Signature</th><th>Expiration</th><th>Honoraires</th><th>Statut</th></tr></thead>
+          <tbody id="mandats-tbody">
+            <tr><td colspan="8"><div class="empty-state">Chargement des mandats…</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
         <div class="pane" id="pane-settings">
       <div class="two-col">
         <div class="panel">
@@ -1561,26 +1832,32 @@ function nav(el, pane) {
   document.querySelectorAll('.sidebar-item').forEach(n => n.classList.remove('active'));
   if(el) el.classList.add('active');
   document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
-  document.getElementById('pane-' + pane).classList.add('active');
+  const paneEl = document.getElementById('pane-' + pane);
+  if(paneEl) paneEl.classList.add('active');
   const titles = {
     overview:'Vue d\'ensemble', biens:'Biens & Mandats', contacts:'Contacts & Leads',
-    pipeline:'Pipeline', qualifier:'Qualifier un lead', annonces:'Générateur d\'annonces',
+    mandats:'Mandats', pipeline:'Pipeline', qualifier:'Qualifier un lead', annonces:'Générateur d\'annonces',
     relances:'Relances automatiques', vocal:'Agent vocal IA', rapports:'Rapports', settings:'Paramètres',
-    fiche:'Fiche client'
+    fiche:'Fiche client', monespace:'Mon espace'
   };
   document.getElementById('page-title').textContent = titles[pane] || pane;
-  if(pane === 'overview') loadMetrics();
+  if(pane === 'overview') { loadMetrics(); loadObjectifs(); renderOverviewAgenda(); }
   if(pane === 'contacts') loadContacts();
-  if(pane === 'relances') loadRelances();   if(pane === 'biens') loadBiens();
+  if(pane === 'relances') loadRelances();
+  if(pane === 'biens') loadBiens();
+  if(pane === 'mandats') loadMandats();
+  if(pane === 'monespace') initMonEspace();
 }
 
 function goToPane(pane) {
-  const idx = ['overview','biens','contacts','pipeline','qualifier','annonces','relances','vocal','rapports','settings'];
+  const idx = ['overview','biens','contacts','mandats','pipeline','qualifier','annonces','relances','vocal','rapports','settings','monespace'];
   const items = document.querySelectorAll('.sidebar-item');
   const i = idx.indexOf(pane);
   nav(i >= 0 ? items[i] : null, pane);
   if(pane === 'biens') loadBiens();
   if(pane === 'contacts') loadContacts();
+  if(pane === 'mandats') loadMandats();
+  if(pane === 'monespace') initMonEspace();
 }
 
 // ── Recherche globale ─────────────────────────────────────────────────────────
@@ -3326,7 +3603,405 @@ async function lancerMatching() {
     btn.textContent = "🔄 Relancer le matching";
   }
 }
-function showToast(msg) {
+
+// ── MON ESPACE ────────────────────────────────────────────────────────────────
+let _meEvents = JSON.parse(localStorage.getItem('aivelo_events') || '[]');
+let _meNotes = JSON.parse(localStorage.getItem('aivelo_notes') || '[]');
+let _meObjectifs = JSON.parse(localStorage.getItem('aivelo_objectifs') || '{"leads":10,"visites":5,"offres":3,"mandats":2}');
+let _selectedEventType = 'demo';
+
+function initMonEspace() {
+  // Nom agent
+  if(currentAgency) {
+    document.getElementById('me-agence').innerHTML = (currentAgency.nom || 'Agence') + ' · Plan Pro · <span style="color:#2da82d">Agent IA actif</span>';
+    document.getElementById('sf-agency-name').textContent = currentAgency.nom || 'Mon agence';
+  }
+  if(currentUser) {
+    const email = currentUser.email || '';
+    const initials = email.slice(0,2).toUpperCase();
+    document.getElementById('me-avatar').textContent = initials;
+    document.getElementById('sf-agent-name').textContent = email.split('@')[0] || 'Agent';
+    document.getElementById('me-nom').textContent = email.split('@')[0] || 'Mon espace';
+  }
+  // Date agenda
+  const today = new Date();
+  document.getElementById('me-agenda-date').textContent = today.toLocaleDateString('fr-FR',{weekday:'long',day:'2-digit',month:'long'});
+  const todayInput = today.toISOString().split('T')[0];
+  document.getElementById('evt-date').value = todayInput;
+  renderAgendaMe();
+  renderNotesMe();
+  renderStatsMe();
+  loadObjectifs();
+  loadMeDossiers('tous');
+}
+
+function switchMeTab(id, el) {
+  ['agenda','dossiers','notes','stats','profil'].forEach(t => {
+    const el2 = document.getElementById('me-tab-' + t);
+    if(el2) el2.style.display = 'none';
+  });
+  const target = document.getElementById('me-tab-' + id);
+  if(target) target.style.display = 'block';
+  document.querySelectorAll('.me-tab').forEach(t => t.classList.remove('active'));
+  if(el) el.classList.add('active');
+  else document.querySelectorAll('.me-tab')[['agenda','dossiers','notes','stats','profil'].indexOf(id)]?.classList.add('active');
+  if(id === 'dossiers') loadMeDossiers('tous');
+  if(id === 'stats') renderStatsMe();
+}
+
+function selectEventType(type, el) {
+  _selectedEventType = type;
+  document.querySelectorAll('.event-type-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function ajouterEvenement() {
+  const titre = document.getElementById('evt-titre').value.trim();
+  const date = document.getElementById('evt-date').value;
+  const heure = document.getElementById('evt-heure').value;
+  const duree = document.getElementById('evt-duree').value;
+  if(!titre || !date || !heure) { showToast('Renseignez le titre, la date et l\'heure'); return; }
+  const evt = { id: Date.now(), type: _selectedEventType, titre, date, heure, duree: parseInt(duree)||60, created: new Date().toISOString() };
+  _meEvents.push(evt);
+  localStorage.setItem('aivelo_events', JSON.stringify(_meEvents));
+  document.getElementById('evt-titre').value = '';
+  renderAgendaMe();
+  renderOverviewAgenda();
+  showToast('✅ Créneau ajouté');
+}
+
+const EVT_CONFIG = {
+  demo:    { label:'Demo Aivelo', color:'#4F7EF7', bg:'#F0F5FF', emoji:'🎯' },
+  admin:   { label:'Admin',       color:'#a78bfa', bg:'#F9F7FF', emoji:'📋' },
+  brief:   { label:'Brief',       color:'#f59e0b', bg:'#FFFBF0', emoji:'💬' },
+  perso:   { label:'Perso',       color:'#22c55e', bg:'#F0FFF4', emoji:'🏠' },
+  indispo: { label:'Indispo',     color:'#ef4444', bg:'#FFF5F5', emoji:'🔴' },
+  visite:  { label:'Visite',      color:'#4F7EF7', bg:'#F0F5FF', emoji:'🏠' },
+};
+
+function renderAgendaMe() {
+  const today = new Date().toISOString().split('T')[0];
+  const evts = _meEvents.filter(e => e.date >= today).sort((a,b) => a.date.localeCompare(b.date) || a.heure.localeCompare(b.heure));
+  const container = document.getElementById('me-agenda-list');
+  if(!evts.length) { container.innerHTML = '<div class="empty-state">Aucun événement à venir — ajoutez des créneaux ci-dessus</div>'; return; }
+  container.innerHTML = evts.map(e => {
+    const cfg = EVT_CONFIG[e.type] || EVT_CONFIG.demo;
+    const dateStr = e.date === today ? 'Aujourd\'hui' : new Date(e.date+'T12:00:00').toLocaleDateString('fr-FR',{weekday:'short',day:'2-digit',month:'short'});
+    return `<div class="agenda-event ${e.type}" style="background:${cfg.bg};border-left-color:${cfg.color}">
+      <div style="min-width:50px;font-size:11px;font-weight:600;color:${cfg.color}">${e.heure}</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:500;color:#1a1a1a">${cfg.emoji} ${e.titre}</div>
+        <div style="font-size:10px;color:#888">${dateStr} · ${e.duree} min</div>
+      </div>
+      <span style="font-size:10px;background:${cfg.bg};color:${cfg.color};border:1px solid ${cfg.color}30;padding:2px 8px;border-radius:20px;font-weight:500">${cfg.label}</span>
+      <button onclick="supprimerEvt(${e.id})" style="font-size:11px;background:none;border:none;color:#aaa;cursor:pointer">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function supprimerEvt(id) {
+  _meEvents = _meEvents.filter(e => e.id !== id);
+  localStorage.setItem('aivelo_events', JSON.stringify(_meEvents));
+  renderAgendaMe();
+  renderOverviewAgenda();
+  showToast('Créneau supprimé');
+}
+
+function renderOverviewAgenda() {
+  const container = document.getElementById('overview-agenda-list');
+  if(!container) return;
+  const today = new Date().toISOString().split('T')[0];
+  const todayEvts = _meEvents.filter(e => e.date === today).sort((a,b) => a.heure.localeCompare(b.heure));
+  const baseItems = `<div class="cal-item">
+    <div class="cal-time">10h30</div>
+    <div style="flex:1"><div class="fw500 text-sm">Visite Apt 72m² — Lyon 6e</div><div class="text-xs">Marie Dupont · Score 87</div></div>
+    <span class="badge badge-green">Confirmée</span>
+  </div>`;
+  let html = baseItems;
+  todayEvts.forEach(e => {
+    const cfg = EVT_CONFIG[e.type] || EVT_CONFIG.demo;
+    const badgeColor = e.type === 'indispo' ? 'badge-red' : e.type === 'brief' ? 'badge-amber' : 'badge-blue';
+    html += `<div class="cal-item">
+      <div class="cal-time">${e.heure.replace(':','h').replace(/^(\d+h)0$/,'$1')}</div>
+      <div style="flex:1"><div class="fw500 text-sm">${cfg.emoji} ${e.titre}</div><div class="text-xs">${cfg.label} · ${e.duree} min${e.type==='indispo'?' · 🔴 Indispo':''}</div></div>
+      <span class="badge ${badgeColor}">${cfg.label}</span>
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+async function loadMeDossiers(cat) {
+  const container = document.getElementById('me-dossiers-list');
+  container.innerHTML = '<div class="text-xs" style="color:#aaa;padding:10px">Chargement…</div>';
+  const allDossiers = [];
+  // Leads
+  const { data: leads } = await sb.from('leads').select('*').order('created_at', { ascending: false });
+  if(Array.isArray(leads)) leads.forEach(l => allDossiers.push({ id: l.id, nom: l.nom, type: l.type || 'client', sous_type: 'client', created: l.created_at, statut: l.statut, score: l.score, extra: l.projet }));
+  // Biens
+  const { data: biens } = await sb.from('biens').select('*').order('created_at', { ascending: false });
+  if(Array.isArray(biens)) biens.forEach(b => allDossiers.push({ id: b.id, nom: b.reference || '—', type: b.type_bien || 'bien', sous_type: 'bien', created: b.created_at, statut: b.statut, extra: (b.adresse||'') + ' ' + (b.ville||'') }));
+
+  let filtered = allDossiers;
+  if(cat !== 'tous') filtered = allDossiers.filter(d => d.sous_type === cat || d.type?.toLowerCase().includes(cat));
+
+  document.getElementById('dossiers-count').textContent = filtered.length;
+  if(!filtered.length) { container.innerHTML = '<div class="empty-state">Aucun dossier dans cette catégorie</div>'; return; }
+
+  const now = new Date();
+  container.innerHTML = filtered.map(d => {
+    const created = new Date(d.created);
+    const diffMs = now - created;
+    const diffDays = Math.floor(diffMs / 86400000);
+    const diffMois = Math.floor(diffDays / 30);
+    const daysLabel = diffMois > 0 ? `${diffMois} mois ${diffDays % 30}j` : `${diffDays}j`;
+    const badge = d.statut === 'chaud' ? 'badge-green' : d.statut === 'disponible' ? 'badge-green' : d.statut === 'tiede' ? 'badge-amber' : 'badge-gray';
+    const initials = (d.nom||'?').split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();
+    const isBien = d.sous_type === 'bien';
+    return `<div class="dossier-card" onclick="${isBien ? `openFicheBien(_biensCache.findIndex(b=>b.id==='${d.id}'))` : `openFiche(_leadsCache.findIndex(l=>l.id==='${d.id}'))`}">
+      <div class="avatar" style="background:${isBien?'#EAFFEA':'#EEF3FF'};color:${isBien?'#1a7a1a':'#2a4eb5'}">${initials}</div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:500;color:#1a1a1a">${d.nom}</div>
+        <div style="font-size:10px;color:#888">${isBien?'Bien':'Contact'} · ${d.extra?.substring(0,30)||'—'}</div>
+      </div>
+      <div style="text-align:right">
+        <span class="badge ${badge}" style="display:block;margin-bottom:3px">${d.statut||'—'}</span>
+        <span class="days-badge">Ouvert : ${daysLabel}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterDossiers(cat, el) {
+  document.querySelectorAll('.dossier-cat-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  loadMeDossiers(cat);
+}
+
+function ajouterNoteMe() {
+  const texte = document.getElementById('me-note-input').value.trim();
+  if(!texte) return;
+  _meNotes.unshift({ id: Date.now(), texte, created: new Date().toISOString() });
+  localStorage.setItem('aivelo_notes', JSON.stringify(_meNotes));
+  document.getElementById('me-note-input').value = '';
+  renderNotesMe();
+  showToast('✅ Note ajoutée');
+}
+
+function renderNotesMe() {
+  const container = document.getElementById('me-notes-list');
+  if(!_meNotes.length) { container.innerHTML = '<div class="empty-state">Aucune note pour l\'instant</div>'; return; }
+  container.innerHTML = _meNotes.map(n => {
+    const date = new Date(n.created).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+    return `<div style="padding:9px 11px;background:#F9F8F5;border-radius:7px;margin-bottom:6px;border-left:3px solid #4F7EF7;display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+      <div>
+        <div style="font-size:10px;color:#aaa;margin-bottom:3px">${date}</div>
+        <div style="font-size:13px;color:#444">${n.texte}</div>
+      </div>
+      <button onclick="supprimerNoteMe(${n.id})" style="font-size:11px;background:none;border:none;color:#aaa;cursor:pointer;flex-shrink:0">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function supprimerNoteMe(id) {
+  _meNotes = _meNotes.filter(n => n.id !== id);
+  localStorage.setItem('aivelo_notes', JSON.stringify(_meNotes));
+  renderNotesMe();
+}
+
+async function renderStatsMe() {
+  const { data: leads } = await sb.from('leads').select('score,statut').catch(()=>({data:[]}));
+  const { data: biens } = await sb.from('biens').select('id,prix').catch(()=>({data:[]}));
+  const nbLeads = leads?.length || 0;
+  const nbBiens = biens?.length || 0;
+  const scores = (leads||[]).filter(l=>l.score).map(l=>l.score);
+  const avgScore = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : '—';
+  const ca = (biens||[]).reduce((s,b)=>s+(b.prix?Number(b.prix)*0.05:0),0);
+  const caStr = ca > 1000 ? Math.round(ca/1000)+'k€' : ca+'€';
+  document.getElementById('me-stat-leads').textContent = nbLeads;
+  document.getElementById('me-stat-biens').textContent = nbBiens;
+  document.getElementById('me-stat-score').textContent = avgScore;
+  document.getElementById('me-stat-ca').textContent = caStr;
+  updateObjectifsUI(nbLeads);
+}
+
+// ── OBJECTIFS ────────────────────────────────────────────────────────────────
+function loadObjectifs() {
+  _meObjectifs = JSON.parse(localStorage.getItem('aivelo_objectifs') || '{"leads":10,"visites":5,"offres":3,"mandats":2}');
+  const now = new Date();
+  const debut = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+  sb.from('leads').select('id').gte('created_at', debut).then(({data}) => {
+    const nbLeads = data?.length || 0;
+    updateObjectifsUI(nbLeads);
+  });
+}
+
+function updateObjectifsUI(nbLeads) {
+  const o = _meObjectifs;
+  const sets = [
+    { key:'leads',   val:nbLeads,        target:o.leads,   fillId:'obj-fill-leads',   valId:'obj-val-leads',   meF:'me-obj-leads',   meV:'me-obj-leads-val',   color:'#4F7EF7' },
+    { key:'visites', val:0,              target:o.visites, fillId:'obj-fill-visites', valId:'obj-val-visites', meF:'me-obj-visites', meV:'me-obj-visites-val', color:'#a78bfa' },
+    { key:'offres',  val:0,              target:o.offres,  fillId:'obj-fill-offres',  valId:'obj-val-offres',  meF:'me-obj-offres',  meV:'me-obj-offres-val',  color:'#f59e0b' },
+    { key:'mandats', val:0,              target:o.mandats, fillId:'obj-fill-mandats', valId:'obj-val-mandats', meF:'me-obj-mandats', meV:'me-obj-mandats-val', color:'#22c55e' },
+  ];
+  sets.forEach(s => {
+    const pct = s.target > 0 ? Math.min(100, Math.round(s.val/s.target*100)) : 0;
+    const label = `${s.val}/${s.target}`;
+    ['fillId','meF'].forEach(fk => { const el = document.getElementById(s[fk]); if(el){el.style.width=pct+'%';el.style.background=s.color;} });
+    ['valId','meV'].forEach(vk => { const el = document.getElementById(s[vk]); if(el) el.textContent=label; });
+  });
+  const tip = document.getElementById('obj-ia-tip');
+  const tipTxt = document.getElementById('obj-ia-txt');
+  if(tip && tipTxt && nbLeads < (o.leads||10)) {
+    tipTxt.textContent = `Il vous manque ${(o.leads||10)-nbLeads} leads pour atteindre l'objectif — relancez vos contacts tièdes`;
+    tip.style.display = 'block';
+  }
+}
+
+function ouvrirModalObjectifs() {
+  document.getElementById('obj-i-leads').value = _meObjectifs.leads||10;
+  document.getElementById('obj-i-visites').value = _meObjectifs.visites||5;
+  document.getElementById('obj-i-offres').value = _meObjectifs.offres||3;
+  document.getElementById('obj-i-mandats').value = _meObjectifs.mandats||2;
+  document.getElementById('modal-objectifs').classList.add('open');
+}
+
+function sauvegarderObjectifs() {
+  _meObjectifs = {
+    leads:   parseInt(document.getElementById('obj-i-leads').value)||10,
+    visites: parseInt(document.getElementById('obj-i-visites').value)||5,
+    offres:  parseInt(document.getElementById('obj-i-offres').value)||3,
+    mandats: parseInt(document.getElementById('obj-i-mandats').value)||2,
+  };
+  localStorage.setItem('aivelo_objectifs', JSON.stringify(_meObjectifs));
+  document.getElementById('modal-objectifs').classList.remove('open');
+  loadObjectifs();
+  showToast('✅ Objectifs sauvegardés');
+}
+
+function saveProfilAgent() {
+  const profil = {
+    nom: document.getElementById('profil-nom').value,
+    email: document.getElementById('profil-email').value,
+    tel: document.getElementById('profil-tel').value,
+    calendly: document.getElementById('profil-calendly').value,
+    carte: document.getElementById('profil-carte').value,
+    spe: document.getElementById('profil-spe').value,
+  };
+  localStorage.setItem('aivelo_profil', JSON.stringify(profil));
+  showToast('✅ Profil sauvegardé');
+}
+
+// ── MANDATS ──────────────────────────────────────────────────────────────────
+let _mandatsCache = [];
+let _mandatCatFilter = 'tous';
+
+async function loadMandats() {
+  try {
+    const { data: mandats } = await sb.from('mandats').select('*, biens(reference, adresse, ville, details)').order('date_debut', { ascending: false });
+    _mandatsCache = mandats || [];
+    renderMandats(_mandatsCache);
+    updateMandatStats(_mandatsCache);
+    // Alimenter le select auto-remplissage
+    await loadBiens();
+    const sel = document.getElementById('mandat-bien-select');
+    if(sel && _biensCache.length) {
+      sel.innerHTML = '<option value="">Choisir un bien pour auto-remplir…</option>' +
+        _biensCache.map(b => `<option value="${b.id}">${b.reference||'—'} · ${b.adresse||b.ville||'—'}</option>`).join('');
+    }
+  } catch(e) { console.error('Erreur mandats:', e); }
+}
+
+function renderMandats(mandats) {
+  const tbody = document.getElementById('mandats-tbody');
+  if(!mandats.length) { tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state">Aucun mandat — créez votre premier mandat</div></td></tr>'; return; }
+  const now = new Date();
+  tbody.innerHTML = mandats.map(m => {
+    const fin = m.date_fin ? new Date(m.date_fin) : null;
+    const jRestants = fin ? Math.ceil((fin - now) / 86400000) : null;
+    const expire = jRestants !== null && jRestants <= 30;
+    const expireLabel = jRestants !== null ? (jRestants <= 0 ? '<span class="badge badge-red">Expiré</span>' : expire ? `<span class="badge badge-amber">J-${jRestants}</span>` : '<span class="badge badge-green">Actif</span>') : '<span class="badge badge-gray">—</span>';
+    const typeLabel = (m.type||'—').replace('_',' ').replace(/\b\w/g,c=>c.toUpperCase());
+    return `<tr onclick="void(0)" style="cursor:pointer">
+      <td class="name-cell">${m.id?.slice(0,6).toUpperCase()||'—'}</td>
+      <td><span class="badge badge-blue" style="font-size:10px">${typeLabel}</span></td>
+      <td>${m.biens?.details?.proprio_nom || '—'}</td>
+      <td>${m.biens?.reference || '—'}</td>
+      <td class="text-xs">${m.date_debut ? new Date(m.date_debut).toLocaleDateString('fr-FR') : '—'}</td>
+      <td class="text-xs" style="color:${expire?'#a06010':'inherit'}">${m.date_fin ? new Date(m.date_fin).toLocaleDateString('fr-FR') : '—'}</td>
+      <td>${m.honoraires ? m.honoraires+'%' : '—'}</td>
+      <td>${expireLabel}</td>
+    </tr>`;
+  }).join('');
+}
+
+function updateMandatStats(mandats) {
+  const now = new Date();
+  document.getElementById('ms-total').textContent = mandats.length;
+  const actifs = mandats.filter(m => m.date_fin && new Date(m.date_fin) > now).length;
+  document.getElementById('ms-actifs').textContent = actifs;
+  const expirent = mandats.filter(m => { if(!m.date_fin) return false; const j = Math.ceil((new Date(m.date_fin)-now)/86400000); return j>0&&j<=30; }).length;
+  document.getElementById('ms-expirent').textContent = expirent;
+  const expires = mandats.filter(m => m.date_fin && new Date(m.date_fin) <= now).length;
+  document.getElementById('ms-expires').textContent = expires;
+}
+
+function showMandatForm() {
+  document.getElementById('mandat-form').style.display = 'block';
+  document.getElementById('mandat-form').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function autoRemplirMandat(bienId) {
+  if(!bienId) return;
+  const b = _biensCache.find(x => x.id === bienId);
+  if(!b) return;
+  const d = b.details || {};
+  document.getElementById('mf-bien-ref').value = b.reference || '';
+  document.getElementById('mf-titulaire').value = d.proprio_nom || '';
+  document.getElementById('mf-honoraires').value = d.mandat_honoraires || d.mandat_charge || '';
+  if(d.mandat_debut) document.getElementById('mf-debut').value = d.mandat_debut.split('T')[0] || d.mandat_debut;
+  if(d.mandat_fin)   document.getElementById('mf-fin').value   = d.mandat_fin.split('T')[0]   || d.mandat_fin;
+  if(d.mandat_type) {
+    const sel = document.getElementById('mf-type');
+    const match = [...sel.options].find(o => o.value.includes(d.mandat_type.toLowerCase()));
+    if(match) sel.value = match.value;
+  }
+  showToast('✨ Champs auto-remplis depuis le dossier bien');
+}
+
+async function saveMandat() {
+  const bienId = _biensCache.find(b => b.reference === document.getElementById('mf-bien-ref').value)?.id || null;
+  const payload = {
+    type: document.getElementById('mf-type').value,
+    date_debut: document.getElementById('mf-debut').value || null,
+    date_fin: document.getElementById('mf-fin').value || null,
+    honoraires: parseFloat(document.getElementById('mf-honoraires').value) || null,
+    bien_id: bienId,
+  };
+  const { error } = await sb.from('mandats').insert(payload);
+  if(error) { showToast('Erreur : ' + error.message); return; }
+  document.getElementById('mandat-form').style.display = 'none';
+  loadMandats();
+  showToast('✅ Mandat enregistré');
+}
+
+function filterMandats(q) {
+  if(!q) { renderMandats(_mandatsCache); return; }
+  const filtered = _mandatsCache.filter(m =>
+    JSON.stringify(m).toLowerCase().includes(q.toLowerCase())
+  );
+  renderMandats(filtered);
+}
+
+function filterMandatCat(cat, el) {
+  _mandatCatFilter = cat;
+  document.querySelectorAll('#pane-mandats .dossier-cat-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  if(cat === 'tous') { renderMandats(_mandatsCache); return; }
+  const filtered = _mandatsCache.filter(m => (m.type||'').includes(cat));
+  renderMandats(filtered);
+}
+
+
   const t = document.createElement('div');
   t.textContent = msg;
   t.style.cssText = `

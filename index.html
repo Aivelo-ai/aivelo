@@ -1711,7 +1711,7 @@ function openFiche(index) {
   // Contact info
   const tel = l.telephone || '';
   const email = l.email || '';
-  document.getElementById('fiche-tel-display').textContent = tel || '—';
+  const telEl = document.getElementById('fiche-tel-display'); if (telEl) telEl.textContent = tel || '—';
   document.getElementById('fiche-tel-action').href = tel ? 'tel:' + tel : '#';
   document.getElementById('fiche-email-display').textContent = email || '—';
   document.getElementById('fiche-email-action').href = email ? 'mailto:' + email : '#';

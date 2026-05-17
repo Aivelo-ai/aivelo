@@ -1013,7 +1013,7 @@ function nav(el, pane) {
   document.getElementById('page-title').textContent = titles[pane] || pane;
   if(pane === 'overview') loadMetrics();
   if(pane === 'contacts') loadContacts();
-  if(pane === 'relances') loadRelances();
+  if(pane === 'relances') loadRelances();   if(pane === 'biens') loadBiens();
 }
 
 function goToPane(pane) {
@@ -1652,8 +1652,7 @@ async function loadBiens() {
     tbody.innerHTML = data.map((b, i) => {
       const badge = b.statut === 'disponible' ? 'badge-green' : b.statut === 'sous_compromis' ? 'badge-amber' : 'badge-gray';
       const label = b.statut === 'disponible' ? 'Disponible' : b.statut === 'sous_compromis' ? 'Sous compromis' : b.statut === 'vendu' ? 'Vendu' : 'Loué';
-      const mandat = b.mandats?.[0];
-      const mandatLabel = mandat ? mandat.type : '—';
+      const mandatLabel = '—';
       const mandatBadge = mandatLabel === 'exclusif' ? 'badge-blue' : 'badge-gray';
       return `<tr onclick="openFicheBien(${i})" style="cursor:pointer" data-bien-id="${b.id}">
         <td class="name-cell">${b.reference || '—'}</td>

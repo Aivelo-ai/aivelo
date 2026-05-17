@@ -397,8 +397,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </div>
     </div>
 
-    </div>
-
     <!-- ════════ FICHE BIEN ════════ -->
     <div class="pane" id="pane-fiche-bien">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
@@ -1475,7 +1473,7 @@ function loadBien(ref) {
     row.setAttribute('data-ref', ref);
     row.innerHTML = `
       <td class="name-cell">${b.ref}</td>
-      <td>${b.type}</td>
+      <td>${b.type_bien}</td>
       <td>${b.adresse}, ${b.ville}</td>
       <td>${b.prix.toLocaleString('fr-FR')}€</td>
       <td><span class="badge ${mandatBadge}">${b.mandat} · exp. ${b.fin}</span></td>
@@ -1659,7 +1657,7 @@ async function loadBiens() {
       const mandatBadge = mandatLabel === 'exclusif' ? 'badge-blue' : 'badge-gray';
       return `<tr onclick="openFicheBien(${i})" style="cursor:pointer" data-bien-id="${b.id}">
         <td class="name-cell">${b.reference || '—'}</td>
-        <td>${b.type || '—'}</td>
+        <td>${b.type_bien || '—'}</td>
         <td>${b.adresse ? b.adresse+', '+b.ville : b.ville || '—'}</td>
         <td>${b.prix ? Number(b.prix).toLocaleString('fr-FR')+'€' : '—'}</td>
         <td><span class="badge ${mandatBadge}">${mandatLabel}</span></td>
@@ -1683,7 +1681,7 @@ async function saveBien() {
   const agency_id = session?.user?.id || null;
 
   const { data: bien, error } = await sb.from('biens').insert({
-    reference: ref, type, adresse, ville, surface, prix, statut, agency_id
+    reference: ref, type_bien: type, adresse, ville, surface, prix, statut, agency_id
   }).select().single();
 
   if(error) { alert('Erreur : ' + error.message); return; }
@@ -1714,7 +1712,7 @@ function openFicheBien(index) {
   _currentBienId = b.id;
 
   document.getElementById('fb-ref').textContent = b.reference || '—';
-  document.getElementById('fb-type').textContent = b.type || '—';
+  document.getElementById('fb-type').textContent = b.type_bien || '—';
   document.getElementById('fb-adresse').textContent = (b.adresse ? b.adresse+', ' : '') + (b.ville||'—');
   document.getElementById('fb-surface').textContent = b.surface ? b.surface+'m²' : '—';
   document.getElementById('fb-prix').textContent = b.prix ? Number(b.prix).toLocaleString('fr-FR')+'€' : '—';

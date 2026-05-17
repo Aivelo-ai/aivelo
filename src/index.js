@@ -6,7 +6,7 @@ const qualificationRoute = require('./routes/qualification');
 const annoncesRoute = require('./routes/annonces');
 const relancesRoute = require('./routes/relances');
 const matchingRoute = require('./routes/matching');
-
+const importBienRoute = require('./routes/importBien');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -28,7 +28,7 @@ app.use('/api/qualify', qualificationRoute);
 app.use('/api/annonces', annoncesRoute);
 app.use('/api/relances', relancesRoute);
 app.use('/api/matching', matchingRoute);
-
+app.use('/api/import-bien', importBienRoute);
 app.get('/health', (_req, res) => {
   res.json({
     status: 'ok',

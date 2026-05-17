@@ -473,6 +473,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <span class="badge badge-gray" style="cursor:pointer" onclick="document.getElementById('fb-doc-upload').click()">🔍 Diagnostics</span>
         </div>
       </div>
+
+      <!-- Matching IA -->
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">🤖 Matching IA — Candidats potentiels</div>
+            <div class="text-xs" style="color:#888;margin-top:2px">Acheteurs qualifiés les plus compatibles avec ce bien</div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="lancerMatching()" id="btn-matching">✨ Analyser les candidats</button>
+        </div>
+        <div id="matching-result">
+          <div class="empty-state">Cliquez sur "Analyser les candidats" pour lancer le matching IA</div>
+        </div>
+      </div>
     </div>
 
     <!-- ════════ CONTACTS ════════ -->
@@ -1768,6 +1782,59 @@ async function ouvrirCadastre() {
   }, 400);
 }
 
+
+async function lancerMatching() {
+  const b = _biensCache.find(x => x.id === _currentBienId);
+  if (!b) return;
+  const btn = document.getElementById("btn-matching");
+  const container = document.getElementById("matching-result");
+  btn.disabled = true;
+  btn.textContent = "⏳ Analyse en cours...";
+  container.innerHTML = `<div class="empty-state" style="padding:20px">🤖 L'IA analyse vos acheteurs qualifiés…</div>`;
+  try {
+    const agencyId = (await supabase.auth.getUser()).data.user?.id;
+    const res = await fetch("https://aivelo-production.up.railway.app/api/matching", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-api-key": "aivelo-2026-ArthurS-immo" },
+      body: JSON.stringify({ bien_id: b.id, agency_id: agencyId })
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.error);
+    if (!data.matches || data.matches.length === 0) {
+      container.innerHTML = `<div class="empty-state">Aucun acheteur compatible trouvé pour ce bien.</div>`;
+      return;
+    }
+    const scoreColor = s => s >= 70 ? "#22c55e" : s >= 45 ? "#f59e0b" : "#ef4444";
+    const scoreLabel = s => s >= 70 ? "Excellent match" : s >= 45 ? "Bon match" : "Match partiel";
+    container.innerHTML = data.matches.map(m => `
+      <div style="border:1px solid #2a2f3e;border-radius:8px;padding:14px;margin-bottom:10px;background:#0f1117">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div>
+            <div style="font-size:14px;font-weight:600;color:#e8eaf0">${m.nom}</div>
+            <div style="font-size:12px;color:#6b7280;margin-top:2px">${m.raison}</div>
+          </div>
+          <div style="text-align:right;flex-shrink:0;margin-left:12px">
+            <div style="font-size:20px;font-weight:700;color:${scoreColor(m.score_match)}">${m.score_match}%</div>
+            <div style="font-size:10px;color:${scoreColor(m.score_match)};font-weight:600">${scoreLabel(m.score_match)}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+          ${(m.points_forts||[]).map(p => `<span class="badge badge-gray" style="background:#1a2035">${p}</span>`).join("")}
+        </div>
+        ${m.alerte ? `<div style="font-size:11px;color:#f59e0b;background:#2a1f00;padding:5px 8px;border-radius:4px;margin-bottom:8px">⚠️ ${m.alerte}</div>` : ""}
+        <div style="display:flex;gap:8px;margin-top:8px">
+          ${m.telephone ? `<a href="tel:${m.telephone}" class="btn btn-sm" style="font-size:11px">📞 ${m.telephone}</a>` : ""}
+          ${m.email ? `<a href="mailto:${m.email}" class="btn btn-sm" style="font-size:11px">✉️ Envoyer un email</a>` : ""}
+        </div>
+      </div>
+    `).join("");
+  } catch(e) {
+    container.innerHTML = `<div class="empty-state" style="color:#ef4444">Erreur : ${e.message}</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "🔄 Relancer le matching";
+  }
+}
 function showToast(msg) {
   const t = document.createElement('div');
   t.textContent = msg;

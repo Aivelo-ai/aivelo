@@ -1991,7 +1991,7 @@ function afficherImportResultContact(data) {
   document.getElementById('cimport-fields-list').innerHTML = entries.map(([k,v]) =>
     `<div class="extracted-field" style="cursor:pointer" onclick="toggleImportField(this)" data-key="${k}">
       <div style="display:flex;align-items:center;gap:8px">
-        <input type="checkbox" checked onclick="event.stopPropagation();toggleImportField(this.closest('.extracted-field'))" style="cursor:pointer;width:14px;height:14px;accent-color:#4F7EF7">
+        <input type="checkbox" checked onclick="event.stopPropagation();toggleImportField(this.parentElement.parentElement)" style="cursor:pointer;width:14px;height:14px;accent-color:#4F7EF7">
         <span class="extracted-label">${CIMPORT_LABELS[k]||k}</span>
       </div>
       <span class="extracted-val">${v}</span>
@@ -2853,7 +2853,7 @@ function afficherImportResult(data) {
   document.getElementById('import-fields-list').innerHTML = entries.map(([k,v]) =>
     `<div class="extracted-field" style="cursor:pointer" onclick="toggleImportField(this)" data-key="${k}">
       <div style="display:flex;align-items:center;gap:8px">
-        <input type="checkbox" checked onclick="event.stopPropagation();toggleImportField(this.closest('.extracted-field'))" style="cursor:pointer;width:14px;height:14px;accent-color:#4F7EF7">
+        <input type="checkbox" checked onclick="event.stopPropagation();toggleImportField(this.parentElement.parentElement)" style="cursor:pointer;width:14px;height:14px;accent-color:#4F7EF7">
         <span class="extracted-label">${IMPORT_LABELS[k]||k}</span>
       </div>
       <span class="extracted-val">${v}</span>

@@ -1792,7 +1792,7 @@ async function lancerMatching() {
   btn.textContent = "⏳ Analyse en cours...";
   container.innerHTML = `<div class="empty-state" style="padding:20px">🤖 L'IA analyse vos acheteurs qualifiés…</div>`;
   try {
-    const agencyId = (await supabase.auth.getUser()).data.user?.id;
+    const agencyId = b.agency_id;
     const res = await fetch("https://aivelo-production.up.railway.app/api/matching", {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-api-key": "aivelo-2026-ArthurS-immo" },

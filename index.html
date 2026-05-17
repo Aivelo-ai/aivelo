@@ -2121,16 +2121,14 @@ async function lancerImportIA(input) {
   document.getElementById('import-zone-scan').style.display = 'none';
   document.getElementById('import-loading').style.display = 'block';
   try {
-    const base64 = await fileToBase64(file);
+    const base64full = await fileToBase64(file);
+    const base64data = base64full.split(',')[1];
     const isImage = file.type.startsWith('image/');
-    const messages = isImage ? [{
-      role: 'user',
-      content: [
-        { type: 'image', source: { type: 'base64', media_type: file.type, data: base64.split(',')[1] } },
-        { type: 'text', text: IMPORT_PROMPT }
-      ]
-    }] : [{ role: 'user', content: IMPORT_PROMPT + '\n\n[Document PDF uploadé — extrais les infos visibles]' }];
-    await appelImportIA(messages);
+    if (isImage) {
+      await appelImportIA({ image_base64: base64data, image_type: file.type });
+    } else {
+      await appelImportIA({ texte: '[Document PDF — extrais les informations immobilières visibles]' });
+    }
   } catch(e) {
     showToast('❌ Erreur import : ' + e.message);
     resetImportIA();
@@ -2143,38 +2141,23 @@ async function lancerImportIATexte() {
   document.getElementById('import-zone-paste').style.display = 'none';
   document.getElementById('import-loading').style.display = 'block';
   try {
-    await appelImportIA([{ role: 'user', content: IMPORT_PROMPT + '\n\nContenu à analyser :\n' + texte }]);
+    await appelImportIA({ texte });
   } catch(e) {
     showToast('❌ Erreur import : ' + e.message);
     resetImportIA();
   }
 }
 
-const IMPORT_PROMPT = `Tu es un expert immobilier. Analyse ce document et extrais les informations disponibles sur le bien immobilier.
-Réponds UNIQUEMENT en JSON valide sans markdown, avec les champs disponibles parmi :
-{
-  "type_bien": "", "pieces": "", "surface": "", "surface_carrez": "", "prix": "", "net_vendeur": "",
-  "dpe": "", "ges": "", "adresse": "", "ville": "",
-  "proprio_nom": "", "etage": "", "ascenseur": "", "exposition": "", "annee_construction": "",
-  "balcon": "", "cave": "", "parking": "", "taxe_fonciere": "",
-  "residence": "", "numero_lot": "", "charges_copro": "", "nb_lots": "", "syndic": "",
-  "mandat_type": "", "mandat_num": "", "mandat_debut": "", "mandat_fin": "", "mandat_honoraires": "",
-  "mandat_charge": "", "mandat_reconduction": "", "carte_pro": "", "garantie_fin": "", "parcelle_cadastrale": ""
-}
-N'inclus que les champs trouvés dans le document. Laisse vide si non trouvé.`;
-
-async function appelImportIA(messages) {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
+async function appelImportIA(payload) {
+  const res = await fetch('https://aivelo-production.up.railway.app/api/import-bien', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages })
+    headers: { 'Content-Type': 'application/json', 'x-api-key': 'aivelo-2026-ArthurS-immo' },
+    body: JSON.stringify(payload)
   });
   const data = await res.json();
-  const text = data.content?.[0]?.text || '{}';
-  let parsed;
-  try { parsed = JSON.parse(text.replace(/```json|```/g,'').trim()); } catch { parsed = {}; }
-  _importedData = parsed;
-  afficherImportResult(parsed);
+  if (!data.success) throw new Error(data.error || 'Erreur import');
+  _importedData = data.data;
+  afficherImportResult(data.data);
 }
 
 function afficherImportResult(data) {

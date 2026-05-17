@@ -1754,24 +1754,25 @@ function ouvrirPanelBiens(type) {
     document.getElementById('panel-biens-list').innerHTML = '<div class="empty-state">Aucun bien dans cette catégorie</div>';
   } else {
     const colors = { green:'#22c55e', amber:'#f59e0b', blue:'#4F7EF7', gray:'#ccc' };
-    document.getElementById('panel-biens-list').innerHTML = biens.map(b => `
-      <div onclick="ouvrirDrawerBien(${JSON.stringify(b).replace(/"/g,'&quot;')})"
-        style="display:flex;align-items:center;gap:10px;padding:9px 11px;background:#F9F8F5;border-radius:8px;border:1px solid #f0ede8;cursor:pointer"
-        onmouseover="this.style.borderColor='#4F7EF7'" onmouseout="this.style.borderColor='#f0ede8'">
-        <span style="width:7px;height:7px;border-radius:50%;background:${colors[b.color||'gray']};flex-shrink:0"></span>
-        <div style="flex:1">
-          <div style="font-size:12px;font-weight:500;color:#1a1a1a">${b.ref} · ${b.adresse||''}</div>
-          <div style="font-size:10px;color:#888;margin-top:2px">${b.type||''} ${b.prix?'· '+b.prix:''} ${b.date?'· '+b.date:''}</div>
-          ${b.note?`<div style="font-size:10px;color:#555;font-style:italic;margin-top:2px">"${b.note}"</div>`:''}
-        </div>
-        ${b.match?`<span style="font-size:10px;font-weight:600;background:#EEF3FF;color:#2a4eb5;padding:2px 8px;border-radius:20px">${b.match}</span>`:''}
-        <span style="font-size:13px;color:#4F7EF7">→</span>
-      </div>`).join('');
+    window._panelBiensData = biens;
+    document.getElementById('panel-biens-list').innerHTML = biens.map((b,i) => {
+      const dot = colors[b.color||'gray'];
+      return '<div onclick="ouvrirDrawerBien(' + i + ')" style="display:flex;align-items:center;gap:10px;padding:9px 11px;background:#F9F8F5;border-radius:8px;border:1px solid #f0ede8;cursor:pointer">'
+        + '<span style="width:7px;height:7px;border-radius:50%;background:' + dot + ';flex-shrink:0"></span>'
+        + '<div style="flex:1"><div style="font-size:12px;font-weight:500;color:#1a1a1a">' + b.ref + ' · ' + (b.adresse||'') + '</div>'
+        + '<div style="font-size:10px;color:#888;margin-top:2px">' + (b.type||'') + (b.prix?' · '+b.prix:'') + (b.date?' · '+b.date:'') + '</div>'
+        + (b.note ? '<div style="font-size:10px;color:#555;font-style:italic;margin-top:2px">' + b.note + '</div>' : '')
+        + '</div>'
+        + (b.match ? '<span style="font-size:10px;font-weight:600;background:#EEF3FF;color:#2a4eb5;padding:2px 8px;border-radius:20px">' + b.match + '</span>' : '')
+        + '<span style="font-size:13px;color:#4F7EF7">→</span></div>';
+    }).join('');
   }
   document.getElementById('panel-biens-contact').style.display = 'block';
 }
 
-function ouvrirDrawerBien(b) {
+function ouvrirDrawerBien(indexOrObj) {
+  const b = typeof indexOrObj === 'number' ? (window._panelBiensData||[])[indexOrObj] : indexOrObj;
+  if (!b) return;
   document.getElementById('drawer-bien-ref').textContent = b.ref || '—';
   document.getElementById('drawer-bien-adresse').textContent = b.adresse || '—';
   const s = document.getElementById('drawer-bien-statut');
@@ -1906,7 +1907,7 @@ async function envoyerLienCalendly() {
 }
 
 function editContactModal() {
-  showToast('💡 Modifiez les infos via l'Agent 1 Qualification ou l'Import IA');
+  showToast("💡 Utilisez l'Import IA ou l'Agent Qualification pour modifier");
 }
 
 // ── Import IA Contact ─────────────────────────────────────────────────────────

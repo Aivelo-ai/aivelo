@@ -27,7 +27,7 @@ Interprétation :
 Ne réponds qu'avec le JSON, sans markdown, sans commentaire.`;
 
 async function qualifierLead(leadData) {
-  const { nom, projet, budget, delai, financement } = leadData;
+  const { nom, projet, budget, delai, financement, agency_id, email, telephone, source } = leadData;
 
   const userMessage = `
 Qualifie ce lead immobilier :
@@ -61,11 +61,15 @@ Financement : ${financement || 'Non précisé'}
   const { data: lead, error } = await supabase
     .from('leads')
     .insert({
+      agency_id:        agency_id ?? null,
       nom,
       projet,
       budget:           budget ?? null,
       delai:            delai ?? null,
       financement:      financement ?? null,
+      email:            email ?? null,
+      telephone:        telephone ?? null,
+      source:           source ?? null,
       score,
       statut,
       resume,

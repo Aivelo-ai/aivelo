@@ -1642,7 +1642,7 @@ let _currentBienId = null;
 
 async function loadBiens() {
   try {
-    const { data, error } = await sb.from('biens').select('*,mandats(type,date_fin,honoraires)').order('created_at', { ascending: false });
+    const { data, error } = await sb.from('biens').select('*').order('created_at', { ascending: false });
     const tbody = document.getElementById('biens-tbody');
     if(error || !data?.length) {
       tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state">Aucun bien enregistré — créez votre premier dossier</div></td></tr>';

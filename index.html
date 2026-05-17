@@ -1589,7 +1589,18 @@ function filterRelances(type, el) {
 }
 
 // ── Déconnexion ───────────────────────────────────────────────────────────────
-async function saveNotaires() {
+async function loadNotaires(bienId) {
+  const { data } = await sb.from('notaires').select('*').eq('bien_id', bienId);
+  if(!data?.length) return;
+  data.forEach(n => {
+    const prefix = n.type === 'vendeur' ? 'v' : 'a';
+    ['nom','cabinet','email','telephone'].forEach(f => {
+      const el = document.getElementById(`fb-notaire-${prefix}-${f === 'telephone' ? 'tel' : f}`);
+      if(el) el.value = n[f] || '';
+    });
+  });
+  
+}async function saveNotaires() {
   if(!_currentBienId) return;
   const notaires = [
     { type:'vendeur', nom: document.getElementById('fb-notaire-v-nom').value, cabinet: document.getElementById('fb-notaire-v-cabinet').value, email: document.getElementById('fb-notaire-v-email').value, telephone: document.getElementById('fb-notaire-v-tel').value },

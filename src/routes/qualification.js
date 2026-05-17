@@ -2,6 +2,7 @@ const express = require('express');
 const { qualifierLead } = require('../agents/qualificationAgent');
 
 const router = express.Router();
+
 router.use((req, res, next) => {
   const key = req.headers['x-api-key'];
   if (key !== process.env.API_SECRET_KEY) {
@@ -9,9 +10,10 @@ router.use((req, res, next) => {
   }
   next();
 });
+
 router.post('/', async (req, res) => {
   try {
-    const { nom, projet, budget, delai, financement } = req.body;
+    const { nom, projet, budget, delai, financement, agency_id, email, telephone, source } = req.body;
 
     if (!nom || !projet) {
       return res.status(400).json({
@@ -20,7 +22,10 @@ router.post('/', async (req, res) => {
       });
     }
 
-    const result = await qualifierLead({ nom, projet, budget, delai, financement });
+    const result = await qualifierLead({
+      nom, projet, budget, delai, financement,
+      agency_id, email, telephone, source
+    });
 
     return res.status(201).json({
       success: true,

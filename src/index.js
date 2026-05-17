@@ -5,6 +5,8 @@ const cors = require('cors');
 const qualificationRoute = require('./routes/qualification');
 const annoncesRoute = require('./routes/annonces');
 const relancesRoute = require('./routes/relances');
+const matchingRoute = require('./routes/matching');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -25,11 +27,13 @@ app.use((req, _res, next) => {
 app.use('/api/qualify', qualificationRoute);
 app.use('/api/annonces', annoncesRoute);
 app.use('/api/relances', relancesRoute);
+app.use('/api/matching', matchingRoute);
+
 app.get('/health', (_req, res) => {
   res.json({
     status: 'ok',
     version: '1.0.0',
-    agents: ['qualification', 'annonces', 'relances'],
+    agents: ['qualification', 'annonces', 'relances', 'matching'],
     timestamp: new Date().toISOString(),
   });
 });
@@ -41,6 +45,7 @@ app.use((_req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Aivelo Backend — http://localhost:${PORT}`);
   console.log(`   Agent 1 Qualification : POST /api/qualify`);
+  console.log(`   Agent 4 Matching      : POST /api/matching`);
   console.log(`   Health check          : GET  /health`);
 });
 
